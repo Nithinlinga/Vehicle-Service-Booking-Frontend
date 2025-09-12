@@ -1,0 +1,20 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+* {
+    box-sizing: border-box;
+    
+}
+@import "tailwindcss";
+/* Make dark: utilities activate when .dark is present on any ancestor */
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  /* Solid palette */
+  @apply min-h-screen bg-slate-50 text-slate-800
+         dark:bg-slate-950 dark:text-slate-100
+         transition-colors duration-700;
+}
