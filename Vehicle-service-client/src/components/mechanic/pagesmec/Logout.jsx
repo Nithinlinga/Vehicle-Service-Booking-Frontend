@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+/*import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 export default function Logout() {
@@ -12,3 +12,4 @@ export default function Logout() {
  // return <div className="p-6 text-red-400">Logging out...</div>;
 }
 
+*/

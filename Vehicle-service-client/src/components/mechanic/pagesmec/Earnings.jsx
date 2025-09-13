@@ -2,7 +2,7 @@ import PageWrapper from "./PageWrapper";
 
 const Earnings=()=>{
     return(
-        <PageWrapper>
+        <>
             <div className="p-6 bg-white min-h-screen">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Earnings History</h1>
 
@@ -29,7 +29,7 @@ const Earnings=()=>{
         </table>
       </div>
     </div>
-        </PageWrapper>
+        </>
     );
 }
 

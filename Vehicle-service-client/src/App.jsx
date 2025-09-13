@@ -29,6 +29,7 @@ import ManageAppointment from "./components/admin/pages/ManageAppointment";
 import AdminProfile from "./components/admin/pages/AdminProfile";
 import AddVehicles from './components/user/AddVehicles';
 import AddServiceCentre from "./components/admin/pages/AddServiceCentre";
+import Earnings from "./components/mechanic/pagesmec/Earnings";
 
 function App() {
   const { isAuthenticated, user, role } = useSelector((state) => state.auth);
@@ -82,6 +83,7 @@ function App() {
           {/* Mechanic-only */}
           <Route element={<RoleRoute roles={['mechanic']} />}>
             <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
+            <Route path="/earnings"element={<Earnings/>}/>
           </Route>
 
           {/* User-only */}
