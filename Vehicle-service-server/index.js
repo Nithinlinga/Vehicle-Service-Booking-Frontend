@@ -13,7 +13,7 @@ app.use(express.json());
 const db = mysql.createConnection({ 
   host: 'localhost', 
   user: 'root',  
-  password: '123456', 
+  password: '19263543', 
   database: 'sb'
 });
 
@@ -366,7 +366,7 @@ app.post('/mechanics', (req, res) => {
     'INSERT INTO mechanic (mechanicId, servicecenterId, name, expertise, availability, rating) VALUES (?, ?, ?, ?, ?, ?)',
     [mechanicId, servicecenterId, name, expertise, availability, rating],
     (err, result) => {
-      if (err) return res.status(500).send({ message: 'Error inserting mechanic',error:err });
+      if (err) return res.status(500).send({ message: 'Error inserting mechanic' });
       res.status(201).json({ id: result.insertId, ...req.body });
     }
   );
@@ -471,7 +471,7 @@ app.get('/booking/:id', (req, res) => {
 
 // GET: Bookings by User ID
 app.get('/booking/user/:userId', (req, res) => {
-  db.query('SELECT * FROM booking WHERE userId = ?', [req.params.userId], (err, result) => {
+  db.query('SELECT * FROM booking WHERE _userId = ?', [req.params.userId], (err, result) => {
     if (err) return res.status(500).send(err);
     res.json(result);
   });
@@ -495,10 +495,10 @@ app.get('/booking/service/:serviceCenterId', (req, res) => {
 
 // POST: Create new booking
 app.post('/booking', (req, res) => {
-  const { userId, vehicleId, serviceCenterId, date, timeslot, status } = req.body;
+  const { _userId, vehicleId, serviceCenterId, date, timeslot, status } = req.body;
   db.query(
-    'INSERT INTO booking (userId, vehicleId, serviceCenterId, date, timeslot, status, createdAt) VALUES (?, ?, ?, ?, ?, ?, NOW())',
-    [userId, vehicleId, serviceCenterId, date, timeslot, status],
+    'INSERT INTO booking (_userId, vehicleId, serviceCenterId, date, timeslot, status, createdAt) VALUES (?, ?, ?, ?, ?, ?, NOW())',
+    [_userId, vehicleId, serviceCenterId, date, timeslot, status],
     (err, result) => {
       if (err) return res.status(500).send(err);
       res.status(201).send({ bookingId: result.insertId });
@@ -508,10 +508,10 @@ app.post('/booking', (req, res) => {
 
 // PUT: Update all fields by booking ID
 app.put('/booking/:id', (req, res) => {
-  const { userId, vehicleId, serviceCenterId, date, timeslot, status } = req.body;
+  const { _userId, vehicleId, serviceCenterId, date, timeslot, status } = req.body;
   db.query(
-    'UPDATE booking SET userId = ?, vehicleId = ?, serviceCenterId = ?, date = ?, timeslot = ?, status = ? WHERE bookingId = ?',
-    [userId, vehicleId, serviceCenterId, date, timeslot, status, req.params.id],
+    'UPDATE booking SET _userId = ?, vehicleId = ?, serviceCenterId = ?, date = ?, timeslot = ?, status = ? WHERE bookingId = ?',
+    [_userId, vehicleId, serviceCenterId, date, timeslot, status, req.params.id],
     (err, result) => {
       if (err) return res.status(500).send(err);
       if (result.affectedRows === 0) return res.status(404).send('Booking not found');
