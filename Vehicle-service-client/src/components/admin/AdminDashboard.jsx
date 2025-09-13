@@ -44,10 +44,10 @@ const AdminDashboard = () => {
           <NavLink to="manage-appointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "Appointments" : <span className="text-xl">📅</span>}
           </NavLink>
-          <NavLink to="users" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+          <NavLink to="manage-users" className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "Manage Users" : <span className="text-xl">👤</span>}
           </NavLink>
-          <NavLink to="mechanics" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+          <NavLink to="manage-mechanics" className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "Manage Mechanics" : <span className="text-xl">👤</span>}
           </NavLink>
           <NavLink to="profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
