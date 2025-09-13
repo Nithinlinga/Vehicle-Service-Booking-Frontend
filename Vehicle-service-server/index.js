@@ -101,6 +101,17 @@ app.post('/serviceCenters', (req, res) => {
   );
 });
 
+// get service center by id
+app.get('/serviceCenters/:id', (req, res) => {
+  db.query(
+    'Select * from serviceCenter where serviceCenterId = ?',
+    [req.params.id],
+    (err,result) => {
+      if (err) return res.status(500).send(err);
+      res.json(result[0])
+    }
+  );
+});
 // Update a service center
 app.put('/serviceCenters/:id', (req, res) => {
   const { name, location, contact, rating, feedback } = req.body;

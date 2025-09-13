@@ -75,6 +75,7 @@ function App() {
               <Route path="manage-appointment" element={<ManageAppointment />} />
               <Route path="manage-service-centers" element={<ManageServiceCentre />} />
               <Route path="add-service-centers" element={<AddServiceCentre />} />
+              <Route path="add-service-centers/:id" element={<AddServiceCentre />} />
               <Route path="profile" element={<AdminProfile />} />
             </Route>
           </Route>
