@@ -21,8 +21,16 @@ import image1 from '../../assets/users/1.png';
 import image2 from '../../assets/users/2.jpg';
 import image3 from '../../assets/users/3.webp';
 import image4 from '../../assets/users/4.jpg';
+import image5 from '../../assets/users/5.webp';
 import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { FaHome } from "react-icons/fa";
+import { BsFillCalendar2DateFill } from "react-icons/bs";
+import { MdOutlineMiscellaneousServices } from "react-icons/md";
+import { CgProfile } from "react-icons/cg";
+import { TbPlaylistAdd } from "react-icons/tb";
+import { CiLogout } from "react-icons/ci";
+
 
 
 const images = [
@@ -56,7 +64,7 @@ const AdminDashboard = () => {
   <div className="flex items-center justify-between p-4">
     {/* Logo Section */}
     <div className="flex items-center justify-center mt-16">
-      {open && <h1 className="ml-2 text-lg font-bold text-gray-700 dark:text-white">User</h1>}
+      {open && <h1 className="ml-2 text-lg font-bold text-blue-700 dark:text-white">User</h1>}
     </div>
 
     {/* Toggle Button */}
@@ -69,21 +77,24 @@ const AdminDashboard = () => {
   </div>
 
   {/* Sidebar Links */}
-  <nav className="mt-10 space-y-4 px-4">
+  <nav className="mt-4 space-y-4 px-4">
     <NavLink to="/" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'Dashboard' : <span className="text-xl">🏠</span>}
+      {open ? 'Dashboard' : <span className="text-xl"><FaHome /></span>}
     </NavLink>
     <NavLink to="/appointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'Appointments' : <span className="text-xl">📅</span>}
+      {open ? 'Appointments' : <span className="text-xl"><BsFillCalendar2DateFill/></span>}
     </NavLink>
     <NavLink to="/services" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'Services' : <span className="text-xl">🛠️</span>}
+      {open ? 'Services' : <span className="text-xl"><MdOutlineMiscellaneousServices /></span>}
     </NavLink>
     <NavLink to="/profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'Profile' : <span className="text-xl">👤</span>}
+      {open ? 'Profile' : <span className="text-xl"><CgProfile/></span>}
+    </NavLink>
+    <NavLink to="/vehicles" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+      {open ? 'Add Vehicles' : <span className="text-xl"><TbPlaylistAdd/></span>}
     </NavLink>
     <NavLink to="/logout" className="block text-red-600 hover:text-red-800">
-      {open ? 'Logout' : <span className="text-xl">🚪</span>}
+      {open ? 'Logout' : <span className="text-xl"><CiLogout /></span>}
     </NavLink>
   </nav>
     </div>
@@ -94,10 +105,10 @@ const AdminDashboard = () => {
         {/* Dashboard Content */}
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <DashboardCard image={image2} label="Total Vehicles" end={15} />
-            <DashboardCard image={image1} label="Total Service Centers" end={20} duration={5} />
-            <DashboardCard image={image3} label="Total Appointments" end={50} />
-            <DashboardCard image={image4} label="Total Paid" end={23000} prefix="$" />
+            <DashboardCard image={image2} label="Vehicles Registered" end={15} />
+            <DashboardCard image={image1} label="Services and Centers" end={20} duration={5} className = 'ml-4'/> 
+            <DashboardCard image={image3} label="Total Appointments" end={30} />
+            <DashboardCard image={image5} label="Upcoming Appointments" end={50} />
           </div>
 
           <div className="mt-10 p-6 bg-white rounded-xl shadow-lg">{/* <SeeNotice /> */}</div>

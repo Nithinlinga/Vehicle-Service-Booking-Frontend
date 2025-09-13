@@ -23,6 +23,7 @@ import UnauthorizedPage from "./components/UnauthorizedPage";
 import Footer from './components/footer/Footer';
 import Services from './components/user/Services';
 import Appointments from './components/user/Appointments';
+import AddVehicles from './components/user/AddVehicles';
 
 function App() {
   const { isAuthenticated, user,role } = useSelector((state) => state.auth);
@@ -77,6 +78,7 @@ function App() {
             <Route path="/user-dashboard" element={<UserDashboard />} />
             <Route path="/appointment" element={<Appointments />}/>
             <Route path="/services" element={<Services />}/>
+            <Route path="/vehicles" element={<AddVehicles />}/>
           </Route>
         </Route>
 
