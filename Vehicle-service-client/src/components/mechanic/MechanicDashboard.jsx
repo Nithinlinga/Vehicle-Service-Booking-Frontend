@@ -71,7 +71,7 @@ const MechanicDashboard = ()=>{
       status: "cancelled",
     },
     {
-      title: "Lifetime Earnings",
+      title: "Weekly Earnings",
       value: "₹ 686",
       color: "text-pink-400 border-pink-400",
       status: "earnings",

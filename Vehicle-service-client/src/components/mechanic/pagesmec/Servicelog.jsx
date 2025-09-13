@@ -39,9 +39,9 @@ const Servicelog=()=> {
           </nav>
         </aside>
     <div className="mx-auto w-[800px] h-[200px] mt-12" >
-      <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Service Log</h1>
+      <h1 className="text-2xl font-bold text-white-800 dark:text-gray-100 mb-6">Service Log</h1>
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm">
+        <table className="min-w-full  rounded-xl shadow-sm">
           <thead className="bg-cyan-50 dark:bg-gray-700 text-cyan-700 dark:text-cyan-300">
             <tr>
               <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
