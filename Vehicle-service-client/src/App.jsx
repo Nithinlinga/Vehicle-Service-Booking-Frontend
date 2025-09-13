@@ -28,6 +28,7 @@ import AdminHome from "./components/admin/pages/AdminHome";
 import ManageAppointment from "./components/admin/pages/ManageAppointment";
 import AdminProfile from "./components/admin/pages/AdminProfile";
 import AddVehicles from './components/user/AddVehicles';
+import AddServiceCentre from "./components/admin/pages/AddServiceCentre";
 
 function App() {
   const { isAuthenticated, user, role } = useSelector((state) => state.auth);
@@ -73,6 +74,7 @@ function App() {
               <Route index element={<AdminHome />} /> {/* Default dashboard content */}
               <Route path="manage-appointment" element={<ManageAppointment />} />
               <Route path="manage-service-centers" element={<ManageServiceCentre />} />
+              <Route path="add-service-centers" element={<AddServiceCentre />} />
               <Route path="profile" element={<AdminProfile />} />
             </Route>
           </Route>

@@ -38,11 +38,11 @@ const AdminDashboard = () => {
           <NavLink to="" end className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "Dashboard" : <span className="text-xl">🏠</span>}
           </NavLink>
-          <NavLink to="manage-appointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Appointments" : <span className="text-xl">📅</span>}
-          </NavLink>
           <NavLink to="manage-service-centers" className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "Service Centre" : <span className="text-xl">🛠️</span>}
+          </NavLink>
+          <NavLink to="manage-appointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+            {open ? "Appointments" : <span className="text-xl">📅</span>}
           </NavLink>
           <NavLink to="profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "Profile" : <span className="text-xl">👤</span>}
