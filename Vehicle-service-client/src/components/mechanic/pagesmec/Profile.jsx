@@ -110,7 +110,7 @@ const Profile=()=> {
       {/* Contact Info & Skills */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Contact Info */}
-        <div className="p-6 rounded-xl  border border-cyan-200 shadow-sm hover:shadow-md transition">
+        <div className="p-6 rounded-xl  border border-cyan-200 shadow-sm hover:shadow-md dark:hover:shadow-[0_0_15px_3px_rgba(34,211,238,0.7)] transition">
           <h2 className="text-xl font-semibold text-cyan-600 mb-4">Contact Information</h2>
           <p className="text-gray-700"><span className="font-semibold">📞 Phone:</span> +91 98765 43210</p>
           <p className="text-gray-700"><span className="font-semibold">✉️ Email:</span> johndoe@email.com</p>
@@ -118,7 +118,7 @@ const Profile=()=> {
         </div>
 
         {/* Skills */}
-        <div className="p-6 rounded-xl  border border-purple-200 shadow-sm hover:shadow-md transition">
+        <div className="p-6 rounded-xl  border border-purple-200 shadow-sm hover:shadow-md dark:hover:shadow-[0_0_15px_3px_rgba(168,85,247,0.7)] transition">
           <h2 className="text-xl font-semibold text-purple-600 mb-4">Skills</h2>
           <ul className="list-disc list-inside space-y-2 text-gray-700">
             <li>Engine Repair</li>
@@ -130,7 +130,7 @@ const Profile=()=> {
       </div>
 
       {/* Work Summary */}
-      <div className="p-6 rounded-xl  border border-indigo-200 shadow-sm hover:shadow-md transition">
+      <div className="p-6 rounded-xl  border border-indigo-200 shadow-sm hover:shadow-md dark:hover:shadow-[0_0_15px_3px_rgba(99,102,241,0.7)] transition">
         <h2 className="text-xl font-semibold text-indigo-600 mb-4">Work Summary</h2>
         <p className="text-gray-700">
           Experienced automobile mechanic specialized in both two-wheelers and four-wheelers. 
@@ -140,10 +140,10 @@ const Profile=()=> {
 
       {/* Action Buttons */}
       <div className="flex space-x-4">
-        <button className="px-6 py-2 bg-cyan-100 text-cyan-700 font-semibold rounded-xl shadow hover:bg-cyan-200 transition">
+        <button className="px-6 py-2 border text-cyan-700 font-semibold rounded-xl shadow hover:bg-cyan-200 transition">
           Edit Profile
         </button>
-        <button className="px-6 py-2 bg-purple-100 text-purple-700 font-semibold rounded-xl shadow hover:bg-purple-200 transition">
+        <button className="px-6 py-2 border text-purple-700 font-semibold rounded-xl shadow hover:bg-purple-200 transition">
           Update Skills
         </button>
       </div>
