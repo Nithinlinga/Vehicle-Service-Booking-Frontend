@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { MdOutlineKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
-import { LayoutDashboard,Wrench,CalendarClock,Users, UserCog,ShieldUser} from 'lucide-react';
+import { LayoutDashboard, Wrench, CalendarClock, Users, UserCog, ShieldUser } from 'lucide-react';
 const AdminDashboard = () => {
   const [open, setOpen] = useState(false);
 
@@ -39,19 +39,19 @@ const AdminDashboard = () => {
             {open ? "Dashboard" : <span className="text-xl"><LayoutDashboard /></span>}
           </NavLink>
           <NavLink to="manage-service-centers" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Service Centre" : <span className="text-xl"><Wrench/></span>}
+            {open ? "Service Centre" : <span className="text-xl"><Wrench /></span>}
           </NavLink>
           <NavLink to="manage-appointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Appointments" : <span className="text-xl"><CalendarClock/></span>}
+            {open ? "Appointments" : <span className="text-xl"><CalendarClock /></span>}
           </NavLink>
           <NavLink to="manage-users" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Manage Users" : <span className="text-xl"><Users/></span>}
+            {open ? "Manage Users" : <span className="text-xl"><Users /></span>}
           </NavLink>
           <NavLink to="manage-mechanics" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Manage Mechanics" : <span className="text-xl"><UserCog/></span>}
+            {open ? "Manage Mechanics" : <span className="text-xl"><UserCog /></span>}
           </NavLink>
           <NavLink to="profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Profile" : <span className="text-xl"><ShieldUser/></span>}
+            {open ? "Profile" : <span className="text-xl"><ShieldUser /></span>}
           </NavLink>
         </nav>
       </div>

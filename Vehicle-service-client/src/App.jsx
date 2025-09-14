@@ -11,7 +11,6 @@ import Register from "./components/user/Register";
 import LoginPage from "./components/LoginPage";
 import { WelcomeUser } from "./components/WelcomeUser";
 import AdminDashboard from "./components/admin/AdminDashboard";
-import UserDashboard from "./components/user/UserDashboard";
 import MechanicDashboard from "./components/mechanic/MechanicDashboard";
 
 import ProtectedRoute from "./components/routes/ProtectedRoute";
@@ -38,6 +37,8 @@ import Servicelog from "./components/mechanic/pagesmec/Servicelog";
 import Earnings from "./components/mechanic/pagesmec/Earnings";
 import EditProfile from "./components/mechanic/pagesmec/EditProfile";
 import EditSkills from "./components/mechanic/pagesmec/EditSkills";
+import UserLayout from "./components/user/UserLayout";
+import UserDashboard from "./components/user/UserDashboard";
 
 
 function App() {
@@ -94,7 +95,7 @@ function App() {
 
           {/* Mechanic-only */}
           <Route element={<RoleRoute roles={['mechanic']} />}>
-            <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
+            <Route path="/mechanic" element={<MechanicDashboard />} />
             <Route path="/earnings"element={<Earnings/>}/>
             <Route path="/profile" element={<MechanicProfile />} />
             <Route path="/service-history" element={<Servicelog />} />
@@ -104,12 +105,14 @@ function App() {
 
           {/* User-only */}
           <Route element={<RoleRoute roles={['user']} />}>
-            <Route path="/user-dashboard" element={<UserDashboard />} />
-            <Route path="/viewappointment" element={<ViewAppointments />} />
-            <Route path="/appointment" element={<Appointments />} />
-            <Route path="/userservices" element={<Services />} />
-            <Route path="/vehicles" element={<Vehicles />}/>
-            <Route path="/invoice" element={<Invoice />} />
+          <Route path="/user" element={<UserLayout />}>
+            <Route index element={<UserDashboard />} />
+            <Route path="viewappointment" element={<ViewAppointments />} />
+            <Route path="appointment" element={<Appointments />} />
+            <Route path="services" element={<Services />} />
+            <Route path="vehicles" element={<Vehicles />}/>
+            <Route path="invoice" element={<Invoice />} />
+          </Route>
           </Route>
         </Route>
 
