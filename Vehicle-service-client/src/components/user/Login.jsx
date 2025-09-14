@@ -7,11 +7,13 @@ import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { login } from "../../store/authSlice";
 import LoginServices from '../services/LoginServices';
+import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const api = import.meta.env.VITE_SERVER_URL;
+  const [showPassword,setShowPassword]=useState(false);
 
   const [params] = useSearchParams();
   const role = params.get("role") || "User";
@@ -129,21 +131,37 @@ const Login = () => {
             >
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="••••••••"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.password}
-              autoComplete="current-password"
-              className="p-3 rounded border border-slate-300 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:border-cyan-600 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-              aria-invalid={Boolean(
-                formik.touched.password && formik.errors.password
-              )}
-              aria-describedby="password-error"
-            />
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                id="password"
+                placeholder="••••••••"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+                autoComplete="current-password"
+                className="p-3 pr-10 rounded border border-slate-300 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:border-cyan-600 dark:border-slate-700 dark:bg-slate-800 dark:text-white w-full"
+                aria-invalid={Boolean(
+                  formik.touched.password && formik.errors.password
+                )}
+                aria-describedby="password-error"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              >
+                {showPassword ? (
+                  <IoIosEyeOff className="text-xl transition-all duration-300" />
+                ) : (
+                  <IoIosEye className="text-xl transition-all duration-300" />
+                )}
+              </button>
+            </div>
+
             <div id="password-error" className="h-5 mt-1">
               {formik.touched.password && formik.errors.password && (
                 <span className="text-xs text-red-600">
