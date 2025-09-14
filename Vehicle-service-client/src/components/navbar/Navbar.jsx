@@ -57,7 +57,7 @@ const Navbar = () => {
           {isAuthenticated && (
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+              className="inline-flex items-center  cursor-pointer gap-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
             >
               <IoMdPower size={20} />
               <span className="hidden sm:inline">Logout</span>
@@ -69,7 +69,7 @@ const Navbar = () => {
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-3">
           <ThemeToggle />
-          <button onClick={toggleMenu} className="text-slate-700 dark:text-slate-200">
+          <button onClick={toggleMenu} className="text-slate-700 cursor-pointer dark:text-slate-200">
             {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
           </button>
         </div>

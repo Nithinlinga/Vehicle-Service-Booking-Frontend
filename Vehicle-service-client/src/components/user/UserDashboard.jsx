@@ -56,7 +56,7 @@ const AdminDashboard = () => {
       {/* Sidebar */}
       {/* Sidebar */}
 <div
-  className={`fixed top-25 left-0 h-screen bg-white dark:bg-gray-800 shadow-md z-50 transition-all duration-300 ${
+  className={`fixed top-25 left-0 h-screen bg-white dark:bg-gray-800 shadow-md z-20 transition-all duration-300 ${
     open ? 'w-64' : 'w-20'
   }`}
 >

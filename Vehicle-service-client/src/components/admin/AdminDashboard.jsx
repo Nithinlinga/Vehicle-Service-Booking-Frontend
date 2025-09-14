@@ -15,7 +15,7 @@ const AdminDashboard = () => {
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 overflow-auto">
       {/* Sidebar */}
       <div
-        className={`h-screen bg-white dark:bg-gray-800 shadow-md z-50 overflow-hidden
+        className={`h-screen bg-white dark:bg-gray-800 shadow-md z-20 overflow-hidden
     ${open ? "w-64" : "w-20"} transition-[width] duration-500 ease-in-out`}
       >
 
