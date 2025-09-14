@@ -36,41 +36,8 @@ const MechanicDashboard = () => {
     : [];
 
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-slate-900 overflow-auto">
+    <div className="flex-1 overflow-auto">
       {/* Sidebar */}
-      <div
-        className={`fixed top-25 rounded-md left-0 h-screen bg-white dark:bg-slate-800 shadow-md z-20 transition-all duration-300 ${
-          sidebarOpen ? "w-64" : "w-20"
-        }`}
-      >
-        <div className="flex items-center justify-between p-4">
-          {sidebarOpen && (
-            <h1 className="text-lg font-bold text-cyan-600 dark:text-white">Mechanic</h1>
-          )}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-md shadow-md focus:outline-none"
-          >
-            {sidebarOpen ? <MdOutlineKeyboardDoubleArrowLeft size={20} /> : <MdKeyboardDoubleArrowRight size={20} />}
-          </button>
-        </div>
-
-        {/* Sidebar Links */}
-        <nav className="mt-10 space-y-4 px-4">
-          <NavLink to="/" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {sidebarOpen ? "Dashboard" : <FaHome size={20} />}
-          </NavLink>
-          <NavLink to="/service-history" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {sidebarOpen ? "Service History" : <MdOutlineMiscellaneousServices size={20} />}
-          </NavLink>
-          <NavLink to="/profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {sidebarOpen ? "Profile" : <CgProfile size={20} />}
-          </NavLink>
-          <NavLink to="/earnings" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {sidebarOpen ? "Earnings" : <MdOutlineAttachMoney size={20} />}
-          </NavLink>
-        </nav>
-      </div>
 
       {/* Main Content */}
       <div className={`flex-1 ml-${sidebarOpen ? "64" : "20"} transition-all duration-300 p-8`}>
@@ -79,7 +46,7 @@ const MechanicDashboard = () => {
             <div
               key={title}
               onClick={() =>
-                status === "earnings" ? navigate("/earnings") : setSelectedStatus(status)
+                status === "earnings" ? navigate("earnings") : setSelectedStatus(status)
               }
               className={`cursor-pointer rounded-xl p-4 border-2 ${color} shadow-md hover:shadow-lg hover:scale-[1.02] transition-transform duration-300`}
             >

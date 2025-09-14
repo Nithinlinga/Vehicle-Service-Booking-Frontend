@@ -40,6 +40,7 @@ import EditSkills from "./components/mechanic/pages/EditSkills";
 import UserLayout from "./components/user/UserLayout";
 import UserDashboard from "./components/user/pages/UserDashboard";
 import UserProfile from "./components/user/pages/UserProfile";
+import MechanicLayout from "./components/mechanic/MechanicLayout";
 
 
 function App() {
@@ -96,12 +97,14 @@ function App() {
 
           {/* Mechanic-only */}
           <Route element={<RoleRoute roles={['mechanic']} />}>
-            <Route path="/mechanic" element={<MechanicDashboard />} />
-            <Route path="/earnings"element={<Earnings/>}/>
-            <Route path="/profile" element={<MechanicProfile />} />
-            <Route path="/service-history" element={<Servicelog />} />
-            <Route path="/edit-profile" element={<EditProfile />} />
-            <Route path="/edit-skills" element={<EditSkills />} />
+            <Route path="/mechanic" element={<MechanicLayout />} >
+            <Route index element={<MechanicDashboard />} />
+            <Route path="earnings"element={<Earnings/>}/>
+            <Route path="profile" element={<MechanicProfile />} />
+            <Route path="service-history" element={<Servicelog />} />
+            <Route path="edit-profile" element={<EditProfile />} />
+            <Route path="edit-skills" element={<EditSkills />} />
+            </Route>
           </Route>
 
           {/* User-only */}
