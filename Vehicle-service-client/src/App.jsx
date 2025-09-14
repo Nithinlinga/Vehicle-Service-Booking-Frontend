@@ -29,8 +29,6 @@ import ManageAppointment from "./components/admin/pages/ManageAppointment";
 import AdminProfile from "./components/admin/pages/AdminProfile";
 import Vehicles from './components/user/Vehicles';
 import AddServiceCentre from "./components/admin/pages/AddServiceCentre";
-import ViewAppointments from "./components/user/ViewAppointments";
-import Invoice from "./components/user/Invoice";
 
 function App() {
   const { isAuthenticated, user, role } = useSelector((state) => state.auth);
@@ -77,6 +75,9 @@ function App() {
               <Route path="manage-appointment" element={<ManageAppointment />} />
               <Route path="manage-service-centers" element={<ManageServiceCentre />} />
               <Route path="add-service-centers" element={<AddServiceCentre />} />
+              <Route path="add-service-centers/:id" element={<AddServiceCentre />} />
+              <Route path="manage-users" element={<ManageUsers />} />
+              <Route path="manage-mechanics" element={<ManageMechanics />} />
               <Route path="profile" element={<AdminProfile />} />
             </Route>
           </Route>
@@ -84,6 +85,9 @@ function App() {
           {/* Mechanic-only */}
           <Route element={<RoleRoute roles={['mechanic']} />}>
             <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
+            <Route path="/earnings"element={<Earnings/>}/>
+            <Route path="/profile"element={<Profile/>}/>
+            <Route path="/services"element={<Servicelog/>}/>
           </Route>
 
           {/* User-only */}

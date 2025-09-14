@@ -2,7 +2,12 @@ import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { MdOutlineKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
-
+import { LayoutDashboard } from 'lucide-react';
+import { Wrench } from 'lucide-react';
+import { CalendarClock } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { UserCog } from 'lucide-react';
+import { ShieldUser } from 'lucide-react';
 const AdminDashboard = () => {
   const [open, setOpen] = useState(false);
 
@@ -36,16 +41,22 @@ const AdminDashboard = () => {
         {/* Sidebar Links */}
         <nav className="mt-10 space-y-4 px-4">
           <NavLink to="" end className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Dashboard" : <span className="text-xl">🏠</span>}
+            {open ? "Dashboard" : <span className="text-xl"><LayoutDashboard /></span>}
           </NavLink>
           <NavLink to="manage-service-centers" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Service Centre" : <span className="text-xl">🛠️</span>}
+            {open ? "Service Centre" : <span className="text-xl"><Wrench/></span>}
           </NavLink>
           <NavLink to="manage-appointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Appointments" : <span className="text-xl">📅</span>}
+            {open ? "Appointments" : <span className="text-xl"><CalendarClock/></span>}
+          </NavLink>
+          <NavLink to="manage-users" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+            {open ? "Manage Users" : <span className="text-xl"><Users/></span>}
+          </NavLink>
+          <NavLink to="manage-mechanics" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+            {open ? "Manage Mechanics" : <span className="text-xl"><UserCog/></span>}
           </NavLink>
           <NavLink to="profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Profile" : <span className="text-xl">👤</span>}
+            {open ? "Profile" : <span className="text-xl"><ShieldUser/></span>}
           </NavLink>
         </nav>
       </div>

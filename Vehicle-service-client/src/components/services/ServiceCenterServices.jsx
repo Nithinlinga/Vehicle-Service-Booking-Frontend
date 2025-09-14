@@ -3,6 +3,9 @@ import axios from "axios";
 const api = "http://localhost:3001/serviceCenters";
 
 class ServiceCenterServices {
+  getServiceCenterById(id) {
+    return axios.get(`${api}/${id}`);
+  }
   getAllServiceCenters() {
     return axios.get(`${api}`);
   }
