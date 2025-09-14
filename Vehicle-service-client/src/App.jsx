@@ -94,7 +94,7 @@ function App() {
             <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
             <Route path="/earnings"element={<Earnings/>}/>
             <Route path="/profile"element={<MechanicProfile/>}/>
-            <Route path="/services"element={<Servicelog/>}/>
+            <Route path="/service-history"element={<Servicelog/>}/>
           </Route>
 
           {/* User-only */}
