@@ -80,7 +80,7 @@ const MechanicDashboard = ()=>{
 
   const links = [
     { to: "/profile", label: "Profile", icon: <User className="w-5 h-5" /> },
-    { to: "/services", label: "Services", icon: <Wrench className="w-5 h-5" /> },
+    { to: "/service-history", label: "Services", icon: <Wrench className="w-5 h-5" /> },
     { to: "/earnings", label: "Earnings", icon: <IndianRupee className="w-5 h-5" /> },
   ];
 
