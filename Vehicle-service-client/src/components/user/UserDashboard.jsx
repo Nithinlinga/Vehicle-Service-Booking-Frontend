@@ -30,8 +30,7 @@ import { MdOutlineMiscellaneousServices } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { TbPlaylistAdd } from "react-icons/tb";
 import { CiLogout } from "react-icons/ci";
-
-
+import AddVehicleForm from './AddVehicleForm';
 
 const images = [
   [img1, img2, img3],
@@ -81,8 +80,8 @@ const AdminDashboard = () => {
     <NavLink to="/" className="block text-gray-700 dark:text-white hover:text-cyan-600">
       {open ? 'Dashboard' : <span className="text-xl"><FaHome /></span>}
     </NavLink>
-    <NavLink to="/appointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'Appointments' : <span className="text-xl"><BsFillCalendar2DateFill/></span>}
+    <NavLink to="/viewappointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+      {open ? 'View Appointments' : <span className="text-xl"><BsFillCalendar2DateFill/></span>}
     </NavLink>
     <NavLink to="/services" className="block text-gray-700 dark:text-white hover:text-cyan-600">
       {open ? 'Services' : <span className="text-xl"><MdOutlineMiscellaneousServices /></span>}
@@ -91,10 +90,7 @@ const AdminDashboard = () => {
       {open ? 'Profile' : <span className="text-xl"><CgProfile/></span>}
     </NavLink>
     <NavLink to="/vehicles" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'Add Vehicles' : <span className="text-xl"><TbPlaylistAdd/></span>}
-    </NavLink>
-    <NavLink to="/logout" className="block text-red-600 hover:text-red-800">
-      {open ? 'Logout' : <span className="text-xl"><CiLogout /></span>}
+      {open ? 'View All Vehicles' : <span className="text-xl"><TbPlaylistAdd/></span>}
     </NavLink>
   </nav>
     </div>
@@ -105,13 +101,15 @@ const AdminDashboard = () => {
         {/* Dashboard Content */}
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <DashboardCard image={image2} label="Vehicles Registered" end={15} />
+            <DashboardCard image={image2} label="Vehicles Registered" end={6} />
             <DashboardCard image={image1} label="Services and Centers" end={20} duration={5} className = 'ml-4'/> 
             <DashboardCard image={image3} label="Total Appointments" end={30} />
             <DashboardCard image={image5} label="Upcoming Appointments" end={50} />
           </div>
 
-          <div className="mt-10 p-6 bg-white rounded-xl shadow-lg">{/* <SeeNotice /> */}</div>
+          {/* <div className="mt-10 p-6 pb-15 bg-gray-900 rounded-xl shadow-lg">
+          </div> */}
+            <AddVehicleForm />
         </div>
 
         {/* Video Section */}
