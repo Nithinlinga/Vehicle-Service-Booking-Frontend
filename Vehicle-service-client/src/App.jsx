@@ -29,13 +29,6 @@ import ManageAppointment from "./components/admin/pages/ManageAppointment";
 import AdminProfile from "./components/admin/pages/AdminProfile";
 import Vehicles from './components/user/Vehicles';
 import AddServiceCentre from "./components/admin/pages/AddServiceCentre";
-import ManageUsers from "./components/admin/pages/ManageUsers";
-import ManageMechanics from "./components/admin/pages/ManageMechanics";
-import ViewAppointments from "./components/user/ViewAppointments";
-import Invoice from "./components/user/Invoice";
-import Earnings from "./components/mechanic/pagesmec/Earnings";
-import Profile from "./components/mechanic/pagesmec/Profile";
-import Servicelog from "./components/mechanic/pagesmec/Servicelog";
 
 function App() {
   const { isAuthenticated, user, role } = useSelector((state) => state.auth);
@@ -93,8 +86,8 @@ function App() {
           <Route element={<RoleRoute roles={['mechanic']} />}>
             <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
             <Route path="/earnings"element={<Earnings/>}/>
-            <Route path="/profile"element={<Profile/>}/>
-            <Route path="/services"element={<Servicelog/>}/>
+            <Route path="/profile"element={<MechanicProfile/>}/>
+            <Route path="/service-history"element={<Servicelog/>}/>
           </Route>
 
           {/* User-only */}

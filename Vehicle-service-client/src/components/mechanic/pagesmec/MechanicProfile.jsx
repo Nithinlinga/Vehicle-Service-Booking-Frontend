@@ -64,7 +64,7 @@
 // src/pages/Profile.jsx
 import {Home,User,Wrench,IndianRupee,LogOut} from "lucide-react";
 import {NavLink} from "react-router-dom";
-const Profile=()=> {
+const MechanicProfile=()=> {
   const links = [
     { to: "/profile", label: "Profile", icon: <User className="w-5 h-5" /> },
     { to: "/services", label: "Services", icon: <Wrench className="w-5 h-5" /> },
@@ -151,4 +151,4 @@ const Profile=()=> {
     </div> 
    </div> );
 }
-export default Profile
+export default MechanicProfile

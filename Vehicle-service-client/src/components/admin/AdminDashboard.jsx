@@ -2,12 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { MdOutlineKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
-import { LayoutDashboard } from 'lucide-react';
-import { Wrench } from 'lucide-react';
-import { CalendarClock } from 'lucide-react';
-import { Users } from 'lucide-react';
-import { UserCog } from 'lucide-react';
-import { ShieldUser } from 'lucide-react';
+import { LayoutDashboard,Wrench,CalendarClock,Users, UserCog,ShieldUser} from 'lucide-react';
 const AdminDashboard = () => {
   const [open, setOpen] = useState(false);
 
@@ -15,7 +10,7 @@ const AdminDashboard = () => {
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 overflow-auto">
       {/* Sidebar */}
       <div
-        className={`h-screen bg-white dark:bg-gray-800 shadow-md z-50 overflow-hidden
+        className={`h-screen bg-white dark:bg-gray-800 shadow-md z-20 overflow-hidden
     ${open ? "w-64" : "w-20"} transition-[width] duration-500 ease-in-out`}
       >
 

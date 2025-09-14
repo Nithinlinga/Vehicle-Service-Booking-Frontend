@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
-export default function MechanicsDropdown() {
+export default function ManageMechanics() {
   const [showVerified, setShowVerified] = useState(false);
   const [showUnverified, setShowUnverified] = useState(false);
 
