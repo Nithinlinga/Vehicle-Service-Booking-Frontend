@@ -32,7 +32,7 @@ const Navbar = () => {
         <div className="flex items-center gap-6 text-sm font-medium text-slate-700 dark:text-slate-200">
           <Link to="/" className="hover:text-cyan-600 dark:hover:text-cyan-400">Home</Link>
           {isAuthenticated && (
-            <Link to={role === "admin" ? '/admin' : `/${role}-dashboard`} className="hover:text-cyan-600 dark:hover:text-cyan-400">
+            <Link to={`/${role}`} className="hover:text-cyan-600 dark:hover:text-cyan-400">
               Dashboard
             </Link>
           )}
@@ -48,8 +48,8 @@ const Navbar = () => {
           {!isAuthenticated && <Link to="/access-account" className="hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>}
           {isAuthenticated && role === "user" && (
             <>
-              <Link to="/userservices" className="hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
-              <Link to="/appointment" className="hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
+              <Link to="/user/services" className="hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
+              <Link to="/user/appointment" className="hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
             </>
           )}
           <Link to="/about" className="hover:text-cyan-600 dark:hover:text-cyan-400">About us</Link>
@@ -57,7 +57,7 @@ const Navbar = () => {
           {isAuthenticated && (
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+              className="inline-flex items-center cursor-pointer gap-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
             >
               <IoMdPower size={20} />
               <span className="hidden sm:inline">Logout</span>
@@ -69,7 +69,7 @@ const Navbar = () => {
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-3">
           <ThemeToggle />
-          <button onClick={toggleMenu} className="text-slate-700 dark:text-slate-200">
+          <button onClick={toggleMenu} className="text-slate-700 cursor-pointer dark:text-slate-200">
             {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
           </button>
         </div>
@@ -81,8 +81,8 @@ const Navbar = () => {
           {!isAuthenticated && <Link to="/access-account" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>}
           {isAuthenticated && role === "user" && (
             <>
-              <Link to="/userservices" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
-              <Link to="/appointment" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
+              <Link to="/user/userservices" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
+              <Link to="/user/appointment" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
             </>
           )}
           <Link to="/about" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">About us</Link>
@@ -90,7 +90,7 @@ const Navbar = () => {
           {isAuthenticated && (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+              className="flex items-center gap-1 cursor-pointer text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
             >
               <IoMdPower size={20} />
               Logout

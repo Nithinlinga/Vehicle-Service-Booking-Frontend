@@ -6,10 +6,10 @@ function PublicOnlyRoute() {
   const { isAuthenticated, user,role } = useSelector((state) => state.auth);
   const dashboardPath =
     role.toLowerCase() === "admin"
-      ? "/admin-dashboard"
+      ? "/admin"
       : role.toLowerCase() === "mechanic"
-      ? "/mechanic-dashboard"
-      : "/user-dashboard";
+      ? "/mechanic"
+      : "/user";
 console.log(role.toLowerCase(),"role")
   return isAuthenticated ? <Navigate to={dashboardPath} replace /> : <Outlet />;
 }

@@ -39,7 +39,7 @@ const images = [
   [img10, img11, img12]
 ];
 
-const AdminDashboard = () => {
+const UserDashboard = () => {
   const [open, setOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -52,64 +52,19 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 overflow-auto">
-      {/* Sidebar */}
-      {/* Sidebar */}
-<div
-  className={`fixed top-25 left-0 h-screen bg-white dark:bg-gray-800 shadow-md z-20 transition-all duration-300 ${
-    open ? 'w-64' : 'w-20'
-  }`}
->
-  <div className="flex items-center justify-between p-4">
-    {/* Logo Section */}
-    <div className="flex items-center justify-center mt-16">
-      {open && <h1 className="ml-2 text-lg font-bold text-blue-700 dark:text-white">User</h1>}
-    </div>
-
-    {/* Toggle Button */}
-    <button
-    onClick={() => setOpen(!open)}
-    className="absolute top-4 right-2 bg-green-600 hover:bg-green-700 text-white p-2 rounded-md shadow-md focus:outline-none"
-  >
-    {open ? <MdOutlineKeyboardDoubleArrowLeft size={20} /> : <MdKeyboardDoubleArrowRight size={20} />}
-  </button>
-  </div>
-
-  {/* Sidebar Links */}
-  <nav className="mt-4 space-y-4 px-4">
-    <NavLink to="/" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'Dashboard' : <span className="text-xl"><FaHome /></span>}
-    </NavLink>
-    <NavLink to="/viewappointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'View Appointments' : <span className="text-xl"><BsFillCalendar2DateFill/></span>}
-    </NavLink>
-    <NavLink to="/userservices" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'Services' : <span className="text-xl"><MdOutlineMiscellaneousServices /></span>}
-    </NavLink>
-    <NavLink to="/profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'Profile' : <span className="text-xl"><CgProfile/></span>}
-    </NavLink>
-    <NavLink to="/vehicles" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-      {open ? 'View All Vehicles' : <span className="text-xl"><TbPlaylistAdd/></span>}
-    </NavLink>
-  </nav>
-    </div>
-
-
+<>
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
         {/* Dashboard Content */}
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <DashboardCard image={image2} label="Vehicles Registered" end={6} />
-            <DashboardCard image={image1} label="Services and Centers" end={20} duration={5} className = 'ml-4'/> 
+            <DashboardCard image={image1} label="Services and Centers" end={20} duration={5} className="ml-4" />
             <DashboardCard image={image3} label="Total Appointments" end={30} />
             <DashboardCard image={image5} label="Upcoming Appointments" end={50} />
           </div>
 
-          {/* <div className="mt-10 p-6 pb-15 bg-gray-900 rounded-xl shadow-lg">
-          </div> */}
-            <AddVehicleForm />
+          <AddVehicleForm />
         </div>
 
         {/* Video Section */}
@@ -138,18 +93,37 @@ const AdminDashboard = () => {
           </NavLink>
 
           <div className="relative w-full max-w-5xl overflow-hidden">
-            <div className="flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+            <div
+              className="flex transition-transform duration-700 ease-in-out"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
               {images.map((group, index) => (
                 <div key={index} className="flex-shrink-0 w-full flex justify-center gap-4 px-4">
                   {group.map((src, i) => (
-                    <img key={i} src={src} alt={`Slide ${index}-${i}`} className="w-[285px] h-[250px] rounded shadow-lg" loading="lazy" />
+                    <img
+                      key={i}
+                      src={src}
+                      alt={`Slide ${index}-${i}`}
+                      className="w-[285px] h-[250px] rounded shadow-lg"
+                      loading="lazy"
+                    />
                   ))}
                 </div>
               ))}
             </div>
 
-            <button onClick={prevSlide} className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black text-2xl dark:bg-slate-700 text-white px-3 py-10 rounded-full shadow hover:bg-gray-300 hover:text-black dark:hover:bg-slate-600">‹</button>
-            <button onClick={nextSlide} className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black text-2xl dark:bg-slate-700 text-white px-3 py-10 rounded-full shadow hover:bg-gray-300 hover:text-black dark:hover:bg-slate-600">›</button>
+            <button
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black text-2xl dark:bg-slate-700 text-white px-3 py-10 rounded-full shadow hover:bg-gray-300 hover:text-black dark:hover:bg-slate-600"
+            >
+              ‹
+            </button>
+            <button
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black text-2xl dark:bg-slate-700 text-white px-3 py-10 rounded-full shadow hover:bg-gray-300 hover:text-black dark:hover:bg-slate-600"
+            >
+              ›
+            </button>
           </div>
         </div>
 
@@ -158,11 +132,11 @@ const AdminDashboard = () => {
           <Scroller />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default AdminDashboard;
+export default UserDashboard;
 
 // Reusable Card Component
 const DashboardCard = ({ image, label, end, duration = 2.5, prefix = '' }) => (
