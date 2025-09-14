@@ -43,11 +43,9 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Right Section */}
-        <div className="flex items-center gap-6 text-sm font-medium text-slate-700 dark:text-slate-200">
-          {!isAuthenticated && (
-            <Link to="/access-account" className="hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>
-          )}
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-700 dark:text-slate-200">
+          {!isAuthenticated && <Link to="/access-account" className="hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>}
           {isAuthenticated && role === "user" && (
             <>
               <Link to="/userservices" className="hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
@@ -66,9 +64,12 @@ const Navbar = () => {
             </button>
           )}
           <ThemeToggle />
+        </div>
 
-          {/* Mobile Menu Toggle */}
-          <button onClick={toggleMenu} className="md:hidden text-slate-700 dark:text-slate-200">
+        {/* Mobile Menu Button */}
+        <div className="md:hidden flex items-center gap-3">
+          <ThemeToggle />
+          <button onClick={toggleMenu} className="text-slate-700 dark:text-slate-200">
             {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
           </button>
         </div>
@@ -77,9 +78,7 @@ const Navbar = () => {
       {/* Mobile Dropdown */}
       {menuOpen && (
         <div className="md:hidden mt-2 rounded-xl bg-white/90 backdrop-blur-md shadow-md ring-1 ring-slate-200 dark:bg-slate-900/90 dark:ring-slate-700 p-4 space-y-3 text-sm font-medium text-slate-700 dark:text-slate-200">
-          {!isAuthenticated && (
-            <Link to="/access-account" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>
-          )}
+          {!isAuthenticated && <Link to="/access-account" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>}
           {isAuthenticated && role === "user" && (
             <>
               <Link to="/userservices" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
