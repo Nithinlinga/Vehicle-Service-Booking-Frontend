@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteAppointment } from "../../store/appointmentSlice";
+import { deleteAppointment } from "../../../store/appointmentSlice";
 
 const ViewAppointments = () => {
   const appointments = useSelector((state) => state.appointments);

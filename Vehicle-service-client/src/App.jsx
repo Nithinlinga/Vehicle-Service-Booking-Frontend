@@ -6,8 +6,8 @@ import Home from "./components/Home";
 import About from "./components/About";
 import Contact from "./components/Contact";
 import NotFound from "./components/notFound/NotFound";
-import Login from "./components/user/Login";
-import Register from "./components/user/Register";
+import Login from "./components/user/pages/Login";
+import Register from "./components/user/pages/Register";
 import LoginPage from "./components/LoginPage";
 import { WelcomeUser } from "./components/WelcomeUser";
 import AdminDashboard from "./components/admin/AdminDashboard";
@@ -20,25 +20,26 @@ import { login } from "./store/authSlice";
 import { useEffect } from "react";
 import UnauthorizedPage from "./components/UnauthorizedPage";
 import Footer from './components/footer/Footer';
-import Services from './components/user/Services';
-import Appointments from './components/user/Appointments';
+import Services from './components/user/pages/Services';
+import Appointments from './components/user/pages/Appointments';
 import ManageServiceCentre from "./components/admin/pages/ManageServiceCentre";
 import AdminHome from "./components/admin/pages/AdminHome";
 import ManageAppointment from "./components/admin/pages/ManageAppointment";
 import AdminProfile from "./components/admin/pages/AdminProfile";
-import Vehicles from './components/user/Vehicles';
+import Vehicles from './components/user/pages/Vehicles';
 import AddServiceCentre from "./components/admin/pages/AddServiceCentre";
 import ManageUsers from "./components/admin/pages/ManageUsers";
 import ManageMechanics from "./components/admin/pages/ManageMechanics";
-import ViewAppointments from "./components/user/ViewAppointments";
-import Invoice from "./components/user/Invoice";
+import ViewAppointments from "./components/user/pages/ViewAppointments";
+import Invoice from "./components/user/pages/Invoice";
 import MechanicProfile from "./components/mechanic/pagesmec/MechanicProfile";
 import Servicelog from "./components/mechanic/pagesmec/Servicelog";
 import Earnings from "./components/mechanic/pagesmec/Earnings";
 import EditProfile from "./components/mechanic/pagesmec/EditProfile";
 import EditSkills from "./components/mechanic/pagesmec/EditSkills";
 import UserLayout from "./components/user/UserLayout";
-import UserDashboard from "./components/user/UserDashboard";
+import UserDashboard from "./components/user/pages/UserDashboard";
+import UserProfile from "./components/user/pages/UserProfile";
 
 
 function App() {
@@ -112,6 +113,7 @@ function App() {
             <Route path="services" element={<Services />} />
             <Route path="vehicles" element={<Vehicles />}/>
             <Route path="invoice" element={<Invoice />} />
+            <Route path="profile" element={<UserProfile />} />
           </Route>
           </Route>
         </Route>

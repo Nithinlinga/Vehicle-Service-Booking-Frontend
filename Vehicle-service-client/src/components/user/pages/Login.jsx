@@ -5,8 +5,8 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-import { login } from "../../store/authSlice";
-import LoginServices from '../services/LoginServices';
+import { login } from "../../../store/authSlice";
+import LoginServices from '../../services/LoginServices';
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 
 const Login = () => {

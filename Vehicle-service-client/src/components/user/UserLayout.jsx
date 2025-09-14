@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import './UserDashboard.css';
+import './pages/UserDashboard.css';
 import { MdOutlineKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { FaHome } from "react-icons/fa";
 import { BsFillCalendar2DateFill } from "react-icons/bs";

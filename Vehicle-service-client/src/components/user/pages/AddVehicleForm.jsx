@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { addVehicle } from '../../store/vehicleSlice';
+import { addVehicle } from '../../../store/vehicleSlice';
 
 const carBrands = [
   { value: '', label: 'Select Brand' },

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addAppointment } from "../../store/appointmentSlice";
+import { addAppointment } from "../../../store/appointmentSlice";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation
 import { useSelector } from "react-redux";

@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { TiTick } from "react-icons/ti";
-import RegisterServices from '../services/RegisterServices';
+import RegisterServices from '../../services/RegisterServices';
 
 const Register = () => {
     const navigate = useNavigate();
