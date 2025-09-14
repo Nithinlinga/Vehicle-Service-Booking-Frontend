@@ -36,6 +36,8 @@ import Invoice from "./components/user/Invoice";
 import MechanicProfile from "./components/mechanic/pagesmec/MechanicProfile";
 import Servicelog from "./components/mechanic/pagesmec/Servicelog";
 import Earnings from "./components/mechanic/pagesmec/Earnings";
+import EditProfile from "./components/mechanic/pagesmec/EditProfile";
+import EditSkills from "./components/mechanic/pagesmec/EditSkills";
 
 
 function App() {
@@ -94,8 +96,10 @@ function App() {
           <Route element={<RoleRoute roles={['mechanic']} />}>
             <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
             <Route path="/earnings"element={<Earnings/>}/>
-            <Route path="/profile"element={<MechanicProfile/>}/>
-            <Route path="/service-history"element={<Servicelog/>}/>
+            <Route path="/profile" element={<MechanicProfile />} />
+            <Route path="/service-history" element={<Servicelog />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
+            <Route path="/edit-skills" element={<EditSkills />} />
           </Route>
 
           {/* User-only */}
