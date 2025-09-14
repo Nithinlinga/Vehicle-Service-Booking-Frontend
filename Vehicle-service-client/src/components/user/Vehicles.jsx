@@ -100,13 +100,50 @@ const Vehicles = () => {
                     <td className="py-1 text-slate-900 dark:text-slate-100">{selected.year}</td>
                   </tr>
                   <tr>
-                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Reg #</td>
+                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Regstaration Number</td>
                     <td className="py-1 text-slate-900 dark:text-slate-100">{selected.regNumber}</td>
                   </tr>
                   <tr>
                     <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Type</td>
                     <td className="py-1 text-slate-900 dark:text-slate-100">{selected.vehicleType}</td>
                   </tr>
+
+                  {/* Conditional Rows based on vehicle type */}
+                  {selected.vehicleType === 'car' ? (
+                    <>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Transmission</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.transmission}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Fuel</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.fuel}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Doors</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.doors}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">AC</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.ac}</td>
+                      </tr>
+                    </>
+                  ) : (
+                    <>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Engine</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.engine}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Fuel</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.fuel}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">ABS</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.abs}</td>
+                      </tr>
+                    </>
+                  )}
                 </tbody>
               </table>
               <button

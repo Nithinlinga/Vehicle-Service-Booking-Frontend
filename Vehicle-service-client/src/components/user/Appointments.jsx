@@ -1,17 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addAppointment } from "../../store/appointmentSlice";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-
-const vehicles = [
-  "Audi A1 S-Line",
-  "VW Golf 6",
-  "Toyota Camry 2017",
-  "Hero Splendor Plus",
-  "JAWA 42",
-  "Triumph Street Twin 2022",
-];
+import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation
+import { useSelector } from "react-redux";
 
 const services = [
   "General Service",
@@ -25,15 +17,46 @@ const services = [
 const Appointments = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const allVehicles = useSelector((state) => state.vehicles);
+
+  // Get the vehicle object passed from the Vehicles page
+  const vehicleFromState = location.state?.vehicle;
+
+  // Dynamically create a list of vehicles for the dropdown
+  // from the Redux store to ensure it's always up-to-date
+  const vehicleOptions = allVehicles.map(
+    (v) => `${v.brand.toUpperCase()} ${v.model}`
+  );
+  
+  // Add a default option if no vehicle is selected
+  const defaultVehicleOption = "Select Vehicle";
+  const vehiclesForDropdown = [defaultVehicleOption, ...vehicleOptions];
+
   const [form, setForm] = useState({
     name: "",
-    vehicle: vehicles[0],
+    // Initialize the vehicle field with the data from state
+    // If no vehicle was passed, use the default 'Select Vehicle' option
+    vehicle: vehicleFromState ? `${vehicleFromState.brand.toUpperCase()} ${vehicleFromState.model}` : defaultVehicleOption,
     date: "",
     time: "",
     service: services[0],
     notes: "",
   });
   const [submitted, setSubmitted] = useState(false);
+
+  // Optional: You could use a useEffect to handle this as well,
+  // but initializing the state directly is cleaner.
+  // This useEffect will run if the vehicle from state changes,
+  // which might happen if a user goes back and selects a new vehicle.
+  useEffect(() => {
+    if (vehicleFromState) {
+      setForm((prevForm) => ({
+        ...prevForm,
+        vehicle: `${vehicleFromState.brand.toUpperCase()} ${vehicleFromState.model}`,
+      }));
+    }
+  }, [vehicleFromState]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,6 +65,10 @@ const Appointments = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (form.vehicle === defaultVehicleOption) {
+        toast.error("Please select a vehicle.");
+        return;
+    }
     const today = new Date().toISOString().split("T")[0];
     if (form.date < today) {
       toast.error("Please select a date afterwards");
@@ -100,7 +127,7 @@ const Appointments = () => {
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
               >
-                {vehicles.map((v) => (
+                {vehiclesForDropdown.map((v) => (
                   <option key={v} value={v}>
                     {v}
                   </option>

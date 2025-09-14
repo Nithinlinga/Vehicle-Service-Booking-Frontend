@@ -20,7 +20,7 @@ import CountUp from 'react-countup';
 import image1 from '../../assets/users/1.png';
 import image2 from '../../assets/users/2.jpg';
 import image3 from '../../assets/users/3.webp';
-import image4 from '../../assets/users/4.jpg';
+// import image4 from '../../assets/users/4.jpg';
 import image5 from '../../assets/users/5.webp';
 import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
@@ -83,7 +83,7 @@ const AdminDashboard = () => {
     <NavLink to="/viewappointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
       {open ? 'View Appointments' : <span className="text-xl"><BsFillCalendar2DateFill/></span>}
     </NavLink>
-    <NavLink to="/services" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+    <NavLink to="/userservices" className="block text-gray-700 dark:text-white hover:text-cyan-600">
       {open ? 'Services' : <span className="text-xl"><MdOutlineMiscellaneousServices /></span>}
     </NavLink>
     <NavLink to="/profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
@@ -131,7 +131,7 @@ const AdminDashboard = () => {
 
         {/* Carousel Section */}
         <div className="secondone h-[400px] bg-gray-100 dark:bg-slate-900 flex flex-col items-center justify-center">
-          <NavLink to="/services">
+          <NavLink to="/userservices">
             <button className="mt-[60px] w-[280px] m-3 inline-flex items-center justify-center rounded-md bg-cyan-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400">
               Look For Services
             </button>

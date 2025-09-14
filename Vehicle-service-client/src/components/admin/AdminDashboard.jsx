@@ -63,7 +63,7 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
-        <Outlet /> {/* This is where child routes will render */}
+        <Outlet />
       </div>
     </div>
   );

@@ -44,7 +44,7 @@ const Navbar = () => {
            {
             isAuthenticated && role === "user" && (
               <>
-                <Link to="/services" className="hover:text-cyan-600     dark:hover:text-cyan-400">Services</Link>
+                <Link to="/userservices" className="hover:text-cyan-600     dark:hover:text-cyan-400">Services</Link>
                 <Link to="/appointment" className="hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
               </>
             )
