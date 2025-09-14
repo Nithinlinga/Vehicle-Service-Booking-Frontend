@@ -1,42 +1,12 @@
 import { User, Wrench, IndianRupee } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const MechanicProfile = () => {
   const navigate = useNavigate();
   const { name, phone, email, address, skills } = useSelector((state) => state.mechanic);
-
-  const links = [
-    { to: "/profile", label: "Profile", icon: <User className="w-5 h-5" /> },
-    { to: "/service-log", label: "Services", icon: <Wrench className="w-5 h-5" /> },
-    { to: "/earnings", label: "Earnings", icon: <IndianRupee className="w-5 h-5" /> },
-  ];
-
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-500">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-slate-800 shadow-md p-6">
-        <h2 className="text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-8">Mechanic Panel</h2>
-        <nav className="space-y-4">
-          {links.map(({ to, label, icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition ${
-                  isActive
-                    ? "bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300"
-                    : "text-slate-700 hover:bg-cyan-50 dark:text-slate-200 dark:hover:bg-slate-700"
-                }`
-              }
-            >
-              {icon}
-              <span>{label}</span>
-            </NavLink>
-          ))}
-        </nav>
-      </aside>
-
       {/* Main Content */}
       <main className="flex-1 p-10">
         {/* Profile Header */}
