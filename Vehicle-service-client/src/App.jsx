@@ -29,6 +29,14 @@ import ManageAppointment from "./components/admin/pages/ManageAppointment";
 import AdminProfile from "./components/admin/pages/AdminProfile";
 import Vehicles from './components/user/Vehicles';
 import AddServiceCentre from "./components/admin/pages/AddServiceCentre";
+import ManageUsers from "./components/admin/pages/ManageUsers";
+import ManageMechanics from "./components/admin/pages/ManageMechanics";
+import ViewAppointments from "./components/user/ViewAppointments";
+import Invoice from "./components/user/Invoice";
+import MechanicProfile from "./components/mechanic/pagesmec/MechanicProfile";
+import Servicelog from "./components/mechanic/pagesmec/Servicelog";
+import Earnings from "./components/mechanic/pagesmec/Earnings";
+
 
 function App() {
   const { isAuthenticated, user, role } = useSelector((state) => state.auth);

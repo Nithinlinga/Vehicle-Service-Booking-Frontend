@@ -43,40 +43,46 @@ const Navbar = () => {
           )}
         </div>
 
-          {/* Right Links */}
-          <div className="flex items-center gap-6 text-sm font-medium text-slate-700 dark:text-slate-200">
-           {!isAuthenticated&& <Link to="/access-account" className="hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>}
-           {
-            isAuthenticated && role === "user" && (
-              <>
-                <Link to="/userservices" className="hover:text-cyan-600     dark:hover:text-cyan-400">Services</Link>
-                <Link to="/appointment" className="hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
-              </>
-            )
-           }
-           <Link to="/about" className="hover:text-cyan-600 dark:hover:text-cyan-400">About us</Link>
-            <Link to="/contact" className="hover:text-cyan-600 dark:hover:text-cyan-400">Contact us</Link>
-            {isAuthenticated && (
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center gap-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-              >
-                <IoMdPower size={20} />
-                <span className="hidden cursor-pointer sm:inline">Logout</span>
-              </button>
-            )}
-            <ThemeToggle />
-          </div>
+        {/* Right Section */}
+        <div className="flex items-center gap-6 text-sm font-medium text-slate-700 dark:text-slate-200">
+          {!isAuthenticated && (
+            <Link to="/access-account" className="hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>
+          )}
+          {isAuthenticated && role === "user" && (
+            <>
+              <Link to="/userservices" className="hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
+              <Link to="/appointment" className="hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
+            </>
+          )}
+          <Link to="/about" className="hover:text-cyan-600 dark:hover:text-cyan-400">About us</Link>
+          <Link to="/contact" className="hover:text-cyan-600 dark:hover:text-cyan-400">Contact us</Link>
+          {isAuthenticated && (
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center gap-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+            >
+              <IoMdPower size={20} />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
+          )}
+          <ThemeToggle />
+
+          {/* Mobile Menu Toggle */}
+          <button onClick={toggleMenu} className="md:hidden text-slate-700 dark:text-slate-200">
+            {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+          </button>
         </div>
       </div>
 
       {/* Mobile Dropdown */}
       {menuOpen && (
         <div className="md:hidden mt-2 rounded-xl bg-white/90 backdrop-blur-md shadow-md ring-1 ring-slate-200 dark:bg-slate-900/90 dark:ring-slate-700 p-4 space-y-3 text-sm font-medium text-slate-700 dark:text-slate-200">
-          {!isAuthenticated && <Link to="/access-account" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>}
+          {!isAuthenticated && (
+            <Link to="/access-account" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>
+          )}
           {isAuthenticated && role === "user" && (
             <>
-              <Link to="/services" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
+              <Link to="/userservices" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
               <Link to="/appointment" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
             </>
           )}
