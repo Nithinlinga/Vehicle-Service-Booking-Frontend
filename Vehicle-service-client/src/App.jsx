@@ -27,13 +27,8 @@ import ManageServiceCentre from "./components/admin/pages/ManageServiceCentre";
 import AdminHome from "./components/admin/pages/AdminHome";
 import ManageAppointment from "./components/admin/pages/ManageAppointment";
 import AdminProfile from "./components/admin/pages/AdminProfile";
-import AddVehicles from './components/user/AddVehicles';
+import Vehicles from './components/user/Vehicles';
 import AddServiceCentre from "./components/admin/pages/AddServiceCentre";
-import ManageUsers from "./components/admin/pages/ManageUsers";
-import ManageMechanics from "./components/admin/pages/ManageMechanics";
-import Earnings from "./components/mechanic/pagesmec/Earnings";
-import Profile from "./components/mechanic/pagesmec/Profile";
-import Servicelog from "./components/mechanic/pagesmec/Servicelog";
 
 function App() {
   const { isAuthenticated, user, role } = useSelector((state) => state.auth);
@@ -98,9 +93,11 @@ function App() {
           {/* User-only */}
           <Route element={<RoleRoute roles={['user']} />}>
             <Route path="/user-dashboard" element={<UserDashboard />} />
+            <Route path="/viewappointment" element={<ViewAppointments />} />
             <Route path="/appointment" element={<Appointments />} />
             <Route path="/services" element={<Services />} />
-            <Route path="/vehicles" element={<AddVehicles />}/>
+            <Route path="/vehicles" element={<Vehicles />}/>
+            <Route path="/invoice" element={<Invoice />} />
           </Route>
         </Route>
 
