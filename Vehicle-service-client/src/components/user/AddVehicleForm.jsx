@@ -62,7 +62,7 @@ const AddVehicleForm = () => {
       {/* Vehicle Type */}
       <div className="mb-4">
         <label className="block mb-1 font-semibold">Vehicle Type</label>
-        <select name="vehicleType" value={vehicleType} onChange={handleTypeChange} required className="w-full px-3 py-2 border rounded-lg">
+        <select name="vehicleType" value={vehicleType} onChange={handleTypeChange} required className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800">
           <option value="">Select Type</option>
           <option value="car">Car</option>
           <option value="bike">Bike</option>
@@ -89,7 +89,7 @@ const AddVehicleForm = () => {
           {/* Year */}
           <div className="mb-4">
             <label className="block mb-1 font-semibold">Year</label>
-            <select name="year" value={form.year} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg">
+            <select name="year" value={form.year} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800">
               <option value="">Select Year</option>
               {years.map((y) => (
                 <option key={y} value={y}>{y}</option>
@@ -106,7 +106,7 @@ const AddVehicleForm = () => {
               </div>
               <div className="mb-4">
                 <label className="block mb-1 font-semibold">AC</label>
-                <select name="ac" value={form.ac} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg">
+                <select name="ac" value={form.ac} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800">
                   <option value="">Select</option>
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
@@ -121,7 +121,7 @@ const AddVehicleForm = () => {
               </div>
               <div className="mb-4">
                 <label className="block mb-1 font-semibold">ABS</label>
-                <select name="abs" value={form.abs} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg">
+                <select name="abs" value={form.abs} onChange={handleChange} required className="w-full dark:bg-gray-800 px-3 py-2 border rounded-lg">
                   <option value="">Select</option>
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>

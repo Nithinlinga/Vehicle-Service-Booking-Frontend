@@ -2,12 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { MdOutlineKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
-import { LayoutDashboard } from 'lucide-react';
-import { Wrench } from 'lucide-react';
-import { CalendarClock } from 'lucide-react';
-import { Users } from 'lucide-react';
-import { UserCog } from 'lucide-react';
-import { ShieldUser } from 'lucide-react';
+import { LayoutDashboard,Wrench,CalendarClock,Users, UserCog,ShieldUser} from 'lucide-react';
 const AdminDashboard = () => {
   const [open, setOpen] = useState(false);
 
