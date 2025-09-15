@@ -24,7 +24,7 @@ const EditSkills = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateSkills(skillList));
-    navigate("/profile");
+    navigate("/mechanic/profile");
   };
 
   return (

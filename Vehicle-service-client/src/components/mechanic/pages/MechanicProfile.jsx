@@ -55,13 +55,13 @@ const MechanicProfile = () => {
         {/* Action Buttons */}
         <div className="flex gap-4">
           <button
-            onClick={() => navigate("/edit-profile")}
+            onClick={() => navigate("/mechanic/edit-profile")}
             className="px-6 py-2 bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300 font-semibold rounded-xl shadow hover:bg-cyan-200 dark:hover:bg-cyan-800 transition"
           >
             Edit Profile
           </button>
           <button
-            onClick={() => navigate("/edit-skills")}
+            onClick={() => navigate("/mechanic/edit-skills")}
             className="px-6 py-2 bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 font-semibold rounded-xl shadow hover:bg-purple-200 dark:hover:bg-purple-800 transition"
           >
             Update Skills

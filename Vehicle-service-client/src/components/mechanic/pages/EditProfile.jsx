@@ -12,7 +12,7 @@ const EditProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateProfile(formData));
-    navigate("/profile");
+    navigate("/mechanic/profile");
   };
 
   return (

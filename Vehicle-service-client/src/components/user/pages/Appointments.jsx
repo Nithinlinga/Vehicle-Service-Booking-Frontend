@@ -90,13 +90,13 @@ const Appointments = () => {
               Appointment Booked Successfully!
             </div>
             <button
-              onClick={() => navigate("/viewappointment")}
+              onClick={() => navigate("/user/viewappointment")}
               className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 rounded-xl shadow transition text-lg"
             >
               View Appointments
             </button>
             <button
-              onClick={() => navigate("/invoice", { state: { appointment: form } })}
+              onClick={() => navigate("/user/invoice", { state: { appointment: form } })}
               className="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 rounded-xl shadow transition text-lg"
             >
               Generate Invoice
@@ -121,18 +121,17 @@ const Appointments = () => {
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Select Vehicle
               </label>
-              <select
+              <input
                 name="vehicle"
                 value={form.vehicle}
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
-              >
-                {vehiclesForDropdown.map((v) => (
+              />
+                {/* {vehiclesForDropdown.map((v) => (
                   <option key={v} value={v}>
                     {v}
                   </option>
-                ))}
-              </select>
+                ))} */}
             </div>
             <div className="flex gap-4">
               <div className="flex-1">

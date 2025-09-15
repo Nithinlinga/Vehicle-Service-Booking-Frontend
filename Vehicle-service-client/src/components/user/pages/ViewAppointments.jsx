@@ -64,7 +64,7 @@ const ViewAppointments = () => {
                       Upcoming
                     </span>
                     <button
-                      onClick={() => navigate("/invoice", { state: { appointment: a } })}
+                      onClick={() => navigate("/user/invoice", { state: { appointment: a } })}
                       className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-full shadow"
                     >
                       Invoice
@@ -116,7 +116,7 @@ const ViewAppointments = () => {
                       Completed
                     </span>
                     <button
-                      onClick={() => navigate("/invoice", { state: { appointment: a } })}
+                      onClick={() => navigate("/user/invoice", { state: { appointment: a } })}
                       className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded shadow"
                     >
                       Invoice
