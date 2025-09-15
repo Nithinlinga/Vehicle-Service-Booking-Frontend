@@ -3,11 +3,20 @@ import authReducer from './authSlice';
 import appointmentsReducer from './appointmentSlice';
 import VehicleReducer from './vehicleSlice';
 import mechanicReducer from './mechanicSlice';
+import userReducer from './userSlice';
 
 
-const loadState = () => {
+const mechanicloadState = () => {
   try {
     const serializedState = localStorage.getItem('mechanic');
+    return serializedState ? JSON.parse(serializedState) : undefined;
+  } catch {
+    return undefined;
+  }
+};
+const userloadState = () => {
+  try {
+    const serializedState = localStorage.getItem('user');
     return serializedState ? JSON.parse(serializedState) : undefined;
   } catch {
     return undefined;
@@ -19,19 +28,24 @@ const store = configureStore({
     auth: authReducer,
     appointments: appointmentsReducer,
     vehicles: VehicleReducer,
-    mechanic : mechanicReducer
+    mechanic : mechanicReducer,
+    user : userReducer,
   },
   preloadedState: {
-    mechanic: loadState(),
+    mechanic: mechanicloadState(),
+    user: userloadState(),
   },
 });
 
 store.subscribe(() => {
   const state = store.getState();
-  const serializedState = JSON.stringify(store.getState().mechanic);
+  const mechanicSerializedState = JSON.stringify(store.getState().mechanic);
+  const userSerializedState = JSON.stringify(store.getState().user);
+
   localStorage.setItem("appointments", JSON.stringify(state.appointments));
   localStorage.setItem("vehicles", JSON.stringify(state.vehicles));
-  localStorage.setItem('mechanic', serializedState);
+  localStorage.setItem('mechanic', mechanicSerializedState);
+  localStorage.setItem('user', userSerializedState);
 });
 
 export default store;

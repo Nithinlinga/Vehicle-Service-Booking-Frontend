@@ -139,6 +139,7 @@ const AddVehicleForm = () => {
       ac: '',
       transmission: '',
       fuel: '',
+      
     });
   };
 
