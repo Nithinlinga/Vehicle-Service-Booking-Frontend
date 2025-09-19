@@ -147,7 +147,7 @@ const Vehicles = () => {
                 </tbody>
               </table>
               <button
-                onClick={() => navigate("/appointment", { state: { vehicle: selected } })}
+                onClick={() => navigate("/user/appointment", { state: { vehicle: selected } })}
                 className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow transition"
               >
                 Book Appointment Now

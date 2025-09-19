@@ -41,6 +41,8 @@ import UserLayout from "./components/user/UserLayout";
 import UserDashboard from "./components/user/pages/UserDashboard";
 import UserProfile from "./components/user/pages/UserProfile";
 import MechanicLayout from "./components/mechanic/MechanicLayout";
+import UserEditProfile from "./components/user/pages/UserEditProfile";
+import AdminEditProfile from "./components/admin/pages/AdminEditProfile";
 
 
 function App() {
@@ -92,6 +94,7 @@ function App() {
               <Route path="manage-users" element={<ManageUsers />} />
               <Route path="manage-mechanics" element={<ManageMechanics />} />
               <Route path="profile" element={<AdminProfile />} />
+              <Route path="edit-profile" element={<AdminEditProfile />} />
             </Route>
           </Route>
 
@@ -117,6 +120,7 @@ function App() {
             <Route path="vehicles" element={<Vehicles />}/>
             <Route path="invoice" element={<Invoice />} />
             <Route path="profile" element={<UserProfile />} />
+            <Route path="edit-profile" element={<UserEditProfile />} />
           </Route>
           </Route>
         </Route>

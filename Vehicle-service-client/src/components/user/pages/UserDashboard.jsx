@@ -22,6 +22,7 @@ import image2 from '../../../assets/users/2.jpg';
 import image3 from '../../../assets/users/3.webp';
 import image5 from '../../../assets/users/5.webp';
 import AddVehicleForm from './AddVehicleForm';
+import { useNavigate } from 'react-router-dom';
 
 const images = [
   [img1, img2, img3],
@@ -31,6 +32,7 @@ const images = [
 ];
 
 const UserDashboard = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -67,21 +69,17 @@ const UserDashboard = () => {
             <h2 className="text-[2.5rem] relative top-[270px] font-extrabold">
               Imagine the possibilities <br />with Xcelerate Auto
             </h2>
-            <NavLink to="/appointment">
-              <button className="inline-flex items-center justify-center rounded-md bg-cyan-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 relative top-[300px] w-[280px] m-[14px]">
+              <button className="inline-flex items-center justify-center rounded-md bg-cyan-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 relative top-[300px] w-[280px] m-[14px]" onClick={() => navigate('/user/appointment')}>
                 Book Your Appointment Now
               </button>
-            </NavLink>
           </div>
         </div>
 
         {/* Carousel Section */}
         <div className="secondone h-[400px] bg-gray-100 dark:bg-slate-900 flex flex-col items-center justify-center">
-          <NavLink to="/userservices">
-            <button className="mt-[60px] w-[280px] m-3 inline-flex items-center justify-center rounded-md bg-cyan-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+            <button className="mt-[60px] w-[280px] m-3 inline-flex items-center justify-center rounded-md bg-cyan-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400" onClick={() => navigate('/user/services')}>
               Look For Services
             </button>
-          </NavLink>
 
           <div className="relative w-full max-w-5xl overflow-hidden">
             <div

@@ -1,18 +1,14 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const AdminProfile = () => {
   // Dummy admin data
+  const { name, role, email, phone, location, department, joined, bio } = useSelector((state) => state.admin);
   const admin = {
-    name: "Sarah Johnson",
-    role: "System Administrator",
-    email: "admin@example.com",
-    phone: "+91 98765 43210",
-    location: "Coimbatore, India",
-    department: "IT & Infrastructure",
-    joined: "March 2022",
-    bio: "Oversees system operations, manages user access, and ensures platform security.",
     avatar: "https://i.pravatar.cc/150?img=12",
   };
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4">
@@ -24,44 +20,44 @@ const AdminProfile = () => {
         <div className="relative flex justify-center">
           <img
             src={admin.avatar}
-            alt={admin.name}
+            alt={name}
             className="w-28 h-28 rounded-full border-4 border-white dark:border-gray-800 absolute -top-14"
           />
         </div>
 
         {/* Content */}
         <div className="mt-16 px-6 pb-6 text-center">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{admin.name}</h2>
-          <p className="text-indigo-500 font-medium">{admin.role}</p>
-          <p className="mt-3 text-gray-600 dark:text-gray-300">{admin.bio}</p>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{name}</h2>
+          <p className="text-indigo-500 font-medium">{role}</p>
+          <p className="mt-3 text-gray-600 dark:text-gray-300">{bio}</p>
 
           {/* Info Grid */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
             <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
               <p className="font-semibold">Email</p>
-              <p className="truncate">{admin.email}</p>
+              <p className="truncate">{email}</p>
             </div>
             <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
               <p className="font-semibold">Phone</p>
-              <p>{admin.phone}</p>
+              <p>{phone}</p>
             </div>
             <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
               <p className="font-semibold">Location</p>
-              <p>{admin.location}</p>
+              <p>{location}</p>
             </div>
             <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
               <p className="font-semibold">Department</p>
-              <p>{admin.department}</p>
+              <p>{department}</p>
             </div>
             <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg sm:col-span-2">
               <p className="font-semibold">Joined</p>
-              <p>{admin.joined}</p>
+              <p>{joined}</p>
             </div>
           </div>
 
           {/* Action Buttons */}
           <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-            <button className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow">
+            <button className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow" onClick={() => navigate("/admin/edit-profile")}>
               Edit Profile
             </button>
             

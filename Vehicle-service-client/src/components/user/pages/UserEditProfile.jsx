@@ -1,25 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { updateProfile } from "../../../store/mechanicSlice";
+import { updateProfile } from "../../../store/userSlice";
 import { useNavigate } from "react-router-dom";
 
-const EditProfile = () => {
-  const { name, phone, email, address } = useSelector((state) => state.mechanic);
-  const [formData, setFormData] = useState({ name, phone, email, address });
+const UserEditProfile = () => {
+  const { name, username, email, phone, location, joined, bio } = useSelector((state) => state.user);
+  const [formData, setFormData] = useState({ name, username, email, phone, location, joined, bio });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateProfile(formData));
-    navigate("/mechanic/profile");
-  };
+    navigate("/user/profile");
+  }
 
   return (
     <div className="max-w-xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4 text-cyan-600">Edit Profile</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {["name", "phone", "email", "address"].map((field) => (
+        {["name", "username" , "email", "phone", "location" , "joined" , "bio"].map((field) => (
           <input
             key={field}
             type="text"
@@ -35,6 +35,6 @@ const EditProfile = () => {
       </form>
     </div>
   );
-};
+}
 
-export default EditProfile;
+export default UserEditProfile
