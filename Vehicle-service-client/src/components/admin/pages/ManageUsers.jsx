@@ -1,62 +1,168 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import UserServices from "../../services/UserServices"; // adjust path if needed
 
 const ManageUsers = () => {
-  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
-  // Dummy static data
-  const users = [
-    { userId: 1, first_name: "John", last_name: "Doe", email: "john.doe@example.com", phone: "1234567890", status: 1 },
-    { userId: 2, first_name: "Jane", last_name: "Smith", email: "jane.smith@example.com", phone: "9876543210", status: 0 },
-    { userId: 3, first_name: "Michael", last_name: "Brown", email: "michael.brown@example.com", phone: "5551234567", status: 1 },
-    { userId: 4, first_name: "Emily", last_name: "Johnson", email: "emily.johnson@example.com", phone: "5559876543", status: 1 },
-    { userId: 5, first_name: "David", last_name: "Wilson", email: "david.wilson@example.com", phone: "5556789012", status: 0 },
-  ];
+  // Fetch all users
+  const fetchUsers = async () => {
+    try {
+      const response = await UserServices.getAllUsers();
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleEditClick = (user) => {
+    setSelectedUser({ ...user });
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleSave = async () => {
+    try {
+      await UserServices.updateUserStatus(
+        selectedUser.userId,
+        selectedUser.status
+      );
+      await fetchUsers(); // refresh list
+      handleModalClose();
+    } catch (error) {
+      console.error("Error updating user status:", error);
+    }
+  };
 
   return (
     <div className="p-4 sm:p-6">
-      <h2 className="text-2xl font-bold mb-6">Users List</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">Users List</h2>
 
-      {/* Responsive grid: 1 col on small, 2 on medium, 3 on large */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {users.map((u, i) => (
-          <div
-            key={u.userId}
-            className="border border-gray-300 rounded-lg p-4 shadow-sm bg-white dark:bg-gray-800 hover:shadow-md transition-shadow"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="font-semibold text-lg">
-                {i + 1}. {u.first_name} {u.last_name}
-              </h3>
-              <span
-                className={`px-2 py-1 text-xs rounded ${
-                  u.status === 1
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
-                }`}
+      {/* Table view for md and lg */}
+<div className="overflow-x-auto rounded-lg shadow hidden sm:block">
+  <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+    <thead className="bg-gray-50 dark:bg-gray-900">
+      <tr>
+        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">#</th>
+        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Name</th>
+        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Email</th>
+        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Phone</th>
+        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Status</th>
+        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+      </tr>
+    </thead>
+    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+      {users.map((u, i) => (
+        <tr key={u.userId} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{i + 1}</td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{u.first_name} {u.last_name}</td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.email}</td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.phone}</td>
+          <td className="px-6 py-4 whitespace-nowrap">
+            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.status === 1 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+              {u.status === 1 ? "Active" : "Inactive"}
+            </span>
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <button onClick={() => handleEditClick(u)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm shadow-sm">
+              Edit
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+{/* Card view for small screens */}
+<div className="block sm:hidden space-y-4">
+  {users.map((u, i) => (
+    <div key={u.userId} className="border border-gray-300 rounded-lg p-4 shadow-sm bg-white dark:bg-gray-800 hover:shadow-md transition-shadow">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="font-semibold text-lg">{i + 1}. {u.first_name} {u.last_name}</h3>
+        <span className={`px-2 py-1 text-xs rounded-full ${u.status === 1 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+          {u.status === 1 ? "Active" : "Inactive"}
+        </span>
+      </div>
+      <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">📧 {u.email}</p>
+      <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">📞 {u.phone}</p>
+      <div className="text-right">
+        <button onClick={() => handleEditClick(u)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+          Edit
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
+
+
+      {/* Modal */}
+      {isModalOpen && selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
+            <h3 className="text-xl text-center font-bold mb-4 text-gray-900 dark:text-white">
+              Edit User Status
+            </h3>
+            <div className="space-y-3">
+              <input
+                type="text"
+                value={`${selectedUser.first_name} ${selectedUser.last_name}`}
+                disabled
+                className="w-full p-2 border rounded dark:bg-gray-700 cursor-not-allowed dark:text-white"
+              />
+              <input
+                type="email"
+                value={selectedUser.email}
+                disabled
+                className="w-full p-2 border rounded dark:bg-gray-700 cursor-not-allowed dark:text-white"
+              />
+              <input
+                type="text"
+                value={selectedUser.phone}
+                disabled
+                className="w-full p-2 border rounded dark:bg-gray-700 cursor-not-allowed dark:text-white"
+              />
+              <select
+                value={selectedUser.status}
+                onChange={(e) =>
+                  setSelectedUser({
+                    ...selectedUser,
+                    status: parseInt(e.target.value),
+                  })
+                }
+                className="w-full p-2 border rounded dark:bg-gray-900 cursor-pointer dark:text-white"
               >
-                {u.status === 1 ? "Active" : "Inactive"}
-              </span>
+                <option value={1}>Active</option>
+                <option value={0}>Inactive</option>
+              </select>
             </div>
-
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
-              📧 {u.email}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-              📞 {u.phone}
-            </p>
-
-            <div className="text-right">
+            <div className="flex justify-end mt-6 space-x-2">
               <button
-                onClick={() => navigate(`admin/manage-users/${u.userId}`)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
+                onClick={handleModalClose}
+                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
               >
-                Edit
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Save
               </button>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
