@@ -116,7 +116,7 @@ const AddServiceType = () => {
                 onChange={(e) =>
                   setSelectedService({ ...selectedService, status: e.target.value })
                 }
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="w-full p-2 border rounded dark:bg-gray-900 dark:text-white"
               >
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>

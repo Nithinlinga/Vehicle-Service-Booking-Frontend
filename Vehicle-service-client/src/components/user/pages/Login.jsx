@@ -175,7 +175,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={formik.isSubmitting}
-            className="inline-flex items-center justify-center rounded-md bg-cyan-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:-translate-y-0.5 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="inline-flex cursor-pointer  items-center justify-center rounded-md bg-cyan-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:-translate-y-0.5 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {formik.isSubmitting ? (
               <span className="inline-flex items-center gap-2">
@@ -208,7 +208,7 @@ const Login = () => {
         </form>
 
         <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Link
             to={`/register?role=${role}`}
             className="text-green-600 hover:underline dark:text-green-400"

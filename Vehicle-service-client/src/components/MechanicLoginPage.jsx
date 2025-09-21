@@ -15,7 +15,7 @@ const MechanicLoginPage = () => {
               skills, reputation</p>
  
             <form className="flex flex-col space-y-4">
-                <button type="submit" onClick={handleClick} className="inline-flex items-center justify-center rounded-md bg-cyan-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:-translate-y-0.5 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                <button type="submit" onClick={handleClick} className="inline-flex cursor-pointer  items-center justify-center rounded-md bg-cyan-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:-translate-y-0.5 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400">
                     Login
                 </button><br /><br />
             </form>

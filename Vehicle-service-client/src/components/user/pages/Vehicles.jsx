@@ -28,7 +28,7 @@ const Vehicles = () => {
             style={{ width: "104px" }}
           ></span>
           <button
-            className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors duration-300 ${
+            className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors duration-300 cursor-pointer ${
               vehicleType === "car"
                 ? "text-white"
                 : "text-slate-700 dark:text-slate-200"
@@ -38,7 +38,7 @@ const Vehicles = () => {
             Cars
           </button>
           <button
-            className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors duration-300 ${
+            className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors cursor-pointer duration-300 ${
               vehicleType === "bike"
                 ? "text-white"
                 : "text-slate-700 dark:text-slate-200"
@@ -148,7 +148,7 @@ const Vehicles = () => {
               </table>
               <button
                 onClick={() => navigate("/user/appointment", { state: { vehicle: selected } })}
-                className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow transition"
+                className="w-full cursor-pointer bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow transition"
               >
                 Book Appointment Now
               </button>

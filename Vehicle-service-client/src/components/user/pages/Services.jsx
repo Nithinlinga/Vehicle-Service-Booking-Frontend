@@ -134,17 +134,17 @@ const Services = () => {
       {isModalOpen && selectedService && (
         <div 
           onClick={handleCloseModal}
-          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 transition-opacity duration-300 z-50"
+          className="fixed inset-0 bg-black  bg-opacity-70 flex items-center justify-center p-4 transition-opacity duration-300 z-50"
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 max-w-lg w-full transition-all duration-300 ease-in-out"
+            className="bg-white dark:bg-gray-800  rounded-xl shadow-2xl p-8 max-w-lg w-full transition-all duration-300 ease-in-out"
           >
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-3xl font-bold text-teal-700 dark:text-teal-400">
                 {selectedService.title}
               </h3>
-              <button onClick={handleCloseModal} className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-3xl font-light">
+              <button onClick={handleCloseModal} className="text-gray-500 cursor-pointer hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-3xl font-light">
                 &times;
               </button>
             </div>
