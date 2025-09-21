@@ -6,6 +6,9 @@ class ServiceTypeServices {
   getAllServiceTypes() {
     return axios.get(`${api}`);
   }
+  getAllServiceTypesByServiceCenter(id){
+    return axios.get(`${api}/serviceCenter/${id}`)
+  }
   addServiceType(data) {
     return axios.post(`${api}`, data);
   }

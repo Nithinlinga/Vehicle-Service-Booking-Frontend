@@ -55,12 +55,21 @@ const ManageServiceCentre = () => {
           )}
 
           {/* Edit Button */}
+          <div className="flex space-x-2  ">
+
           <button
             onClick={() => navigate(`/admin/add-service-centers/${s.servicecenterId}`)}
-            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+            className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"
           >
             Edit
           </button>
+          <button
+            onClick={() => navigate(`/admin/add-service-type/${s.servicecenterId}`)}
+            className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"
+          >
+            Manage Service Types
+          </button>
+            </div>
         </div>
       ))}
     </div>

@@ -43,6 +43,7 @@ import UserProfile from "./components/user/pages/UserProfile";
 import MechanicLayout from "./components/mechanic/MechanicLayout";
 import UserEditProfile from "./components/user/pages/UserEditProfile";
 import AdminEditProfile from "./components/admin/pages/AdminEditProfile";
+import AddServiceType from "./components/admin/pages/AddServiceType";
 
 
 function App() {
@@ -91,6 +92,7 @@ function App() {
               <Route path="manage-service-centers" element={<ManageServiceCentre />} />
               <Route path="add-service-centers" element={<AddServiceCentre />} />
               <Route path="add-service-centers/:id" element={<AddServiceCentre />} />
+              <Route path="add-service-type/:id" element={<AddServiceType />} />
               <Route path="manage-users" element={<ManageUsers />} />
               <Route path="manage-mechanics" element={<ManageMechanics />} />
               <Route path="profile" element={<AdminProfile />} />

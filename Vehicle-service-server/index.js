@@ -13,7 +13,7 @@ app.use(express.json());
 const db = mysql.createConnection({ 
   host: 'localhost', 
   user: 'root',  
-  password: 'enter the password', 
+  password: '123456', 
   database: 'sb'
 });
 
@@ -142,6 +142,14 @@ app.get('/serviceTypes', (req, res) => {
     res.json(result);
   });
 });
+// Get all service types by service centre id
+app.get('/serviceTypes/serviceCenter/:id', (req, res) => {
+  db.query('SELECT * FROM serviceType where serviceCenterId=?',[req.params.id]
+    ,(err, result) => {
+    if (err) return res.status(500).send(err);
+    res.json(result);
+  });
+});
 
 // Add a new service type
 app.post('/serviceTypes', (req, res) => {
@@ -164,7 +172,7 @@ app.put('/serviceTypes/:id', (req, res) => {
     [description, price, status, serviceCenterId, req.params.id],
     (err) => {
       if (err) return res.status(500).send(err);
-      res.sendStatus(200);
+      res.json({"message":"Updated successfully"});
     }
   );
 });
