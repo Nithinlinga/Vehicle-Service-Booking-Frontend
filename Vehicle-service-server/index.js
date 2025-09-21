@@ -452,6 +452,32 @@ app.patch('/mechanics/:id', (req, res) => {
     }
   );
 });
+//verify mechanic by id
+app.patch('/mechanics/verify/:id', (req, res) => {
+  const { verify } = req.body;
+  db.query(
+    'UPDATE mechanic SET isVerified = ? WHERE mechanicId = ?',
+    [verify, req.params.id],
+    (err, result) => {
+      if (err) return res.status(500).send(err);
+      if (result.affectedRows === 0) return res.status(404).send('Mechanic not found');
+      res.sendStatus(200);
+    }
+  );
+});
+//change status mechanic by id
+app.patch('/mechanics/status/:id', (req, res) => {
+  const { status } = req.body;
+  db.query(
+    'UPDATE mechanic SET status = ? WHERE mechanicId = ?',
+    [status, req.params.id],
+    (err, result) => {
+      if (err) return res.status(500).send(err);
+      if (result.affectedRows === 0) return res.status(404).send('Mechanic not found');
+      res.sendStatus(200);
+    }
+  );
+});
 
 // PATCH: Update rating by ID
 app.patch('/mechanics/:id', (req, res) => {

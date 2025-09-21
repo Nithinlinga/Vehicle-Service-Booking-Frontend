@@ -1,22 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
+import MechanicServices from "../../services/MechanicServices";
+import ServiceCenterServices from "../../services/ServiceCenterServices";
 
 export default function ManageMechanics() {
   const [showVerified, setShowVerified] = useState(false);
   const [showUnverified, setShowUnverified] = useState(false);
+  const [showRejected, setShowRejected] = useState(false);
+  const [mechanics, setMechanics] = useState([]);
+  const [serviceCentreName,setServiceCentreName]=useState("");
 
-  const mechanics = [
-    { mechanicId: 1, servicecenterId: "SC101", name: "Arun Kumar", expertise: "Engine Repair", availability: "Mon-Fri", rating: 4.5, isverified: "yes" },
-    { mechanicId: 2, servicecenterId: "SC102", name: "Ravi Shankar", expertise: "Brake Specialist", availability: "Mon-Sat", rating: 4.2, isverified: "no" },
-    { mechanicId: 3, servicecenterId: "SC103", name: "Suresh Babu", expertise: "Electrical Systems", availability: "Tue-Sun", rating: 4.8, isverified: "yes" },
-    { mechanicId: 4, servicecenterId: "SC104", name: "Manoj Kumar", expertise: "Transmission", availability: "Mon-Fri", rating: 3.9, isverified: "no" },
-  ];
+  // Modal state for editing Active/Inactive (verified mechanics)
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [selectedMechanic, setSelectedMechanic] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState("active");
 
-  const verified = mechanics.filter(m => m.isverified === "yes");
-  const unverified = mechanics.filter(m => m.isverified === "no");
+  const fetchMechanics = async () => {
+    try {
+      const res = await MechanicServices.getMechanics();
+      setMechanics(res.data);
+    } catch (err) {
+      console.error("Error fetching mechanics:", err);
+    }
+  };
+const getServiceCenterById=async(id)=>{
+  try {
+    const response=await ServiceCenterServices.getServiceCenterById(id)
+    setServiceCentreName(response.data.name)
+  } catch (error) {
+    console.error("Service centre not found",error)
+  }
+}
+  useEffect(() => {
+    fetchMechanics();
+  }, []);
+
+  const handleVerification = async (id, status) => {
+    const confirmMsg =
+      status === "yes"
+        ? "Are you sure you want to ACCEPT this mechanic?"
+        : status === "rejected"
+        ? "Are you sure you want to REJECT this mechanic?"
+        : "Are you sure you want to mark this mechanic as UNVERIFIED?";
+    if (!window.confirm(confirmMsg)) return;
+
+    try {
+      await MechanicServices.updateVerification(id, status);
+      fetchMechanics();
+    } catch (err) {
+      console.error("Error updating verification:", err);
+    }
+  };
+
+  // Open modal for Active/Inactive edit (verified mechanics)
+  const openStatusModal =async (mechanic) => {
+    await getServiceCenterById(mechanic.servicecenterId)
+    setSelectedMechanic(mechanic);
+    // If backend doesn't have a "status" field yet, default to "active"
+    setSelectedStatus(mechanic.status || "active");
+    setIsStatusModalOpen(true);
+  };
+
+  const closeStatusModal = () => {
+    setIsStatusModalOpen(false);
+    setSelectedMechanic(null);
+    setSelectedStatus("active");
+  };
+
+  const handleStatusSave = async () => {
+    try {
+      await MechanicServices.updateStatus(selectedMechanic.mechanicId,selectedStatus)
+
+      await fetchMechanics()
+
+      closeStatusModal();
+    } catch (err) {
+      console.error("Error updating active/inactive status:", err);
+    }
+  };
+
+  const verified = mechanics.filter((m) => m.isVerified === "yes");
+  const unverified = mechanics.filter((m) => m.isVerified === "no");
+  const rejected = mechanics.filter((m) => m.isVerified === "rejected");
 
   return (
-    <div className="w-full gap-4">
+    <div className="w-full gap-4 space-y-4">
       {/* Unverified Mechanics */}
       <div className="flex-1">
         <button
@@ -24,27 +92,46 @@ export default function ManageMechanics() {
           className="w-full flex justify-between items-center text-white py-3 px-4 rounded shadow bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 transition-colors duration-500"
         >
           <span>Unverified Mechanics ({unverified.length})</span>
-          {showUnverified ? (
-            <IoIosArrowUp className="transition-transform duration-700 ease-in-out" />
-          ) : (
-            <IoIosArrowDown className="transition-transform duration-700 ease-in-out" />
-          )}
+          {showUnverified ? <IoIosArrowUp /> : <IoIosArrowDown />}
         </button>
         <div
           className={`overflow-hidden transition-all duration-1000 ease-in-out ${
             showUnverified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="mt-2 rounded p-3 space-y-3">
-            {unverified.map(m => (
-              <div key={m.mechanicId} className="p-3 rounded shadow-sm border">
-                <p className="font-bold text-amber-700">{m.name}</p>
-                <p>Expertise: {m.expertise}</p>
-                <p>Availability: {m.availability}</p>
-                <p>Rating: {m.rating}</p>
-                <p>Service Center ID: {m.servicecenterId}</p>
+          {/* Scrollable list */}
+          <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
+            {unverified.map((m) => (
+              <div
+                key={m.mechanicId}
+                className="p-3 rounded shadow-sm border flex flex-col sm:flex-row sm:justify-between sm:items-center"
+              >
+                <div>
+                  <p className="font-bold text-amber-700">{m.name}</p>
+                  <p>Expertise: {m.expertise}</p>
+                  <p>Availability: {m.availability}</p>
+                  <p>Rating: {m.rating}</p>
+                  <p>Service Center ID: {m.servicecenterId}</p>
+                </div>
+                <div className="mt-3 sm:mt-0 flex gap-2">
+                  <button
+                    onClick={() => handleVerification(m.mechanicId, "yes")}
+                    className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    onClick={() => handleVerification(m.mechanicId, "rejected")}
+                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                  >
+                    Reject
+                  </button>
+                </div>
               </div>
             ))}
+            {unverified.length === 0 && (
+              <p className="text-sm text-gray-500">No unverified mechanics.</p>
+            )}
           </div>
         </div>
       </div>
@@ -56,30 +143,139 @@ export default function ManageMechanics() {
           className="w-full flex justify-between items-center text-white py-3 px-4 rounded shadow bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 transition-colors duration-500"
         >
           <span>Verified Mechanics ({verified.length})</span>
-          {showVerified ? (
-            <IoIosArrowUp className="transition-transform duration-700 ease-in-out" />
-          ) : (
-            <IoIosArrowDown className="transition-transform duration-700 ease-in-out" />
-          )}
+          {showVerified ? <IoIosArrowUp /> : <IoIosArrowDown />}
         </button>
         <div
           className={`overflow-hidden transition-all duration-1000 ease-in-out ${
             showVerified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="mt-2 rounded p-3 space-y-3">
-            {verified.map(m => (
-              <div key={m.mechanicId} className="p-3 rounded shadow-sm border">
-                <p className="font-bold text-teal-700">{m.name}</p>
-                <p>Expertise: {m.expertise}</p>
-                <p>Availability: {m.availability}</p>
-                <p>Rating: {m.rating}</p>
-                <p>Service Center ID: {m.servicecenterId}</p>
+          {/* Scrollable list */}
+          <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
+            {verified.map((m) => (
+              <div
+                key={m.mechanicId}
+                className="p-3 rounded shadow-sm border flex flex-col sm:flex-row sm:justify-between sm:items-center"
+              >
+                <div>
+                  <p className="font-bold text-teal-700">{m.name}</p>
+                  <p>Expertise: {m.expertise}</p>
+                  <p>Availability: {m.availability}</p>
+                  <p>Rating: {m.rating}</p>
+                  <p>Service Center ID: {m.servicecenterId}</p>
+                  {/* Optional display of current Active/Inactive if present */}
+                  {m.status && <p>Status: {m.status}</p>}
+                </div>
+                <div className="mt-3 sm:mt-0 flex gap-2">
+                  <button
+                    onClick={() => openStatusModal(m)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                  >
+                    Edit
+                  </button>
+                </div>
               </div>
             ))}
+            {verified.length === 0 && (
+              <p className="text-sm text-gray-500">No verified mechanics.</p>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Rejected Mechanics */}
+      <div className="flex-1">
+        <button
+          onClick={() => setShowRejected(!showRejected)}
+          className="w-full flex justify-between items-center text-white py-3 px-4 rounded shadow bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 transition-colors duration-500"
+        >
+          <span>Rejected Mechanics ({rejected.length})</span>
+          {showRejected ? <IoIosArrowUp /> : <IoIosArrowDown />}
+        </button>
+        <div
+          className={`overflow-hidden transition-all duration-1000 ease-in-out ${
+            showRejected ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          {/* Scrollable list */}
+          <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
+            {rejected.map((m) => (
+              <div
+                key={m.mechanicId}
+                className="p-3 rounded shadow-sm border flex flex-col sm:flex-row sm:justify-between sm:items-center"
+              >
+                <div>
+                  <p className="font-bold text-red-700">{m.name}</p>
+                  <p>Expertise: {m.expertise}</p>
+                  <p>Availability: {m.availability}</p>
+                  <p>Rating: {m.rating}</p>
+                  <p>Service Center ID: {m.servicecenterId}</p>
+                </div>
+                <div className="mt-3 sm:mt-0 flex gap-2">
+                  <button
+                    onClick={() => handleVerification(m.mechanicId, "yes")}
+                    className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                  >
+                    Accept
+                  </button>
+                </div>
+              </div>
+            ))}
+            {rejected.length === 0 && (
+              <p className="text-sm text-gray-500">No rejected mechanics.</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Status Edit Modal (Active/Inactive) */}
+      {isStatusModalOpen && selectedMechanic && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
+            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+              Edit Mechanic Status
+            </h3>
+
+            <div className="space-y-3">
+              <input
+                type="text"
+                value={selectedMechanic.name}
+                disabled
+                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+              />
+              <input
+                type="text"
+                value={serviceCentreName}
+                disabled
+                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+              />
+              <select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+              >
+                <option value="active">Active</option>
+                <option value="inActive">InActive</option>
+              </select>
+            </div>
+
+            <div className="flex justify-end mt-6 space-x-2">
+              <button
+                onClick={closeStatusModal}
+                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleStatusSave}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

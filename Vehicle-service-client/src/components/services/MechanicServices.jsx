@@ -28,6 +28,13 @@ class MechanicServices{
     updateRating(id, rating) {
         return axios.patch(`${api}/${id}`, { rating });
     }
+    updateVerification(id,verify){
+        return axios.patch(`${api}/verify/${id}`, { verify });
+    }
+    updateStatus(id,status){
+        return axios.patch(`${api}/status/${id}`, { status });
+
+    }
 
 }
 
