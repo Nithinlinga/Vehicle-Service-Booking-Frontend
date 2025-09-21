@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addAppointment } from "../../../store/appointmentSlice";
 import toast from "react-hot-toast";
-import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation
+import { useNavigate, useLocation, useParams } from "react-router-dom"; // Import useLocation
 import { useSelector } from "react-redux";
 
 const services = [
@@ -15,6 +15,7 @@ const services = [
 ];
 
 const Appointments = () => {
+  const {id}=useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,11 +45,7 @@ const Appointments = () => {
     notes: "",
   });
   const [submitted, setSubmitted] = useState(false);
-
-  // Optional: You could use a useEffect to handle this as well,
-  // but initializing the state directly is cleaner.
-  // This useEffect will run if the vehicle from state changes,
-  // which might happen if a user goes back and selects a new vehicle.
+  
   useEffect(() => {
     if (vehicleFromState) {
       setForm((prevForm) => ({
@@ -166,6 +163,23 @@ const Appointments = () => {
                   className="w-full px-4 date-input  py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 />
               </div>
+            </div>
+            <div>
+              <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
+                Service Center
+              </label>
+              <select
+                name="service"
+                value={form.service}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              >
+                {services.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">

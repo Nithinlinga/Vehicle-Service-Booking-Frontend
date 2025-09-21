@@ -1,20 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import VehiclesServices from "../../services/VehiclesServices";
 
 const Vehicles = () => {
   const navigate = useNavigate();
-  const allVehicles = useSelector((state) => state.vehicles);
-
+  const [vehicles,setVehicles]=useState([]);
   const [vehicleType, setVehicleType] = useState("car");
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [selected, setSelected] = useState(null);
+useEffect(() => {
+  const fetchVehicle = async () => {
+    try {
+      const resp = await VehiclesServices.getVehicles();
+      setVehicles(resp.data || []); // fallback to empty array if no data
+      console.log(resp.data);
+    } catch (error) {
+      console.error("Error in vehicle", error);
+    }
+  };
 
-  useEffect(() => {
-    const filtered = allVehicles.filter((v) => v.vehicleType === vehicleType);
+  fetchVehicle();
+}, []); // runs once on mount
+
+useEffect(() => {
+  if (vehicles.length > 0 && vehicleType) {
+    const filtered = vehicles.filter(
+      (v) => v.vehicle_type === vehicleType
+    );
+    console.log('vehcile',vehicleType,vehicles,filtered)
     setFilteredVehicles(filtered);
-    setSelected(filtered[0]);
-  }, [vehicleType, allVehicles]);
+    setSelected(filtered[0] || null); // avoid undefined
+  } else {
+    setFilteredVehicles([]);
+    setSelected(null);
+  }
+}, [vehicleType, vehicles]);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-cyan-50 to-teal-100 dark:from-slate-900 dark:via-slate-800 dark:to-teal-900 py-10 px-2">
@@ -74,7 +96,7 @@ const Vehicles = () => {
                   className="w-16 h-16 object-contain rounded-lg bg-slate-100 dark:bg-slate-700"
                 />
                 <span className="font-bold text-lg text-slate-800 dark:text-slate-100">
-                  {v.brand.toUpperCase()} {v.model}
+                  {v.make.toUpperCase()} {v.model}
                 </span>
               </div>
             ))
@@ -82,7 +104,7 @@ const Vehicles = () => {
         </div>
 
         {/* Vehicle Details */}
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex h-screen justify-center">
           {selected && (
             <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 flex flex-col items-center">
               <img
@@ -91,7 +113,7 @@ const Vehicles = () => {
                 className="w-48 h-48 object-contain mb-4 rounded-xl bg-slate-100 dark:bg-slate-700"
               />
               <div className="text-3xl font-extrabold text-teal-700 dark:text-teal-300 mb-2">
-                {selected.brand.toUpperCase()} {selected.model}
+                {selected.make.toUpperCase()} {selected.model}
               </div>
               <table className="w-full mb-4 border-separate border-spacing-y-1 ml-40">
                 <tbody>
@@ -101,11 +123,11 @@ const Vehicles = () => {
                   </tr>
                   <tr>
                     <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Regstaration Number</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.regNumber}</td>
+                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.registration_number}</td>
                   </tr>
                   <tr>
                     <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Type</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.vehicleType}</td>
+                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.vehicle_type}</td>
                   </tr>
 
                   {/* Conditional Rows based on vehicle type */}
@@ -147,7 +169,7 @@ const Vehicles = () => {
                 </tbody>
               </table>
               <button
-                onClick={() => navigate("/user/appointment", { state: { vehicle: selected } })}
+                onClick={() => navigate("/user/appointment/1", { state: { vehicle: selected } })}
                 className="w-full cursor-pointer bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow transition"
               >
                 Book Appointment Now

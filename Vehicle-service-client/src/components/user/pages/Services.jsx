@@ -3,6 +3,7 @@ import { FaCarSide, FaOilCan, FaWrench, FaBolt, FaCarCrash } from 'react-icons/f
 import {GiFlatTire} from 'react-icons/gi';
 import ServiceTypeServices from '../../services/ServiceTypeServices';
 import { useParams } from 'react-router-dom';
+import ServiceCenterServices from '../../services/ServiceCenterServices';
 
 // Array of services with title, description, icon, price, and details
 const servicesList = [
@@ -92,6 +93,7 @@ const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
   const { id } = useParams();
   const [serviceType,setServiceType]=useState([])
+  const [serviceCenterName,setServiceCenterName]=useState("");
 
   const handleOpenModal = (service) => {
     setSelectedService(service);
@@ -106,6 +108,8 @@ useEffect(() => {
   const fetchData = async () => {
     try {
       const response = await ServiceTypeServices.getAllServiceTypesByServiceCenter(id);
+      const sc=await ServiceCenterServices.getServiceCenterById(id);
+      setServiceCenterName(sc.data.name);
       setServiceType(response.data);
     } catch (error) {
       console.log("No Services found", error);
@@ -119,7 +123,7 @@ useEffect(() => {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-extrabold text-center mb-6 text-teal-700 dark:text-teal-400">
-          Our Services
+         Services of {serviceCenterName}
         </h1>
         <p className="text-center text-lg text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
           We offer a wide range of professional services to keep your vehicle running smoothly and safely.
