@@ -4,61 +4,80 @@ import { addAppointment } from "../../../store/appointmentSlice";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation, useParams } from "react-router-dom"; // Import useLocation
 import { useSelector } from "react-redux";
+import ServiceCenterServices from "../../services/ServiceCenterServices";
+import ServiceTypeServices from "../../services/ServiceTypeServices";
 
-const services = [
-  "General Service",
-  "Oil Change",
-  "Engine Check",
-  "Tire Replacement",
-  "AC Repair",
-  "Other",
-];
 
 const Appointments = () => {
-  const {id}=useParams();
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const allVehicles = useSelector((state) => state.vehicles);
+  const [allServiceCenters, setAllServiceCenters] = useState([]);
+  const [serviceType, setServiceType] = useState([]);
+  console.log(typeof id);
+  useEffect(() => {
 
+
+    async function fetchData() {
+      try {
+        const resp = await ServiceTypeServices.getAllServiceTypesByServiceCenter(id);
+        setServiceType(resp.data);
+        const serviceCenters = await ServiceCenterServices.getAllServiceCenters();
+        setAllServiceCenters(serviceCenters.data);
+      } catch (error) {
+        console.error("Error fetching service centres:", error);
+      }
+    }
+    fetchData();
+  }, [id]);
   // Get the vehicle object passed from the Vehicles page
   const vehicleFromState = location.state?.vehicle;
 
   // Dynamically create a list of vehicles for the dropdown
   // from the Redux store to ensure it's always up-to-date
   const vehicleOptions = allVehicles.map(
-    (v) => `${v.brand.toUpperCase()} ${v.model}`
+    (v) => `${v.make.toUpperCase()} ${v.model}`
   );
 
   // Add a default option if no vehicle is selected
   const defaultVehicleOption = "Select Vehicle";
   const vehiclesForDropdown = [defaultVehicleOption, ...vehicleOptions];
 
+
   const [form, setForm] = useState({
     name: "",
-    // Initialize the vehicle field with the data from state
-    // If no vehicle was passed, use the default 'Select Vehicle' option
-    vehicle: vehicleFromState ? `${vehicleFromState.brand.toUpperCase()} ${vehicleFromState.model}` : defaultVehicleOption,
+    vehicle: vehicleFromState ? `${vehicleFromState.make.toUpperCase()} ${vehicleFromState.model}` : defaultVehicleOption,
     date: "",
     time: "",
-    service: services[0],
+    serviceCenter: "",
+    service: serviceType[0],
     notes: "",
   });
   const [submitted, setSubmitted] = useState(false);
-  
+
   useEffect(() => {
     if (vehicleFromState) {
       setForm((prevForm) => ({
         ...prevForm,
-        vehicle: `${vehicleFromState.brand.toUpperCase()} ${vehicleFromState.model}`,
+        vehicle: `${vehicleFromState.make.toUpperCase()} ${vehicleFromState.model}`,
       }));
     }
   }, [vehicleFromState]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm(prev => ({ ...prev, [name]: value }));
   };
+  useEffect(() => {
+    if (allServiceCenters.length > 0) {
+      const selected = allServiceCenters.find(sc => sc.servicecenterId === Number(id));
+      if (selected) {
+        setForm(prev => ({ ...prev, serviceCenter: selected.servicecenterId }));
+      }
+    }
+  }, [allServiceCenters, id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -118,18 +137,20 @@ const Appointments = () => {
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Select Vehicle
               </label>
-              <input
+              <select
                 name="vehicle"
                 value={form.vehicle}
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
-              />
-              {/* {vehiclesForDropdown.map((v) => (
-                  <option key={v} value={v}>
+              >
+                {vehiclesForDropdown.map((v) => (
+                  <option key={v} value={v.vehicleId}>
                     {v}
                   </option>
-                ))} */}
+                ))}
+              </select>
             </div>
+
             <div className="flex gap-4">
               <div className="flex-1">
                 <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
@@ -169,19 +190,20 @@ const Appointments = () => {
                 Service Center
               </label>
               <select
-                name="service"
-                value={form.service}
+                name="serviceCenter"
+                value={form.serviceCenter}
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
               >
-                {services.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
+                {allServiceCenters.map((s) => (
+                  <option key={s.servicecenterId} value={s.servicecenterId}>
+                    {s.name}
                   </option>
                 ))}
               </select>
             </div>
             <div>
+              {/* Service Type */}
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Service Type
               </label>
@@ -191,13 +213,26 @@ const Appointments = () => {
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
               >
-                {services.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
+                {serviceType.map((s) => (
+                  <option key={s.serviceTypeId} value={s.name}>
+                    {s.name}
                   </option>
                 ))}
               </select>
+
+              {/* Price */}
+              {form.service && (
+                <div className="mt-4">
+                  <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
+                    Price
+                  </label>
+                  <div className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                    ₹{serviceType.find((s) => s.name === form.service)?.price}
+                  </div>
+                </div>
+              )}
             </div>
+
             <div>
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Additional Notes

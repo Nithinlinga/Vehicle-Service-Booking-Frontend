@@ -15,6 +15,7 @@ useEffect(() => {
       const resp = await VehiclesServices.getVehicles();
       setVehicles(resp.data || []); // fallback to empty array if no data
       console.log(resp.data);
+      localStorage.setItem("vehicles",JSON.stringify(resp.data))
     } catch (error) {
       console.error("Error in vehicle", error);
     }
