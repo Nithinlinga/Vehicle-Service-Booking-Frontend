@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCarSide, FaOilCan, FaWrench, FaBolt, FaCarCrash } from 'react-icons/fa';
 import {GiFlatTire} from 'react-icons/gi';
+import ServiceTypeServices from '../../services/ServiceTypeServices';
+import { useParams } from 'react-router-dom';
 
 // Array of services with title, description, icon, price, and details
 const servicesList = [
@@ -88,6 +90,8 @@ const servicesList = [
 const Services = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const { id } = useParams();
+  const [serviceType,setServiceType]=useState([])
 
   const handleOpenModal = (service) => {
     setSelectedService(service);
@@ -98,6 +102,18 @@ const Services = () => {
     setIsModalOpen(false);
     setSelectedService(null);
   };
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await ServiceTypeServices.getAllServiceTypesByServiceCenter(id);
+      setServiceType(response.data);
+    } catch (error) {
+      console.log("No Services found", error);
+    }
+  };
+
+  fetchData();
+}, [id]); // include id as a dependency if it can change
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4">
@@ -110,14 +126,14 @@ const Services = () => {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {servicesList.map((service, index) => (
+          {serviceType.map((service, index) => (
             <div
               key={index}
               onClick={() => handleOpenModal(service)}
               className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer"
             >
               <div className="flex justify-center mb-4 text-5xl text-cyan-600 dark:text-cyan-400">
-                {service.icon}
+                <FaBolt />
               </div>
               <h2 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white">
                 {service.title}
@@ -142,7 +158,7 @@ const Services = () => {
           >
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-3xl font-bold text-teal-700 dark:text-teal-400">
-                {selectedService.title}
+                {selectedService.name}
               </h3>
               <button onClick={handleCloseModal} className="text-gray-500 cursor-pointer hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-3xl font-light">
                 &times;
@@ -154,17 +170,17 @@ const Services = () => {
             </p>
             
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              {selectedService.about}
+              {selectedService.description}
             </p>
 
             <h4 className="text-lg font-bold mb-2 text-teal-800 dark:text-teal-400">
               Includes:
             </h4>
-            <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
+            {/* <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
               {selectedService.details.map((detail, index) => (
                 <li key={index}>{detail}</li>
               ))}
-            </ul>
+            </ul> */}
           </div>
         </div>
       )}

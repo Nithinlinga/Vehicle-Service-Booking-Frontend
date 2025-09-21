@@ -28,7 +28,7 @@ const Appointments = () => {
   const vehicleOptions = allVehicles.map(
     (v) => `${v.brand.toUpperCase()} ${v.model}`
   );
-  
+
   // Add a default option if no vehicle is selected
   const defaultVehicleOption = "Select Vehicle";
   const vehiclesForDropdown = [defaultVehicleOption, ...vehicleOptions];
@@ -66,8 +66,8 @@ const Appointments = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (form.vehicle === defaultVehicleOption) {
-        toast.error("Please select a vehicle.");
-        return;
+      toast.error("Please select a vehicle.");
+      return;
     }
     const today = new Date().toISOString().split("T")[0];
     if (form.date < today) {
@@ -114,7 +114,7 @@ const Appointments = () => {
                 required
                 value={form.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                className="w-full px-4 py-2 rounded border  border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
               />
             </div>
             <div>
@@ -127,7 +127,7 @@ const Appointments = () => {
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
               />
-                {/* {vehiclesForDropdown.map((v) => (
+              {/* {vehiclesForDropdown.map((v) => (
                   <option key={v} value={v}>
                     {v}
                   </option>
@@ -144,7 +144,13 @@ const Appointments = () => {
                   required
                   value={form.date}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                  min={new Date(Date.now() + 24 * 60 * 60 * 1000) // tomorrow
+                    .toISOString()
+                    .split("T")[0]}
+                  // max={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from today
+                  //   .toISOString()
+                  //   .split("T")[0]}
+                  className="w-full date-input px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 />
               </div>
               <div className="flex-1">
@@ -157,7 +163,7 @@ const Appointments = () => {
                   required
                   value={form.time}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                  className="w-full px-4 date-input  py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 />
               </div>
             </div>
@@ -187,9 +193,10 @@ const Appointments = () => {
                 value={form.notes}
                 onChange={handleChange}
                 rows={3}
-                className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 placeholder="Any specific requests?"
               />
+
             </div>
             <button
               type="submit"

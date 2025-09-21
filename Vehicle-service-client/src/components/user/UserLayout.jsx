@@ -45,7 +45,7 @@ const UserLayout = () => {
           <NavLink to="viewappointment" className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "View Appointments" : <span className="text-xl"><BsFillCalendar2DateFill /></span>}
           </NavLink>
-          <NavLink to="services" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+          <NavLink to="service-centers" className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "Services" : <span className="text-xl"><MdOutlineMiscellaneousServices /></span>}
           </NavLink>
           <NavLink to="profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">

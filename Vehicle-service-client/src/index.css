@@ -18,3 +18,26 @@ body {
          dark:bg-slate-950 dark:text-slate-100
          transition-colors duration-700;
 }
+/* Style the calendar icon for light mode */
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0); /* black icon */
+  cursor: pointer;
+}
+
+/* Style the calendar icon for dark mode */
+.dark .date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* white icon */
+}
+
+/* Autofill fix for dark mode */
+/* Light mode autofill fix */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #f9fafb inset !important; /* Tailwind bg-gray-50 */
+  -webkit-text-fill-color: #1f2937 !important; /* Tailwind text-gray-800 */
+}
+
+/* Dark mode autofill fix */
+.dark input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #111827 inset !important; /* Tailwind bg-gray-900 */
+  -webkit-text-fill-color: #e5e7eb !important; /* Tailwind text-gray-200 */
+}

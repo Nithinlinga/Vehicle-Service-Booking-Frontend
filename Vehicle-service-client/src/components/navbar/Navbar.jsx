@@ -48,8 +48,8 @@ const Navbar = () => {
           {!isAuthenticated && <Link to="/access-account" className="hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>}
           {isAuthenticated && role === "user" && (
             <>
-              <Link to="/user/services" className="hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
-              <Link to="/user/appointment" className="hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
+              <Link to="/user/service-centers" className="hover:text-cyan-600 dark:hover:text-cyan-400">Service Centers</Link>
+              <Link to="/user/viewappointment" className="hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
             </>
           )}
           <Link to="/about" className="hover:text-cyan-600 dark:hover:text-cyan-400">About us</Link>
@@ -81,8 +81,8 @@ const Navbar = () => {
           {!isAuthenticated && <Link to="/access-account" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>}
           {isAuthenticated && role === "user" && (
             <>
-              <Link to="/user/userservices" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Services</Link>
-              <Link to="/user/appointment" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
+              <Link to="/user/service-centers" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Service Centers</Link>
+              <Link to="/user/viewappointment" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Appointment</Link>
             </>
           )}
           <Link to="/about" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">About us</Link>

@@ -44,6 +44,7 @@ import MechanicLayout from "./components/mechanic/MechanicLayout";
 import UserEditProfile from "./components/user/pages/UserEditProfile";
 import AdminEditProfile from "./components/admin/pages/AdminEditProfile";
 import AddServiceType from "./components/admin/pages/AddServiceType";
+import ServiceCenters from "./components/user/pages/ServiceCenters";
 
 
 function App() {
@@ -118,7 +119,8 @@ function App() {
             <Route index element={<UserDashboard />} />
             <Route path="viewappointment" element={<ViewAppointments />} />
             <Route path="appointment" element={<Appointments />} />
-            <Route path="services" element={<Services />} />
+            <Route path="services/:id" element={<Services />} />
+            <Route path="service-centers" element={<ServiceCenters />} />
             <Route path="vehicles" element={<Vehicles />}/>
             <Route path="invoice" element={<Invoice />} />
             <Route path="profile" element={<UserProfile />} />
