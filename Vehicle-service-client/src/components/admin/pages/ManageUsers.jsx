@@ -73,7 +73,7 @@ const ManageUsers = () => {
             </span>
           </td>
           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <button onClick={() => handleEditClick(u)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm shadow-sm">
+            <button onClick={() => handleEditClick(u)} className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-3 py-1 rounded text-sm shadow-sm">
               Edit
             </button>
           </td>
@@ -96,7 +96,7 @@ const ManageUsers = () => {
       <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">📧 {u.email}</p>
       <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">📞 {u.phone}</p>
       <div className="text-right">
-        <button onClick={() => handleEditClick(u)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+        <button onClick={() => handleEditClick(u)} className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
           Edit
         </button>
       </div>
@@ -149,13 +149,13 @@ const ManageUsers = () => {
             <div className="flex justify-end mt-6 space-x-2">
               <button
                 onClick={handleModalClose}
-                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+                className="px-4 py-2 cursor-pointer bg-gray-400 text-white rounded hover:bg-gray-500"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                className="px-4 py-2 cursor-pointer bg-green-600 text-white rounded hover:bg-green-700"
               >
                 Save
               </button>
