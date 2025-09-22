@@ -540,10 +540,10 @@ app.get('/booking/service/:serviceCenterId', (req, res) => {
 
 // POST: Create new booking
 app.post('/booking', (req, res) => {
-  const { _userId, vehicleId, serviceCenterId, date, timeslot, status } = req.body;
+  const { userId, vehicleId, serviceCenterId, date, timeslot, status } = req.body;
   db.query(
-    'INSERT INTO booking (_userId, vehicleId, serviceCenterId, date, timeslot, status, createdAt) VALUES (?, ?, ?, ?, ?, ?, NOW())',
-    [_userId, vehicleId, serviceCenterId, date, timeslot, status],
+    'INSERT INTO booking (userId, vehicleId, serviceCenterId, date, timeslot, status, createdAt) VALUES (?, ?, ?, ?, ?, ?, NOW())',
+    [userId, vehicleId, serviceCenterId, date, timeslot, status],
     (err, result) => {
       if (err) return res.status(500).send(err);
       res.status(201).send({ bookingId: result.insertId });

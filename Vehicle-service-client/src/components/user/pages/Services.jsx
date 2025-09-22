@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaCarSide, FaOilCan, FaWrench, FaBolt, FaCarCrash } from 'react-icons/fa';
 import {GiFlatTire} from 'react-icons/gi';
 import ServiceTypeServices from '../../services/ServiceTypeServices';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ServiceCenterServices from '../../services/ServiceCenterServices';
 
 // Array of services with title, description, icon, price, and details
@@ -94,6 +94,7 @@ const Services = () => {
   const { id } = useParams();
   const [serviceType,setServiceType]=useState([])
   const [serviceCenterName,setServiceCenterName]=useState("");
+  const navigate=useNavigate();
 
   const handleOpenModal = (service) => {
     setSelectedService(service);
@@ -185,6 +186,12 @@ useEffect(() => {
                 <li key={index}>{detail}</li>
               ))}
             </ul> */}
+            <button
+            onClick={() => navigate(`/user/appointment?service_center=${selectedService.serviceCenterId}&service_type=${selectedService.serviceTypeId}`)}
+            className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"
+          >
+            Book Appointment
+          </button>
           </div>
         </div>
       )}

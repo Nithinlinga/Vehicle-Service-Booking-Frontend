@@ -118,7 +118,7 @@ function App() {
           <Route path="/user" element={<UserLayout />}>
             <Route index element={<UserDashboard />} />
             <Route path="viewappointment" element={<ViewAppointments />} />
-            <Route path="appointment/:id" element={<Appointments />} />
+            <Route path="appointment" element={<Appointments />} />
             <Route path="services/:id" element={<Services />} />
             <Route path="service-centers" element={<ServiceCenters />} />
             <Route path="vehicles" element={<Vehicles />}/>

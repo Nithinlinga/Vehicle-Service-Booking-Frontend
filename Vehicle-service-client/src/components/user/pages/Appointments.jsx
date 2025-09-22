@@ -1,85 +1,158 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addAppointment } from "../../../store/appointmentSlice";
 import toast from "react-hot-toast";
-import { useNavigate, useLocation, useParams } from "react-router-dom"; // Import useLocation
-import { useSelector } from "react-redux";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
 import ServiceTypeServices from "../../services/ServiceTypeServices";
-
+import BookingServices from "../../services/BookingServices";
 
 const Appointments = () => {
-  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const {user}=useSelector((state)=>state.auth);
+  const service_center = searchParams.get("service_center");
+  const service_type = searchParams.get("service_type");
+  const [selectedVehicle,setSelectedVehicle]=useState();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const allVehicles = useSelector((state) => state.vehicles);
+
   const [allServiceCenters, setAllServiceCenters] = useState([]);
   const [serviceType, setServiceType] = useState([]);
-  console.log(typeof id);
-  useEffect(() => {
+  const [submitted, setSubmitted] = useState(false);
 
+  const defaultVehicleOption = "Select Vehicle";
+useEffect(() => {
+  if (location.state?.vehicleId) {
+    const foundVehicle = allVehicles.find(
+      (av) => String(av.vehicleId) === String(location.state.vehicleId)
+    );
+    setSelectedVehicle(foundVehicle);
 
-    async function fetchData() {
-      try {
-        const resp = await ServiceTypeServices.getAllServiceTypesByServiceCenter(id);
-        setServiceType(resp.data);
-        const serviceCenters = await ServiceCenterServices.getAllServiceCenters();
-        setAllServiceCenters(serviceCenters.data);
-      } catch (error) {
-        console.error("Error fetching service centres:", error);
-      }
+    if (foundVehicle) {
+      setForm((prev) => ({
+        ...prev,
+        vehicle: `${foundVehicle.make.toUpperCase()} ${foundVehicle.model}`,
+      }));
     }
-    fetchData();
-  }, [id]);
-  // Get the vehicle object passed from the Vehicles page
-  const vehicleFromState = location.state?.vehicle;
+  }
+}, [location.state?.vehicleId, allVehicles]);
 
-  // Dynamically create a list of vehicles for the dropdown
-  // from the Redux store to ensure it's always up-to-date
   const vehicleOptions = allVehicles.map(
     (v) => `${v.make.toUpperCase()} ${v.model}`
   );
-
-  // Add a default option if no vehicle is selected
-  const defaultVehicleOption = "Select Vehicle";
   const vehiclesForDropdown = [defaultVehicleOption, ...vehicleOptions];
 
+const [form, setForm] = useState({
+  name: "",
+  vehicle: defaultVehicleOption,
+  vehicleId:location.state?.vehicleId,
+  date: "",
+  userId: user.id,
+  timeslot: "",
+  serviceCenterId: service_center || "",
+  service: "",
+  notes: "",
+});
 
-  const [form, setForm] = useState({
-    name: "",
-    vehicle: vehicleFromState ? `${vehicleFromState.make.toUpperCase()} ${vehicleFromState.model}` : defaultVehicleOption,
-    date: "",
-    time: "",
-    serviceCenter: "",
-    service: serviceType[0],
-    notes: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    if (vehicleFromState) {
-      setForm((prevForm) => ({
-        ...prevForm,
-        vehicle: `${vehicleFromState.make.toUpperCase()} ${vehicleFromState.model}`,
-      }));
+  // Fetch service types for a given center
+  const fetchServiceTypes = async (centerId) => {
+    try {
+      const resp = await ServiceTypeServices.getAllServiceTypesByServiceCenter(centerId);
+      setServiceType(resp.data);
+
+      if (resp.data.length > 0) {
+        const selected =
+          resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ??
+          resp.data[0];
+        setForm((prev) => ({ ...prev, service: selected.name }));
+      }
+    } catch (error) {
+      console.error("Error fetching service types:", error);
     }
-  }, [vehicleFromState]);
+  };
+useEffect(() => {
+  const fetchCentersAndTypes = async () => {
+    try {
+      const centers = await ServiceCenterServices.getAllServiceCenters();
+      setAllServiceCenters(centers.data);
+
+      let centerIdToFetch = service_center;
+
+      // If no service_center in URL, default to first center
+      if (!centerIdToFetch && centers.data.length > 0) {
+        centerIdToFetch = centers.data[0].servicecenterId;
+        setForm(prev => ({ ...prev, serviceCenterId: String(centerIdToFetch) }));
+      }
+
+      if (centerIdToFetch) {
+        await fetchServiceTypes(centerIdToFetch);
+      }
+    } catch (error) {
+      console.error("Error fetching service centers:", error);
+    }
+  };
+
+  fetchCentersAndTypes();
+}, [service_center, service_type]);
+
+  // Initial load: fetch centers and service types from search param
+  useEffect(() => {
+    const fetchCenters = async () => {
+      try {
+        const centers = await ServiceCenterServices.getAllServiceCenters();
+        setAllServiceCenters(centers.data);
+      } catch (error) {
+        console.error("Error fetching service centers:", error);
+      }
+    };
+
+    fetchCenters();
+    if (service_center) {
+      fetchServiceTypes(service_center);
+    }
+  }, [service_center, service_type]);
+
+  // Update vehicle if passed from state
+  // useEffect(() => {
+  //   if (vehicleFromState) {
+  //     setForm((prev) => ({
+  //       ...prev,
+  //       vehicle: `${vehicleFromState.make.toUpperCase()} ${vehicleFromState.model}`,
+  //     }));
+  //   }
+  // }, [vehicleFromState]);
+
+  // Preselect service center in form when centers are loaded
+  useEffect(() => {
+    if (allServiceCenters.length > 0 && service_center) {
+      const selected = allServiceCenters.find(
+        (sc) => sc.servicecenterId === Number(service_center)
+      );
+      if (selected) {
+        setForm((prev) => ({
+          ...prev,
+          serviceCenterId: String(selected.servicecenterId),
+        }));
+      }
+    }
+  }, [allServiceCenters, service_center]);
+
+  const handleServiceCenterChange = (e) => {
+    const newCenterId = e.target.value;
+    setForm((prev) => ({ ...prev, serviceCenterId: newCenterId }));
+    fetchServiceTypes(newCenterId);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
-  useEffect(() => {
-    if (allServiceCenters.length > 0) {
-      const selected = allServiceCenters.find(sc => sc.servicecenterId === Number(id));
-      if (selected) {
-        setForm(prev => ({ ...prev, serviceCenter: selected.servicecenterId }));
-      }
-    }
-  }, [allServiceCenters, id]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.vehicle === defaultVehicleOption) {
       toast.error("Please select a vehicle.");
@@ -90,10 +163,14 @@ const Appointments = () => {
       toast.error("Please select a date afterwards");
       return;
     }
-    dispatch(addAppointment(form));
+    try {
+      const appointment=await BookingServices.addBooking(form)
+      dispatch(addAppointment(form));
+    } catch (error) {
+      console.log(error)
+    }
     setSubmitted(true);
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-100 via-white to-teal-100 dark:from-gray-900 dark:via-gray-800 dark:to-teal-900 py-10">
       <div className="w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-10">
@@ -144,10 +221,11 @@ const Appointments = () => {
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
               >
                 {vehiclesForDropdown.map((v) => (
-                  <option key={v} value={v.vehicleId}>
+                  <option key={v} value={v}>
                     {v}
                   </option>
                 ))}
+
               </select>
             </div>
 
@@ -177,9 +255,9 @@ const Appointments = () => {
                 </label>
                 <input
                   type="time"
-                  name="time"
+                  name="timeslot"
                   required
-                  value={form.time}
+                  value={form.timeslot}
                   onChange={handleChange}
                   className="w-full px-4 date-input  py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 />
@@ -190,10 +268,10 @@ const Appointments = () => {
                 Service Center
               </label>
               <select
-                name="serviceCenter"
-                value={form.serviceCenter}
-                onChange={handleChange}
+                name="serviceCenterId"
+                value={form.serviceCenterId}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                onChange={handleServiceCenterChange} // 🔹 now triggers API call
               >
                 {allServiceCenters.map((s) => (
                   <option key={s.servicecenterId} value={s.servicecenterId}>
@@ -207,11 +285,13 @@ const Appointments = () => {
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Service Type
               </label>
+
               <select
                 name="service"
                 value={form.service}
-                onChange={handleChange}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+
+                onChange={(e) => setForm((prev) => ({ ...prev, service: e.target.value }))}
               >
                 {serviceType.map((s) => (
                   <option key={s.serviceTypeId} value={s.name}>
@@ -219,6 +299,7 @@ const Appointments = () => {
                   </option>
                 ))}
               </select>
+
 
               {/* Price */}
               {form.service && (
@@ -231,6 +312,7 @@ const Appointments = () => {
                   </div>
                 </div>
               )}
+
             </div>
 
             <div>

@@ -29,7 +29,7 @@ useEffect(() => {
     const filtered = vehicles.filter(
       (v) => v.vehicle_type === vehicleType
     );
-    console.log('vehcile',vehicleType,vehicles,filtered)
+    // console.log('vehcile',vehicleType,vehicles,filtered)
     setFilteredVehicles(filtered);
     setSelected(filtered[0] || null); // avoid undefined
   } else {
@@ -83,10 +83,10 @@ useEffect(() => {
           ) : (
             filteredVehicles.map((v) => (
               <div
-                key={v.id}
+                key={v.vehicleId}
                 onClick={() => setSelected(v)}
                 className={`cursor-pointer rounded-xl border-2 transition-all duration-200 shadow-sm hover:shadow-lg p-4 flex items-center gap-4 ${
-                  selected && selected.id === v.id
+                  selected && selected.vehicleId === v.vehicleId
                     ? "border-teal-600 bg-white dark:bg-slate-800"
                     : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
                 }`}
@@ -170,7 +170,7 @@ useEffect(() => {
                 </tbody>
               </table>
               <button
-                onClick={() => navigate("/user/appointment/1", { state: { vehicle: selected } })}
+                onClick={() => navigate("/user/appointment", { state: { vehicleId: selected.vehicleId } })}
                 className="w-full cursor-pointer bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow transition"
               >
                 Book Appointment Now

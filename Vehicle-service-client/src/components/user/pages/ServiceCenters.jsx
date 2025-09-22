@@ -59,7 +59,7 @@ const ServiceCenters = () => {
             View
           </button>
           <button
-            onClick={() => navigate(`/user/appointment/${s.servicecenterId}`)}
+            onClick={() => navigate(`/user/appointment?service_center=${s.servicecenterId}`)}
             className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"
           >
             Book Appointment
