@@ -271,9 +271,21 @@ app.delete('/users/:userId', (req, res) => {
 //vehicles 
 
 app.post('/vehicles', (req, res) => {
-  const { userId, registration_number, make, model, year } = req.body;
+  const {
+    userId,
+    registration_number,
+    engine_cc,
+    abs,
+    doors,
+    ac,
+    transmission,
+    fuel,
+    make,
+    model,
+    year,
+    vehicle_type
+  } = req.body;
 
-  // Step 1: Check if userId exists in users table
   db.query('SELECT * FROM users WHERE userId = ?', [userId], (err, userResult) => {
     if (err) return res.status(500).send({ message: 'Error checking userId' });
 
@@ -281,10 +293,9 @@ app.post('/vehicles', (req, res) => {
       return res.status(400).send({ message: 'Invalid userId. Please register the user first.' });
     }
 
-    // Step 2: Insert vehicle if user exists
     db.query(
-      'INSERT INTO vehicles (userId, registration_number, make, model, year) VALUES ( ?, ?, ?, ?, ?)',
-      [userId, registration_number, make, model, year],
+      'INSERT INTO vehicles (userId, registration_number, make, model, year, engine_cc, abs, doors, ac, transmission, fuel, vehicle_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [userId, registration_number, make, model, year, engine_cc, abs, doors, ac, transmission, fuel, vehicle_type],
       (err, result) => {
         if (err) {
           if (err.code === 'ER_DUP_ENTRY') {
@@ -299,7 +310,8 @@ app.post('/vehicles', (req, res) => {
           registration_number,
           make,
           model,
-          year
+          year,
+          vehicle_type
         });
       }
     );

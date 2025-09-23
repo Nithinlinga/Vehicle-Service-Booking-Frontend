@@ -5,6 +5,7 @@ import VehiclesServices from "../../services/VehiclesServices";
 
 const Vehicles = () => {
   const navigate = useNavigate();
+  const {user}=useSelector((state)=>state.auth);
   const [vehicles,setVehicles]=useState([]);
   const [vehicleType, setVehicleType] = useState("car");
   const [filteredVehicles, setFilteredVehicles] = useState([]);
@@ -12,7 +13,7 @@ const Vehicles = () => {
 useEffect(() => {
   const fetchVehicle = async () => {
     try {
-      const resp = await VehiclesServices.getVehicles();
+      const resp = await VehiclesServices.getVehiclesByUserId(user.id)
       setVehicles(resp.data || []); // fallback to empty array if no data
       console.log(resp.data);
       localStorage.setItem("vehicles",JSON.stringify(resp.data))

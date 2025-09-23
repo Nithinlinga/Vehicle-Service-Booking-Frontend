@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addVehicle } from '../../../store/vehicleSlice';
+import VehiclesServices from '../../services/VehiclesServices';
 
 const carBrands = [
   { value: '', label: 'Select Brand' },
@@ -89,61 +90,79 @@ const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 30 }, (_, i) => currentYear - i);
 
 const AddVehicleForm = () => {
+  const {user}=useSelector((state)=>state.auth);
   const dispatch = useDispatch(); 
   const [vehicleType, setVehicleType] = useState('');
   const [form, setForm] = useState({
-    brand: '',
+    userId:user.id,
+    make: '',
     model: '',
     year: '',
-    regNumber: '',
-    engine: '',
+    registration_number: '',
+    engine_cc: '',
     abs: '',
     doors: '',
     ac: '',
     transmission: '',
     fuel: '',
+    vehicle_type:vehicleType
   });
-
+console.log(vehicleType,"cehicn")
   const handleTypeChange = (e) => {
     setVehicleType(e.target.value);
-    setForm({ ...form, brand: '', model: '', year: '', regNumber: '' });
+    setForm({ ...form, vehicle_type:e.target.value, make: '', model: '', year: '', registration_number: '' });
   };
+
+  useEffect(() => {
+  setForm((prevForm) => ({
+    ...prevForm,
+    vehicle_type: vehicleType
+  }));
+}, [vehicleType]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'brand') {
-      setForm({ ...form, brand: value, model: '' });
+    if (name === 'make') {
+      setForm({ ...form, make: value, model: '' });
     } else {
       setForm({ ...form, [name]: value });
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Dispatch the form data to the Redux store
-    dispatch(addVehicle({ vehicleType, ...form }));
-    
-    toast.success('Vehicle Added Successfully');
+    try {
+      const respo=await VehiclesServices.addVehicles(form)
+      
+      dispatch(addVehicle({ vehicleType, ...form }));
+      toast.success('Vehicle Added Successfully');
+      setVehicleType('');
+      setForm({
+        make: '',
+        model: '',
+        year: '',
+        registration_number: '',
+        engine_cc: '',
+        abs: '',
+        doors: '',
+        ac: '',
+        transmission: '',
+        fuel: '',
+        vehicle_type:''
+        
+      });
+    } catch (error) {
+      console.log(error)
+      toast.error(error)
+    }
+
 
     // Reset the form after submission
-    setVehicleType('');
-    setForm({
-      brand: '',
-      model: '',
-      year: '',
-      regNumber: '',
-      engine: '',
-      abs: '',
-      doors: '',
-      ac: '',
-      transmission: '',
-      fuel: '',
-      
-    });
   };
 
-  const modelsForSelectedBrand = vehicleType === 'car' ? carModels[form.brand] : bikeModels[form.brand];
+  const modelsForSelectedBrand = vehicleType === 'car' ? carModels[form.make] : bikeModels[form.make];
 
   return (
     <form onSubmit={handleSubmit} className="mt-10 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-xl mx-auto">
@@ -163,22 +182,22 @@ const AddVehicleForm = () => {
         <>
           {/* Brand Dropdown */}
           <div className="mb-4">
-            <label htmlFor="brand" className="block mb-1 font-semibold">Brand</label>
-            <select id="brand" name="brand" value={form.brand} onChange={handleChange} required className="w-full dark:bg-gray-900   px-3 py-2 border rounded-lg">
+            <label htmlFor="make" className="block mb-1 font-semibold">Brand</label>
+            <select id="make" name="make" value={form.make} onChange={handleChange} required className="w-full dark:bg-gray-900   px-3 py-2 border rounded-lg">
               {vehicleType === 'car' ? (
-                carBrands.map((brand) => (
-                  <option key={brand.value} value={brand.value}>{brand.label}</option>
+                carBrands.map((make) => (
+                  <option key={make.value} value={make.value}>{make.label}</option>
                 ))
               ) : (
-                bikeBrands.map((brand) => (
-                  <option key={brand.value} value={brand.value}>{brand.label}</option>
+                bikeBrands.map((make) => (
+                  <option key={make.value} value={make.value}>{make.label}</option>
                 ))
               )}
             </select>
           </div>
 
           {/* Model Dropdown */}
-          {form.brand && (
+          {form.make && (
             <div className="mb-4">
               <label htmlFor="model" className="block mb-1 font-semibold">Model</label>
               <select id="model" name="model" value={form.model} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg dark:bg-gray-900">
@@ -192,12 +211,12 @@ const AddVehicleForm = () => {
           
           {/* Reg Number */}
           <div className="mb-4">
-            <label htmlFor="regNumber" className="block mb-1 font-semibold">Reg Number</label>
+            <label htmlFor="registration_number" className="block mb-1 font-semibold">Reg Number</label>
             <input
-              id="regNumber"
+              id="registration_number"
               type="text"
-              name="regNumber"
-              value={form.regNumber}
+              name="registration_number"
+              value={form.registration_number}
               onChange={handleChange}
               required
               placeholder="e.g., KA-01-AB-1234"
@@ -257,12 +276,12 @@ const AddVehicleForm = () => {
           ) : (
             <>
               <div className="mb-4">
-                <label htmlFor="engine" className="block mb-1 font-semibold">Engine</label>
+                <label htmlFor="engine_cc" className="block mb-1 font-semibold">Engine</label>
                 <input
                   type="text"
-                  id="engine"
-                  name="engine"
-                  value={form.engine}
+                  id="engine_cc"
+                  name="engine_cc"
+                  value={form.engine_cc}
                   onChange={handleChange}
                   required
                   placeholder="e.g., 100cc"

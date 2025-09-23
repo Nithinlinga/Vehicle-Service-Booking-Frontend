@@ -35,18 +35,18 @@ const Home = () => {
 
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Link
-                  to="/access-account"
+                  to="/user/service-centers"
                   className="inline-flex items-center justify-center rounded-md bg-cyan-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:-translate-y-0.5 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400"
                 >
                   Book a Service
                 </Link>
 
-                <Link
-                  to="/service-centres"
+                {/* <Link
+                  to="/user/service-centers"
                   className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
                   View All Service Centres
-                </Link>
+                </Link> */}
               </div>
 
               <div className="mt-8 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
