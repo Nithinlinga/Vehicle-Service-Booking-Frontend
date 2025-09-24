@@ -6,12 +6,14 @@ import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
 import ServiceTypeServices from "../../services/ServiceTypeServices";
 import BookingServices from "../../services/BookingServices";
+import { isAllOf } from "@reduxjs/toolkit";
 
 const Appointments = () => {
   const [searchParams] = useSearchParams();
   const {user}=useSelector((state)=>state.auth);
   const service_center = searchParams.get("service_center");
   const service_type = searchParams.get("service_type");
+  const vehicleId = searchParams.get("vehicleId");
   const [selectedVehicle,setSelectedVehicle]=useState();
 
   const dispatch = useDispatch();
@@ -44,11 +46,11 @@ useEffect(() => {
     (v) => `${v.make.toUpperCase()} ${v.model}`
   );
   const vehiclesForDropdown = [defaultVehicleOption, ...vehicleOptions];
-
+console.log(vehiclesForDropdown)
 const [form, setForm] = useState({
   name: "",
-  vehicle: defaultVehicleOption,
-  vehicleId:location.state?.vehicleId,
+  vehicle: "",
+  vehicleId:vehicleId || "",
   date: "",
   userId: user.id,
   timeslot: "",
@@ -57,7 +59,7 @@ const [form, setForm] = useState({
   notes: "",
 });
 
-
+console.log(vehicleId," d")
   // Fetch service types for a given center
   const fetchServiceTypes = async (centerId) => {
     try {
@@ -210,24 +212,37 @@ useEffect(() => {
                 className="w-full px-4 py-2 rounded border  border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
               />
             </div>
-            <div>
-              <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
-                Select Vehicle
-              </label>
-              <select
-                name="vehicle"
-                value={form.vehicle}
-                onChange={handleChange}
-                className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
-              >
-                {vehiclesForDropdown.map((v) => (
-                  <option key={v} value={v}>
-                    {v}
-                  </option>
-                ))}
+<div>
+  <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
+    Select Vehicle
+  </label>
+  <select
+    name="vehicleId"
+    value={form.vehicleId || ""}   // 👈 controlled by vehicleId
+    onChange={(e) => {
+      const selectedId = e.target.value;
+      const selectedVehicle = allVehicles.find(
+        (v) => String(v.vehicleId) === selectedId
+      );
+      setForm((prev) => ({
+        ...prev,
+        vehicleId: selectedId,
+        vehicle: selectedVehicle
+          ? `${selectedVehicle.make.toUpperCase()} ${selectedVehicle.model}`
+          : "",
+      }));
+    }}
+    className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+  >
+    <option value="">Select Vehicle</option>
+    {allVehicles.map((v) => (
+      <option key={v.vehicleId} value={v.vehicleId}>
+        {v.make.toUpperCase()} {v.model}
+      </option>
+    ))}
+  </select>
+</div>
 
-              </select>
-            </div>
 
             <div className="flex gap-4">
               <div className="flex-1">

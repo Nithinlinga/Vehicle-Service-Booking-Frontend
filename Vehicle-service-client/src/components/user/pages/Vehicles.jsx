@@ -171,7 +171,7 @@ useEffect(() => {
                 </tbody>
               </table>
               <button
-                onClick={() => navigate("/user/appointment", { state: { vehicleId: selected.vehicleId } })}
+                onClick={() => navigate(`/user/appointment?vehicleId=${selected.vehicleId}`)}
                 className="w-full cursor-pointer bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow transition"
               >
                 Book Appointment Now

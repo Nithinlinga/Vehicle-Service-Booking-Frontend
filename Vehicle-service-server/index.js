@@ -36,6 +36,9 @@ app.get('/register', (req, res) => {
 
 app.post('/register', (req, res) => {
   const { username,email,password,role} = req.body;
+  if(role==="Admin" || role==="admin"){
+    return res.sendStatus(400)
+  }
   db.query('INSERT INTO auth (username,email,password,role) VALUES (?, ?, ?,?)', [username,email,password,role],(err, result) => {
       if (err) return res.send(err);
       res.json({ id: result.insertId, username,email,password,role });

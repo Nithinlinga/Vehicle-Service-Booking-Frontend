@@ -206,16 +206,18 @@ const Login = () => {
             )}
           </button>
         </form>
-
+{
+!role==='Admin' &&
         <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
           Don't have an account?{" "}
           <Link
             to={`/register?role=${role}`}
             className="text-green-600 hover:underline dark:text-green-400"
-          >
+            >
             Sign Up
           </Link>
         </p>
+          }
       </div>
     </div>
   );

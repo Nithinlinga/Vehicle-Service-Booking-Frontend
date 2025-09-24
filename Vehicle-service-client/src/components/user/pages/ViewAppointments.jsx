@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { deleteAppointment } from "../../../store/appointmentSlice";
 import BookingServices from "../../services/BookingServices";
+import {toast} from 'react-hot-toast'
 
 const ViewAppointments = () => {
   const { user } = useSelector((state) => state.auth);
@@ -35,8 +36,20 @@ const [appointments, setAppointments] = useState([]);
   }, []);
 
 
-  const handleDelete = (id) => {
+  const handleDelete = async(id) => {
+    try {
+      const confirmed = window.confirm("Are you sure you want to delete this Booking?");
+      if (confirmed) {
+      
+          const response=BookingServices.deleteBookingById(id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
     dispatch(deleteAppointment(id));
+    fetchAppointments();
+    toast.error("Booking Deleted Successfully")
+  
   };
 useEffect(() => {
   const mapped = (appointments || []).map((a) => {
