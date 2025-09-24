@@ -2,10 +2,7 @@
     import { NavLink, Outlet } from 'react-router-dom';
     import { MdOutlineKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
     import { FaHome } from "react-icons/fa";
-    import { BsFillCalendar2DateFill } from "react-icons/bs";
     import { MdOutlineMiscellaneousServices } from "react-icons/md";
-    import { CgProfile } from "react-icons/cg";
-    import { TbPlaylistAdd } from "react-icons/tb";
     
     const MechanicLayout = () => {
       const [open, setOpen] = useState(false);
@@ -40,9 +37,6 @@
             <nav className="mt-10 space-y-4 px-4">
               <NavLink to="" end className="block text-gray-700 dark:text-white hover:text-cyan-600">
                 {open ? "Dashboard" : <span className="text-xl"><FaHome /></span>}
-              </NavLink>
-              <NavLink to="service-history" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-                {open ? "Service History" : <span className="text-xl"><BsFillCalendar2DateFill /></span>}
               </NavLink>
               <NavLink to="profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
                 {open ? "profilP" : <span className="text-xl"><MdOutlineMiscellaneousServices /></span>}

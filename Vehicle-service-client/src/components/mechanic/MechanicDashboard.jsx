@@ -28,7 +28,6 @@ const MechanicDashboard = () => {
     { title: "Upcoming Services", value: 2, color: "text-cyan-400 border-cyan-400", status: "upcoming" },
     { title: "Completed Services", value: 2, color: "text-green-400 border-green-400", status: "completed" },
     { title: "Cancelled Services", value: 1, color: "text-red-400 border-red-400", status: "cancelled" },
-    { title: "Weekly Earnings", value: 686, color: "text-pink-400 border-pink-400", status: "earnings" },
   ];
 
   const filteredOrders = selectedStatus
@@ -41,7 +40,7 @@ const MechanicDashboard = () => {
 
       {/* Main Content */}
       <div className={`flex-1 ml-${sidebarOpen ? "64" : "20"} transition-all duration-300 p-8`}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {cards.map(({ title, value, color, status }) => (
             <div
               key={title}

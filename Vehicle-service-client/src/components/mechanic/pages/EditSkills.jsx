@@ -1,26 +1,62 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { updateSkills } from "../../../store/mechanicSlice";
 import { useNavigate } from "react-router-dom";
+import MechanicSkill from "../../services/MechanicSkill";
+import { toast } from "react-hot-toast";
 
 const EditSkills = () => {
-  // Use the nullish coalescing operator (??) to provide an empty array as a fallback
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
   const skills = useSelector((state) => state.mechanic.skills ?? []);
-  
+
   const [skillInput, setSkillInput] = useState("");
   const [skillList, setSkillList] = useState(skills);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // New useEffect hook to fetch skills from the database on component mount
+  useEffect(() => {
+    if (user && user.id) {
+      MechanicSkill.getAllSkills()
+        .then((response) => {
+          // Assuming your API returns an array of objects like {skill_id: 5, skill_name: 'farmhouse'}
+          // We need to map this to an array of just skill names for the list
+          const fetchedSkills = response.data.map(skill => skill.skill_name);
+          setSkillList(fetchedSkills);
+        })
+        .catch((error) => {
+          console.error("Error fetching mechanic skills:", error);
+        });
+    }
+  }, [user]);
 
   const addSkill = () => {
     if (skillInput.trim()) {
       setSkillList([...skillList, skillInput.trim()]);
       setSkillInput("");
     }
+    const skills = {
+      skill_id: user.id,
+      skill_name: skillInput.trim()
+    };
+    MechanicSkill.addSkill(skills).then((res) => {
+      toast.success("Skill added successfully");
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    });
   };
 
   const removeSkill = (index) => {
+    // Get the skill name to be deleted before filtering the list
+    const skillToDelete = skillList[index];
     setSkillList(skillList.filter((_, i) => i !== index));
+    MechanicSkill.deleteSkillByName(skillToDelete).then((res) => {
+      toast.success("Skill removed successfully");
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    });
   };
 
   const handleSubmit = (e) => {

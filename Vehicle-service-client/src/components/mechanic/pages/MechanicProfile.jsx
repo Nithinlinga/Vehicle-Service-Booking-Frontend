@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import MechanicServices from "../../services/MechanicServices";
+import MechanicSkill from "../../services/MechanicSkill";
 import { Star, StarHalf } from "lucide-react";
 
 const MechanicProfile = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const { skills } = useSelector((state) => state.mechanic);
+  // const { skills } = useSelector((state) => state.mechanic);
 
   const [mechanicData, setMechanicData] = useState({
     name: "",
@@ -17,22 +18,32 @@ const MechanicProfile = () => {
     availability: "",
     rating: null,
   });
+  const [skills , setSkills] = useState([]);
 
   useEffect(() => {
-    if (user && user.id) {
-      MechanicServices.getMechanicsById(user.id)
-        .then((response) => {
-          const { name, phone, address, expertise, availability, rating } = response.data;
-          setMechanicData({ name, phone, address, expertise, availability, rating });
-        })
-        .catch((error) => {
-          console.error("Error fetching mechanic data:", error);
-        });
-    }
-  }, [user]);
+  if (user && user.id) {
+    MechanicServices.getMechanicsById(user.id)
+      .then((response) => {
+        const { name, phone, address, expertise, availability, rating } = response.data;
+        setMechanicData({ name, phone, address, expertise, availability, rating });
+      })
+      .catch((error) => {
+        console.error("Error fetching mechanic data:", error);
+      });
+    MechanicSkill.getAllSkills()
+      .then((response) => {
+        setSkills(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching mechanic skills:", error);
+      });
+  }
+}, [user]);
 
   // Destructure the data from the state for use in JSX
   const { name, phone, address, expertise, availability, rating } = mechanicData;
+  console.log(skills);
+  
 
   // Helper function to render stars based on a numeric rating
   const renderStars = (rating) => {
@@ -134,34 +145,22 @@ const MechanicProfile = () => {
           </div>
 
           {/* Skills */}
-          <div className="p-6 rounded-xl border border-purple-300 bg-white dark:bg-slate-800 shadow hover:shadow-lg transition">
-            <h2 className="text-xl font-semibold text-purple-600 dark:text-purple-400 mb-4">
-              Skills
-            </h2>
-            {skills && skills.length > 0 ? (
-              <ul className="list-disc list-inside space-y-2 text-slate-700 dark:text-slate-300">
-                {skills.map((skill, index) => (
-                  <li key={index}>{skill}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500 dark:text-slate-400">
-                No skills added yet.
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Work Summary */}
-        <div className="p-6 rounded-xl border border-indigo-300 bg-white dark:bg-slate-800 shadow hover:shadow-lg transition mb-10">
-          <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">
-            Work Summary
-          </h2>
-          <p className="text-slate-700 dark:text-slate-300">
-            Experienced automobile mechanic specialized in both two-wheelers and
-            four-wheelers. Known for quick diagnostics and reliable service with
-            strong customer satisfaction.
-          </p>
+            <div className="p-6 rounded-xl border border-purple-300 bg-white dark:bg-slate-800 shadow hover:shadow-lg transition">
+              <h2 className="text-xl font-semibold text-purple-600 dark:text-purple-400 mb-4">
+                Skills
+              </h2>
+              {skills && skills.length > 0 ? (
+                <ul className="list-disc list-inside space-y-2 text-slate-700 dark:text-slate-300">
+                  {skills.map((skill, index) => (
+                    <li key={index}>{skill.skill_name}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 dark:text-slate-400">
+                  No skills added yet.
+                </p>
+              )}
+            </div>
         </div>
 
         {/* Action Buttons */}
