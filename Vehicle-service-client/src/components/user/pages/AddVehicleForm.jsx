@@ -107,7 +107,6 @@ const AddVehicleForm = () => {
     fuel: '',
     vehicle_type:vehicleType
   });
-console.log(vehicleType,"cehicn")
   const handleTypeChange = (e) => {
     setVehicleType(e.target.value);
     setForm({ ...form, vehicle_type:e.target.value, make: '', model: '', year: '', registration_number: '' });
@@ -129,13 +128,12 @@ console.log(vehicleType,"cehicn")
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = (e) => {
+  e.preventDefault();
 
-    // Dispatch the form data to the Redux store
-    try {
-      const respo=await VehiclesServices.addVehicles(form)
-      
+  VehiclesServices.addVehicles(form)
+    .then(respo => {
+      // Success block
       dispatch(addVehicle({ vehicleType, ...form }));
       toast.success('Vehicle Added Successfully');
       setVehicleType('');
@@ -144,22 +142,19 @@ console.log(vehicleType,"cehicn")
         model: '',
         year: '',
         registration_number: '',
-        engine_cc: '',
+        engine: '',
         abs: '',
         doors: '',
         ac: '',
         transmission: '',
         fuel: '',
         vehicle_type:''
-        
       });
-    } catch (error) {
-      console.log(error)
-      toast.error(error)
-    }
-
-
-    // Reset the form after submission
+    })
+    .catch(error => {
+      console.log(error);
+      toast.error(error);
+    });
   };
 
   const modelsForSelectedBrand = vehicleType === 'car' ? carModels[form.make] : bikeModels[form.make];
@@ -276,12 +271,12 @@ console.log(vehicleType,"cehicn")
           ) : (
             <>
               <div className="mb-4">
-                <label htmlFor="engine_cc" className="block mb-1 font-semibold">Engine</label>
+                <label htmlFor="engine" className="block mb-1 font-semibold">Engine</label>
                 <input
                   type="text"
-                  id="engine_cc"
-                  name="engine_cc"
-                  value={form.engine_cc}
+                  id="engine"
+                  name="engine"
+                  value={form.engine}
                   onChange={handleChange}
                   required
                   placeholder="e.g., 100cc"

@@ -10,6 +10,7 @@ export default function ManageAppointments() {
   const fetchBookings = async () => {
     try {
       const response = await BookingServices.getAllBookings();
+      // console.log(response.data); 
       setBookings(response.data);
     } catch (error) {
       console.error("Error fetching bookings:", error);

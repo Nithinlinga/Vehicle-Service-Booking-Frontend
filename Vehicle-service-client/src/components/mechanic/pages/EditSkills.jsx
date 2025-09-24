@@ -7,61 +7,77 @@ import { toast } from "react-hot-toast";
 
 const EditSkills = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const skills = useSelector((state) => state.mechanic.skills ?? []);
+  // Initial state is taken from Redux, but it will be updated by the useEffect
+  const skills = useSelector((state) => state.mechanic.skills ?? []); 
 
   const [skillInput, setSkillInput] = useState("");
-  const [skillList, setSkillList] = useState(skills);
+  // Local state for the list of skills
+  const [skillList, setSkillList] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // New useEffect hook to fetch skills from the database on component mount
   useEffect(() => {
     if (user && user.id) {
       MechanicSkill.getAllSkills()
         .then((response) => {
-          // Assuming your API returns an array of objects like {skill_id: 5, skill_name: 'farmhouse'}
-          // We need to map this to an array of just skill names for the list
           const fetchedSkills = response.data.map(skill => skill.skill_name);
+          // 1. Update local state
           setSkillList(fetchedSkills);
+          // 2. Also update Redux store
+          dispatch(updateSkills(fetchedSkills));
         })
         .catch((error) => {
           console.error("Error fetching mechanic skills:", error);
         });
     }
-  }, [user]);
+  }, [user, dispatch]);
 
   const addSkill = () => {
     if (skillInput.trim()) {
-      setSkillList([...skillList, skillInput.trim()]);
-      setSkillInput("");
+      const newSkillData = {
+        skill_id: user.id, // Ensure your API handles this correctly
+        skill_name: skillInput.trim()
+      };
+      // ⚠️ Add to database first
+      MechanicSkill.addSkill(newSkillData)
+        .then((res) => {
+          // ✅ If successful, then update the local state and Redux store
+          const updatedList = [...skillList, skillInput.trim()];
+          setSkillList(updatedList);
+          dispatch(updateSkills(updatedList));
+          setSkillInput(""); // Clear input on success
+          toast.success("Skill added successfully");
+          console.log(res);
+        })
+        .catch((err) => {
+          console.error("Error adding skill:", err);
+          toast.error("Failed to add skill.");
+        });
     }
-    const skills = {
-      skill_id: user.id,
-      skill_name: skillInput.trim()
-    };
-    MechanicSkill.addSkill(skills).then((res) => {
-      toast.success("Skill added successfully");
-      console.log(res);
-    }).catch((err) => {
-      console.log(err);
-    });
   };
 
   const removeSkill = (index) => {
-    // Get the skill name to be deleted before filtering the list
     const skillToDelete = skillList[index];
-    setSkillList(skillList.filter((_, i) => i !== index));
-    MechanicSkill.deleteSkillByName(skillToDelete).then((res) => {
-      toast.success("Skill removed successfully");
-      console.log(res);
-    }).catch((err) => {
-      console.log(err);
-    });
+    // ⚠️ Delete from database first
+    MechanicSkill.deleteSkillByName(skillToDelete)
+      .then((res) => {
+        // ✅ If successful, then update the local state and Redux store
+        const updatedList = skillList.filter((_, i) => i !== index);
+        setSkillList(updatedList);
+        dispatch(updateSkills(updatedList));
+        toast.success("Skill removed successfully");
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error("Error removing skill:", err);
+        toast.error("Failed to remove skill.");
+      });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateSkills(skillList));
+    // The Redux state is already updated in addSkill/removeSkill,
+    // so just navigate
     navigate("/mechanic/profile");
   };
 
@@ -104,6 +120,7 @@ const EditSkills = () => {
                   >
                     <span className="text-purple-800 dark:text-purple-300 font-medium">{skill}</span>
                     <button
+                      type="button"
                       onClick={() => removeSkill(index)}
                       className="text-red-400 hover:text-red-700 dark:hover:text-red-500 dark:font-bold"
                     >

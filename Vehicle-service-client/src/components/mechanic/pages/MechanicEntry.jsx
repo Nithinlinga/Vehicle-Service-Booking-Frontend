@@ -1,14 +1,17 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import InitialForm from './InitialForm'; // adjust path if needed
+import InitialForm from './InitialForm';
+import MechanicServices from '../../services/MechanicServices';
+import { useSelector } from 'react-redux';
 
 const MechanicEntry = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const profileCompleted = localStorage.getItem('profileCompleted');
-    if (profileCompleted === 'true') {
-      navigate('/mechanic/dashboard', { replace: true });
+    const mecId = user?.id; 
+    if (mecId !== undefined && isAuthenticated) {
+      navigate('/mechanic/dashboard');
     }
   }, [navigate]);
 
