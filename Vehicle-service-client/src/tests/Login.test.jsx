@@ -2,7 +2,7 @@ import React from "react";
 import { it, expect, describe } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import "@testing-library/jest-dom/vitest"
-import Login from '../components/user/Login'
+import Login from '../components/user/pages/Login'
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "../store/store";
