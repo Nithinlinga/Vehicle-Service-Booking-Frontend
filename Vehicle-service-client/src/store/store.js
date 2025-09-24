@@ -1,3 +1,4 @@
+// src/store/store.js
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
 import appointmentsReducer from './appointmentSlice';
@@ -5,7 +6,6 @@ import VehicleReducer from './vehicleSlice';
 import mechanicReducer from './mechanicSlice';
 import userReducer from './userSlice';
 import adminReducer from './adminSlice';
-
 
 const mechanicloadState = () => {
   try {
@@ -37,8 +37,8 @@ const store = configureStore({
     auth: authReducer,
     appointments: appointmentsReducer,
     vehicles: VehicleReducer,
-    mechanic : mechanicReducer,
-    user : userReducer,
+    mechanic: mechanicReducer,
+    user: userReducer,
     admin: adminReducer,
   },
   preloadedState: {
@@ -50,9 +50,9 @@ const store = configureStore({
 
 store.subscribe(() => {
   const state = store.getState();
-  const mechanicSerializedState = JSON.stringify(store.getState().mechanic);
-  const userSerializedState = JSON.stringify(store.getState().user);
-  const adminSerializedState = JSON.stringify(store.getState().admin);
+  const mechanicSerializedState = JSON.stringify(state.mechanic);
+  const userSerializedState = JSON.stringify(state.user);
+  const adminSerializedState = JSON.stringify(state.admin);
 
   localStorage.setItem("appointments", JSON.stringify(state.appointments));
   localStorage.setItem("vehicles", JSON.stringify(state.vehicles));

@@ -1,14 +1,92 @@
-import { User, Wrench, IndianRupee } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import MechanicServices from "../../services/MechanicServices";
+import { Star, StarHalf } from "lucide-react";
 
 const MechanicProfile = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const { phone, address, skills } = useSelector((state) => state.mechanic);
+  const { skills } = useSelector((state) => state.mechanic);
+
+  const [mechanicData, setMechanicData] = useState({
+    name: "",
+    phone: "",
+    address: "",
+    expertise: "",
+    availability: "",
+    rating: null,
+  });
+
+  useEffect(() => {
+    if (user && user.id) {
+      MechanicServices.getMechanicsById(user.id)
+        .then((response) => {
+          const { name, phone, address, expertise, availability, rating } = response.data;
+          setMechanicData({ name, phone, address, expertise, availability, rating });
+        })
+        .catch((error) => {
+          console.error("Error fetching mechanic data:", error);
+        });
+    }
+  }, [user]);
+
+  // Destructure the data from the state for use in JSX
+  const { name, phone, address, expertise, availability, rating } = mechanicData;
+
+  // Helper function to render stars based on a numeric rating
+  const renderStars = (rating) => {
+      let numericRating = 0;
+
+      // Convert string ratings to numbers
+      if (typeof rating === 'string') {
+        switch (rating.toLowerCase()) {
+          case 'excellent':
+            numericRating = 5;
+            break;
+          case 'good':
+            numericRating = 4;
+            break;
+          case 'average':
+            numericRating = 3;
+            break;
+          case 'poor':
+            numericRating = 2;
+            break;
+          case 'very poor':
+            numericRating = 1;
+            break;
+          default:
+            numericRating = 0;
+        }
+      } else if (typeof rating === 'number') {
+        numericRating = rating;
+      } else {
+        return <span>N/A</span>;
+      }
+
+      const stars = [];
+      const fullStars = Math.floor(numericRating);
+      const hasHalfStar = numericRating % 1 !== 0;
+
+      for (let i = 0; i < fullStars; i++) {
+        stars.push(<Star key={`full-${i}`} className="h-4 w-4 text-yellow-400" fill="currentColor" />);
+      }
+
+      if (hasHalfStar) {
+        stars.push(<StarHalf key="half" className="h-4 w-4 text-yellow-400" fill="currentColor" />);
+      }
+
+      const remainingStars = 5 - stars.length;
+      for (let i = 0; i < remainingStars; i++) {
+        stars.push(<Star key={`empty-${i}`} className="h-4 w-4 text-gray-300" />);
+      }
+
+      return stars;
+    };
+
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-500">
-      {/* Main Content */}
       <main className="flex-1 p-10">
         {/* Profile Header */}
         <div className="flex items-center gap-6 mb-10">
@@ -19,10 +97,13 @@ const MechanicProfile = () => {
           />
           <div>
             <h1 className="text-4xl font-bold text-slate-800 dark:text-white">
-              {isAuthenticated ? user.username : "FarmHouse"}
+              {name || "Loading..."}
             </h1>
-            <p className="text-slate-500 dark:text-slate-400">
-              Senior Mechanic • 5+ Years Experience
+            <p className="text-slate-500 dark:text-slate-400 flex items-center gap-2">
+              Senior Mechanic • {expertise || "N/A"}
+              <span className="flex items-center gap-1">
+                {renderStars(rating)}
+              </span>
             </p>
           </div>
         </div>
@@ -35,14 +116,20 @@ const MechanicProfile = () => {
               Contact Information
             </h2>
             <p className="text-slate-700 dark:text-slate-300">
-              <span className="font-semibold">📞 Phone:</span> {phone}
+              <span className="font-semibold">📞 Phone:</span> {phone || "N/A"}
             </p>
             <p className="text-slate-700 dark:text-slate-300">
               <span className="font-semibold">✉️ Email:</span>{" "}
-              {isAuthenticated ? user.email : "somthing@gmail.com"}
+              {isAuthenticated ? user.email : "something@gmail.com"}
             </p>
             <p className="text-slate-700 dark:text-slate-300">
-              <span className="font-semibold">📍 Address:</span> {address}
+              <span className="font-semibold">📍 Address:</span> {address || "N/A"}
+            </p>
+            <p className="text-slate-700 dark:text-slate-300">
+              <span className="font-semibold">📅 Availability:</span> {availability || "N/A"}
+            </p>
+            <p className="text-slate-700 dark:text-slate-300">
+              <span className="font-semibold">⭐ Rating:</span> {rating || "N/A"}
             </p>
           </div>
 
@@ -51,14 +138,13 @@ const MechanicProfile = () => {
             <h2 className="text-xl font-semibold text-purple-600 dark:text-purple-400 mb-4">
               Skills
             </h2>
-            {skills && ( // <-- Check if skills is truthy (not null or undefined)
+            {skills && skills.length > 0 ? (
               <ul className="list-disc list-inside space-y-2 text-slate-700 dark:text-slate-300">
                 {skills.map((skill, index) => (
                   <li key={index}>{skill}</li>
                 ))}
               </ul>
-            )}
-            {!skills && ( // <-- Optional: Render a fallback if skills is not available
+            ) : (
               <p className="text-gray-500 dark:text-slate-400">
                 No skills added yet.
               </p>
