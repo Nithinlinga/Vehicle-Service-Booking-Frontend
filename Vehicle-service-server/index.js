@@ -527,13 +527,32 @@ app.get('/booking/:id', (req, res) => {
 });
 
 // GET: Bookings by User ID
+// app.get('/booking/user/:userId', (req, res) => {
+//   db.query('SELECT * FROM booking WHERE userId = ?', [req.params.userId], (err, result) => {
+//     if (err) return res.status(500).send(err);
+//     res.json(result);
+//   });
+// });
 app.get('/booking/user/:userId', (req, res) => {
-  db.query('SELECT * FROM booking WHERE userId = ?', [req.params.userId], (err, result) => {
+  const userId = req.params.userId;
+
+  const query = `
+    SELECT 
+      b.*, 
+      v.*, 
+      s.*
+    FROM booking b
+    INNER JOIN vehicles v ON b.vehicleId = v.vehicleId
+    INNER JOIN servicecenter s ON b.serviceCenterId = s.servicecenterId
+    WHERE b.userId = ?
+  `;
+
+  db.query(query, [userId], (err, result) => {
     if (err) return res.status(500).send(err);
+    if (result.length === 0) return res.status(404).send('Booking not found');
     res.json(result);
   });
 });
-
 // GET: Bookings by Vehicle ID
 app.get('/booking/vehicle/:vehicleId', (req, res) => {
   db.query('SELECT * FROM booking WHERE vehicleId = ?', [req.params.vehicleId], (err, result) => {
