@@ -13,7 +13,7 @@ app.use(express.json());
 const db = mysql.createConnection({ 
   host: 'localhost', 
   user: 'root',  
-  password: '123456', 
+  password: '19263543', 
   database: 'sb'
 });
 
@@ -42,6 +42,7 @@ app.post('/register', (req, res) => {
     }
   );
 });
+
 app.put('/register/:id', (req, res) => {
   const { username,password,role} = req.body;
   db.query('UPDATE auth SET username = ?, password = ? , role = ?  WHERE id = ?', [username,password,role, req.params.id], err => {
@@ -379,13 +380,12 @@ app.delete('/vehicles/:vehicleId', (req, res) => {
 
 // Create a new mechanic
 app.post('/mechanics', (req, res) => {
-  const { mechanicId, servicecenterId, name, expertise, availability, rating } = req.body;
-
+  const { mechanicId, serviceCenterId, name, expertise , availability , rating , phone , address } = req.body;
   db.query(
-    'INSERT INTO mechanic (mechanicId, servicecenterId, name, expertise, availability, rating) VALUES (?, ?, ?, ?, ?, ?)',
-    [mechanicId, servicecenterId, name, expertise, availability, rating],
+    'INSERT INTO mechanic (mechanicId, serviceCenterId, name, expertise , availability , rating , phone , address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [mechanicId, serviceCenterId, name, expertise, availability, rating, phone, address],
     (err, result) => {
-      if (err) return res.status(500).send({ message: 'Error inserting mechanic' });
+      if (err) return res.status(500).send({ message: 'Error inserting mechanic' ,"err" : err });
       res.status(201).json({ id: result.insertId, ...req.body });
     }
   );

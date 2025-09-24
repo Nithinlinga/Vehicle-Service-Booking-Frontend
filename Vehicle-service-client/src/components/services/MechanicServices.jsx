@@ -5,7 +5,11 @@ const api = "http://localhost:3001/mechanics";
 
 class MechanicServices{
     addMechanics(credentials){
-        return axios.post(`${api}` , credentials);
+        return axios.post(`${api}` , credentials , {
+            "headers" : {
+                "Content-Type" : "application/json"
+            }
+        });
     }
     getMechanics(){
         return axios.get(`${api}`);

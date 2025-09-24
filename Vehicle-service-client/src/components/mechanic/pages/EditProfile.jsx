@@ -4,8 +4,9 @@ import { updateProfile } from "../../../store/mechanicSlice";
 import { useNavigate } from "react-router-dom";
 
 const EditProfile = () => {
-  const { name, phone, email, address } = useSelector((state) => state.mechanic);
-  const [formData, setFormData] = useState({ name, phone, email, address });
+  const {isAuthenticated , user} = useSelector((state) => state.auth);
+  const {phone, address} = useSelector((state) => state.mechanic);
+  const [formData, setFormData] = useState({ name: isAuthenticated ? user.username : "something", phone, email: isAuthenticated ? user.email : "something@gmail.com", address });
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

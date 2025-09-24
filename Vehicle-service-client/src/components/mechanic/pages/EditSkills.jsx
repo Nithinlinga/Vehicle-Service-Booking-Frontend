@@ -4,7 +4,9 @@ import { updateSkills } from "../../../store/mechanicSlice";
 import { useNavigate } from "react-router-dom";
 
 const EditSkills = () => {
-  const skills = useSelector((state) => state.mechanic.skills);
+  // Use the nullish coalescing operator (??) to provide an empty array as a fallback
+  const skills = useSelector((state) => state.mechanic.skills ?? []);
+  
   const [skillInput, setSkillInput] = useState("");
   const [skillList, setSkillList] = useState(skills);
   const dispatch = useDispatch();
