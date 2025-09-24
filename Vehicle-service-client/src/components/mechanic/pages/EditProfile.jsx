@@ -1,18 +1,29 @@
+// src/components/EditProfile.jsx
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { updateProfile } from "../../../store/mechanicSlice";
+import { updateProfile, updateSkills } from "../../../store/mechanicSlice";
 import { useNavigate } from "react-router-dom";
 
 const EditProfile = () => {
-  const {isAuthenticated , user} = useSelector((state) => state.auth);
-  const {phone, address} = useSelector((state) => state.mechanic);
-  const [formData, setFormData] = useState({ name: isAuthenticated ? user.username : "something", phone, email: isAuthenticated ? user.email : "something@gmail.com", address });
+  const { name, phone, email, address} = useSelector((state) => state.mechanic);
+  const [formData, setFormData] = useState({
+    name: name,
+    phone: phone,
+    email: email,
+    address: address,
+  });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateProfile(formData));
+    dispatch(updateProfile({
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      address: formData.address,
+    }));
     navigate("/mechanic/profile");
   };
 
@@ -24,13 +35,16 @@ const EditProfile = () => {
           <input
             key={field}
             type="text"
-            placeholder={field}
+            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
             value={formData[field]}
             onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
             className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:text-white"
           />
         ))}
-        <button type="submit" className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700">
+        <button
+          type="submit"
+          className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
+        >
           Save Changes
         </button>
       </form>

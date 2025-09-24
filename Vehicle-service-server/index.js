@@ -413,7 +413,7 @@ app.get('/mechanics', (req, res) => {
 
 // GET: Mechanic by ID
 app.get('/mechanics/:id', (req, res) => {
-  db.query('SELECT * FROM mechanic WHERE id = ?', [req.params.id], (err, result) => {
+  db.query('SELECT * FROM mechanic WHERE mechanicId = ?', [req.params.id], (err, result) => {
     if (err) return res.status(500).send(err);
     if (result.length === 0) return res.status(404).send('Mechanic not found');
     res.json(result[0]);
@@ -422,7 +422,7 @@ app.get('/mechanics/:id', (req, res) => {
 
 // DELETE: Mechanic by ID
 app.delete('/mechanics/:id', (req, res) => {
-  db.query('DELETE FROM mechanic WHERE id = ?', [req.params.id], (err, result) => {
+  db.query('DELETE FROM mechanic WHERE mechanicId = ?', [req.params.id], (err, result) => {
     if (err) return res.status(500).send(err);
     if (result.affectedRows === 0) return res.status(404).send('Mechanic not found');
     res.sendStatus(200);
@@ -455,7 +455,7 @@ app.put('/mechanics/:id', (req, res) => {
 app.patch('/mechanics/:id', (req, res) => {
   const { availability } = req.body;
   db.query(
-    'UPDATE mechanic SET availability = ? WHERE id = ?',
+    'UPDATE mechanic SET availability = ? WHERE mechanicId = ?',
     [availability, req.params.id],
     (err, result) => {
       if (err) return res.status(500).send(err);
@@ -495,7 +495,7 @@ app.patch('/mechanics/status/:id', (req, res) => {
 app.patch('/mechanics/:id', (req, res) => {
   const { rating } = req.body;
   db.query(
-    'UPDATE mechanic SET rating = ? WHERE id = ?',
+    'UPDATE mechanic SET rating = ? WHERE mechanicId = ?',
     [rating, req.params.id],
     (err, result) => {
       if (err) return res.status(500).send(err);
