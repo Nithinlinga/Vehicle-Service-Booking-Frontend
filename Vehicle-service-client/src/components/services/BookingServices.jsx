@@ -34,6 +34,9 @@ class BookingServices {
   patchBookingById(bookingId, updatedData) {
     return axios.patch(`${api}/${bookingId}`, updatedData);
   }
+  patchBookingVerifyById(bookingId, verify) {
+    return axios.patch(`${api}/verify/${bookingId}`, verify);
+  }
 
   deleteBookingById(bookingId) {
     return axios.delete(`${api}/${bookingId}`);

@@ -13,7 +13,7 @@ app.use(express.json());
 const db = mysql.createConnection({ 
   host: 'localhost', 
   user: 'root',  
-  password: '19263543', 
+  password: '123456', 
   database: 'sb'
 });
 
@@ -528,7 +528,7 @@ app.get('/booking/:id', (req, res) => {
 
 // GET: Bookings by User ID
 app.get('/booking/user/:userId', (req, res) => {
-  db.query('SELECT * FROM booking WHERE _userId = ?', [req.params.userId], (err, result) => {
+  db.query('SELECT * FROM booking WHERE userId = ?', [req.params.userId], (err, result) => {
     if (err) return res.status(500).send(err);
     res.json(result);
   });
@@ -558,17 +558,17 @@ app.post('/booking', (req, res) => {
     [userId, vehicleId, serviceCenterId, date, timeslot, status],
     (err, result) => {
       if (err) return res.status(500).send(err);
-      res.status(201).send({ bookingId: result.insertId });
+      res.status(201).send({ bookingId: result.insertId, userId, vehicleId, serviceCenterId, date, timeslot, status });
     }
   );
 });
 
 // PUT: Update all fields by booking ID
 app.put('/booking/:id', (req, res) => {
-  const { _userId, vehicleId, serviceCenterId, date, timeslot, status } = req.body;
+  const { userId, vehicleId, serviceCenterId, date, timeslot, status } = req.body;
   db.query(
-    'UPDATE booking SET _userId = ?, vehicleId = ?, serviceCenterId = ?, date = ?, timeslot = ?, status = ? WHERE bookingId = ?',
-    [_userId, vehicleId, serviceCenterId, date, timeslot, status, req.params.id],
+    'UPDATE booking SET userId = ?, vehicleId = ?, serviceCenterId = ?, date = ?, timeslot = ?, status = ? WHERE bookingId = ?',
+    [userId, vehicleId, serviceCenterId, date, timeslot, status, req.params.id],
     (err, result) => {
       if (err) return res.status(500).send(err);
       if (result.affectedRows === 0) return res.status(404).send('Booking not found');
@@ -583,6 +583,18 @@ app.patch('/booking/:id/status', (req, res) => {
   db.query(
     'UPDATE booking SET status = ? WHERE bookingId = ?',
     [status, req.params.id],
+    (err, result) => {
+      if (err) return res.status(500).send(err);
+      if (result.affectedRows === 0) return res.status(404).send('Booking not found');
+      res.sendStatus(200);
+    }
+  );
+});
+app.patch('/booking/verify/:id', (req, res) => {
+  const { verify } = req.body;
+  db.query(
+    'UPDATE booking SET isVerified = ? WHERE bookingId = ?',
+    [verify, req.params.id],
     (err, result) => {
       if (err) return res.status(500).send(err);
       if (result.affectedRows === 0) return res.status(404).send('Booking not found');
