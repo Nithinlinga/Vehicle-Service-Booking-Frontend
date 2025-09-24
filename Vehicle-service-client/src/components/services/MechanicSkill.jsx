@@ -3,8 +3,8 @@ import axios from "axios";
 const api = "http://localhost:3001/skill";
 
 class BookingServices {
-    getAllSkills() {
-        return axios.get(`${api}`);
+    getAllSkills(id) {
+        return axios.get(`${api}/${id}`);
     }
     addSkill(skill) {
         return axios.post(`${api}`, skill);

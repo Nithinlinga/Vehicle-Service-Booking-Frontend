@@ -30,7 +30,7 @@ const MechanicProfile = () => {
       .catch((error) => {
         console.error("Error fetching mechanic data:", error);
       });
-    MechanicSkill.getAllSkills()
+    MechanicSkill.getAllSkills(user.id)
       .then((response) => {
         setSkills(response.data);
       })

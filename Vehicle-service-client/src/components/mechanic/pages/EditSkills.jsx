@@ -18,7 +18,7 @@ const EditSkills = () => {
 
   useEffect(() => {
     if (user && user.id) {
-      MechanicSkill.getAllSkills()
+      MechanicSkill.getAllSkills(user.id)
         .then((response) => {
           const fetchedSkills = response.data.map(skill => skill.skill_name);
           // 1. Update local state

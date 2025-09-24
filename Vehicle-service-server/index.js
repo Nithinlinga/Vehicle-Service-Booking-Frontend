@@ -13,7 +13,7 @@ app.use(express.json());
 const db = mysql.createConnection({ 
   host: 'localhost', 
   user: 'root',  
-  password: '123456', 
+  password: '19263543', 
   database: 'sb'
 });
 
@@ -61,7 +61,6 @@ app.delete('/register/:id', (req, res) => {
   });
 });
 
- 
 //Login page
 app.post('/login', (req, res) => {
   const { email, password ,role} = req.body;
@@ -79,9 +78,30 @@ app.post('/login', (req, res) => {
     }
   );
 });
- 
- 
- 
+
+//skills of mechanic
+app.get('/skill/:id', (req, res) => {
+  db.query('SELECT * FROM skill where skill_id = ?', [req.params.id], (err, result) => {
+    if (err) return res.status(500).send(err);
+    res.json(result);
+  });
+});
+// Add a new skill
+app.post('/skill', (req, res) => {
+  const { skill_id, skill_name } = req.body;
+  db.query('INSERT INTO skill (skill_id, skill_name) VALUES (?, ?)', [skill_id, skill_name], (err, result) => {
+    if (err) return res.status(500).send(err);
+    res.json({ id: result.insertId, skill_id, skill_name });
+  });
+});
+// Delete a skill by name
+app.delete('/skill/:name', (req, res) => {
+  db.query('DELETE FROM skill WHERE skill_name = ?', [req.params.name], (err, result) => {
+    if (err) return res.status(500).send(err);
+    if (result.affectedRows === 0) return res.status(404).send('Skill not found');
+    res.sendStatus(200);
+  });
+});
 //Service Center Page of Admin dashboard
 
 // Get all service centers
