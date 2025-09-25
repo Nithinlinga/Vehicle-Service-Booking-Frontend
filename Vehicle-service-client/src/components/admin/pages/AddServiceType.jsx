@@ -14,6 +14,8 @@ const AddServiceType = () => {
   const [serviceTypes, setServiceTypes] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errors, setErrors] = useState({});
+
 
   useEffect(() => {
     const fetchServiceCentre = async () => {
@@ -36,20 +38,70 @@ const AddServiceType = () => {
     setSelectedService({ ...service });
     setIsModalOpen(true);
   };
+  const validateService = (values) => {
+    const errors = {};
 
-  // Function to handle opening the modal for adding a new service
+    const descriptionRegex = /^[A-Za-z\s]{3,100}$/; // only alphabets + spaces, 3–100 chars
+    const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;   // positive number, up to 2 decimals
+
+    // Description validation
+    if (!values.description) {
+      errors.description = "Description is required";
+    } else if (!descriptionRegex.test(values.description)) {
+      errors.description = "Description must be 3-100 alphabets only";
+    }
+
+    // Price validation
+    if (!values.price) {
+      errors.price = "Price is required";
+    } else if (!priceRegex.test(values.price)) {
+      errors.price = "Price must be a valid positive number (up to 2 decimals)";
+    } else if (parseFloat(values.price) <= 0) {
+      errors.price = "Price must be greater than 0";
+    }
+
+    // Status validation
+    if (!values.status) {
+      errors.status = "Status is required";
+    } else if (!["active", "inactive"].includes(values.status)) {
+      errors.status = "Invalid status";
+    }
+
+    return errors;
+  };
+
+  // ✅ Save handler
+  const handleModalSave = () => {
+    const validationErrors = validateService(selectedService);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors); // show errors in UI
+      return;
+    }
+    else{
+      handleSave();
+    }
+    // If no errors, clear them and proceed
+    setErrors({});
+    console.log("Saving service:", selectedService);
+    // ... your save logic here (API call, state update, etc.)
+    setIsModalOpen(false);
+  };
+
+
+  
+  // ✅ Open modal for adding a new service
   const handleAddComponentClick = () => {
     setSelectedService({
-      description: '',
-      price: '',
-      status: 'active',
-      serviceCenterId: id
+      description: "",
+      price: "",
+      status: "active",
+      serviceCenterId: id,
     });
     setIsModalOpen(true);
   };
-
   const handleModalClose = () => {
     setIsModalOpen(false);
+    setErrors({});
     setSelectedService(null);
   };
 
@@ -131,44 +183,94 @@ const AddServiceType = () => {
         </div>
       </div>
 
+      <div>
+      {/* Button to open modal */}
+      {/* <button
+        onClick={handleAddComponentClick}
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Add Service Type
+      </button> */}
+
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
             <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-              {selectedService?.serviceTypeId ? "Edit Service Type" : "Add Service Type"}
+              {selectedService?.serviceTypeId
+                ? "Edit Service Type"
+                : "Add Service Type"}
             </h3>
+
             <div className="space-y-3">
-              <input
-                type="text"
-                // Use optional chaining to safely access properties
-                value={selectedService?.description || ''}
-                onChange={(e) =>
-                  setSelectedService({ ...selectedService, description: e.target.value })
-                }
-                placeholder="Description"
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
-              />
-              <input
-                type="number"
-                value={selectedService?.price || ''}
-                onChange={(e) =>
-                  setSelectedService({ ...selectedService, price: e.target.value })
-                }
-                placeholder="Price"
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
-              />
-              <select
-                value={selectedService?.status || 'active'}
-                onChange={(e) =>
-                  setSelectedService({ ...selectedService, status: e.target.value })
-                }
-                className="w-full p-2 border rounded dark:bg-gray-900 dark:text-white"
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
+              {/* Description */}
+              <div>
+                <input
+                  type="text"
+                  value={selectedService?.description || ""}
+                  onChange={(e) =>
+                    setSelectedService({
+                      ...selectedService,
+                      description: e.target.value,
+                    })
+                  }
+                  placeholder="Description"
+                  className={`w-full p-2 border rounded dark:bg-gray-700 dark:text-white ${
+                    errors.description ? "border-red-500" : ""
+                  }`}
+                />
+                {errors.description && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.description}
+                  </p>
+                )}
+              </div>
+
+              {/* Price */}
+              <div>
+                <input
+                  type="number"
+                  value={selectedService?.price || ""}
+                  onChange={(e) =>
+                    setSelectedService({
+                      ...selectedService,
+                      price: e.target.value,
+                    })
+                  }
+                  placeholder="Price"
+                  className={`w-full p-2 border rounded dark:bg-gray-700 dark:text-white ${
+                    errors.price ? "border-red-500" : ""
+                  }`}
+                />
+                {errors.price && (
+                  <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+                )}
+              </div>
+
+              {/* Status */}
+              <div>
+                <select
+                  value={selectedService?.status || "active"}
+                  onChange={(e) =>
+                    setSelectedService({
+                      ...selectedService,
+                      status: e.target.value,
+                    })
+                  }
+                  className={`w-full p-2 border rounded dark:bg-gray-900 dark:text-white ${
+                    errors.status ? "border-red-500" : ""
+                  }`}
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+                {errors.status && (
+                  <p className="text-red-500 text-sm mt-1">{errors.status}</p>
+                )}
+              </div>
             </div>
+
+            {/* Buttons */}
             <div className="flex justify-end mt-6 space-x-2">
               <button
                 onClick={handleModalClose}
@@ -177,7 +279,7 @@ const AddServiceType = () => {
                 Cancel
               </button>
               <button
-                onClick={handleSave}
+                onClick={handleModalSave}
                 className="px-4 py-2 cursor-pointer bg-green-600 text-white rounded hover:bg-green-700"
               >
                 Save
@@ -186,6 +288,7 @@ const AddServiceType = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };

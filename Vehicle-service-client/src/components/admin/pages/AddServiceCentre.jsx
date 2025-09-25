@@ -16,7 +16,6 @@ const ServiceCentreForm = () => {
     feedback: "Great service!"
   });
 
-  // Fetch data for edit mode
   useEffect(() => {
     const fetchServiceCentre = async () => {
       try {
@@ -39,29 +38,34 @@ const ServiceCentreForm = () => {
     fetchServiceCentre();
   }, [id, isEditMode]);
 
-  // Validation
-  const validate = (values) => {
-    const errors = {};
-    const nameRegex = /^[A-Za-z0-9\s]{3,50}$/;
-    const locationRegex = /^.{5,100}$/;
-    const contactRegex = /^[0-9+\- ]{7,15}$/;
+const validate = (values) => {
+  const errors = {};
 
-    if (!values.name) errors.name = "Service centre name is required";
-    else if (!nameRegex.test(values.name))
-      errors.name = "Name must be 3-50 characters (letters/numbers/spaces)";
+  const nameRegex = /^[A-Za-z\s]{3,50}$/;      
+  const locationRegex = /^[A-Za-z0-9\s,.-/]{5,100}$/; 
+  const contactRegex = /^[0-9]{10}$/;              
 
-    if (!values.location) errors.location = "Location is required";
-    else if (!locationRegex.test(values.location))
-      errors.location = "Location must be 5-100 characters";
+  if (!values.name) {
+    errors.name = "Service centre name is required";
+  } else if (!nameRegex.test(values.name)) {
+    errors.name = "Service centre name must be 3-50 alphabets only";
+  }
 
-    if (!values.contact) errors.contact = "Contact is required";
-    else if (!contactRegex.test(values.contact))
-      errors.contact = "Invalid contact number";
+  if (!values.location) {
+    errors.location = "Location is required";
+  } else if (!locationRegex.test(values.location)) {
+    errors.location = "Location must be 5-100 characters (letters, numbers, spaces, , . - / allowed)";
+  }
 
-    return errors;
-  };
+  if (!values.contact) {
+    errors.contact = "Contact is required";
+  } else if (!contactRegex.test(values.contact)) {
+    errors.contact = "Contact must be exactly 10 digits";
+  }
 
-  // Formik hook
+  return errors;
+};
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues,
@@ -92,7 +96,7 @@ const ServiceCentreForm = () => {
         </h2>
 
         <form onSubmit={formik.handleSubmit} className="space-y-4">
-          {/* Name */}
+
           <div>
             <label className="block font-medium mb-1">Service Centre Name</label>
             <input
@@ -109,7 +113,7 @@ const ServiceCentreForm = () => {
             )}
           </div>
 
-          {/* Location */}
+ 
           <div>
             <label className="block font-medium mb-1">Location</label>
             <input
@@ -126,7 +130,7 @@ const ServiceCentreForm = () => {
             )}
           </div>
 
-          {/* Contact */}
+      
           <div>
             <label className="block font-medium mb-1">Contact</label>
             <input
@@ -143,7 +147,6 @@ const ServiceCentreForm = () => {
             )}
           </div>
 
-          {/* Rating */}
           <div>
             <label className="block font-medium mb-1">Rating</label>
             <input
@@ -155,7 +158,6 @@ const ServiceCentreForm = () => {
             />
           </div>
 
-          {/* Feedback */}
           <div>
             <label className="block font-medium mb-1">Feedback</label>
             <textarea
@@ -165,8 +167,6 @@ const ServiceCentreForm = () => {
               className="w-full p-2 border rounded bg-gray-400 cursor-not-allowed"
             />
           </div>
-
-          {/* Submit */}
           <div className="text-right">
             <button
               type="submit"
