@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
 import ServiceTypeServices from "../../services/ServiceTypeServices";
 import BookingServices from "../../services/BookingServices";
+import VehiclesServices from "../../services/VehiclesServices";
 
 const Appointments = () => {
   const [searchParams] = useSearchParams();
@@ -13,10 +14,11 @@ const Appointments = () => {
   const service_type = searchParams.get("service_type");
   const vehicleId = searchParams.get("vehicleId");
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const allVehicles = useSelector((state) => state.vehicles);
+
+  // 👇 Initialize state for vehicles
+  const [allVehicles, setAllVehicles] = useState([]);
 
   const [allServiceCenters, setAllServiceCenters] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
@@ -34,8 +36,25 @@ const Appointments = () => {
     notes: "",
   });
 
+  // 👇 New useEffect to fetch vehicles
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const resp = await VehiclesServices.getVehiclesByUserId(user.id);
+        setAllVehicles(resp.data);
+      } catch (error) {
+        console.error("Error fetching vehicles:", error);
+        toast.error("Failed to load vehicles.");
+      }
+    };
+
+    if (user && user.id) {
+      fetchVehicles();
+    }
+  }, [user]); // Re-run when the user object changes
+
   const fetchServiceTypes = async (centerId) => {
-    if (!centerId) return; // Prevents API call with invalid ID
+    if (!centerId) return;
     try {
       const resp = await ServiceTypeServices.getAllServiceTypesByServiceCenter(
         centerId
@@ -45,7 +64,7 @@ const Appointments = () => {
         const selected =
           resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ||
           resp.data[0];
-        setForm((prev) => ({ ...prev, service: selected.name }));
+        setForm((prev) => ({ ...prev, service: selected.description })); // Changed from s.name to s.description
       }
     } catch (error) {
       console.error("Error fetching service types:", error);
@@ -73,10 +92,10 @@ const Appointments = () => {
       }
     };
     fetchInitialData();
-  }, [service_center, service_type]); // 👈 Depend on search params
+  }, [service_center, service_type]);
 
   useEffect(() => {
-    if (location.state?.vehicleId) {
+    if (location.state?.vehicleId && allVehicles.length > 0) {
       const foundVehicle = allVehicles.find(
         (av) => String(av.vehicleId) === String(location.state.vehicleId)
       );
@@ -84,6 +103,7 @@ const Appointments = () => {
         setForm((prev) => ({
           ...prev,
           vehicle: `${foundVehicle.make.toUpperCase()} ${foundVehicle.model}`,
+          vehicleId: foundVehicle.vehicleId, // Ensure vehicleId is also set
         }));
       }
     }
@@ -183,7 +203,7 @@ const Appointments = () => {
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
               >
                 <option value="">Select Vehicle</option>
-                {allVehicles.map((v) => (
+                {allVehicles?.map((v) => (
                   <option key={v.vehicleId} value={v.vehicleId}>
                     {v.make.toUpperCase()} {v.model}
                   </option>
@@ -231,7 +251,7 @@ const Appointments = () => {
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 onChange={handleServiceCenterChange}
               >
-                {allServiceCenters.map((s) => (
+                {allServiceCenters?.map((s) => (
                   <option key={s.servicecenterId} value={s.servicecenterId}>
                     {s.name}
                   </option>
@@ -248,7 +268,7 @@ const Appointments = () => {
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 onChange={(e) => setForm((prev) => ({ ...prev, service: e.target.value }))}
               >
-                {serviceTypes.map((s) => (
+                {serviceTypes?.map((s) => (
                   <option key={s.serviceTypeId} value={s.description}>
                     {s.description}
                   </option>
@@ -260,7 +280,7 @@ const Appointments = () => {
                     Price
                   </label>
                   <div className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                    ₹{serviceTypes.find((s) => s.name === form.service)?.price}
+                    ₹{serviceTypes.find((s) => s.description === form.service)?.price}
                   </div>
                 </div>
               )}

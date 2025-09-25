@@ -14,16 +14,13 @@ const UserProfile = () => {
     address: "",
     phone: ""
   });
-  
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Ensure the user is authenticated and has an ID from the auth store
     if (user && user.id) {
-      // Use the new service method to fetch user data by the auth ID
       UserServices.getUserById(user.id)
         .then((response) => {
-          // Assuming the response is an array and we need the first item
           const profile = response.data[0];
           if (profile) {
             const { first_name, last_name, address, phone } = profile;
@@ -44,55 +41,48 @@ const UserProfile = () => {
     }
   }, [user]);
 
-  // Destructure the data from the state for use in JSX
   const { first_name, last_name, address, phone } = userData;
 
   if (isLoading) {
-    return <div>Loading user profile...</div>;
+    return <div className="text-center mt-20 text-lg text-gray-600">Loading user profile...</div>;
   }
-  
+
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-500">
-      <main className="flex-1 p-10">
-        {/* Profile Header */}
-        <div className="flex items-center gap-6 mb-10">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-800 dark:to-slate-900 transition-colors duration-500">
+      <main className="max-w-4xl mx-auto py-12 px-6">
+        {/* Profile Card */}
+        <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 flex flex-col md:flex-row items-center gap-8">
           <img
-            src="https://tse2.mm.bing.net/th/id/OIP.qmESXk-tJOdCshigsLG6GAHaJQ"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4qdBAfjlSTjoaOGeV22tf8jgUjl_0KvJcTbOBMPWDNNX3r2MetzGgSapJFR0SpCDhCcM&usqp=CAU"
             alt="Profile"
-            className="rounded-full w-28 h-28 border-4 border-cyan-400 shadow-md"
+            className="rounded-full w-32 h-32 border-4 border-indigo-400 shadow-lg object-cover"
           />
-          <div>
-            <h1 className="text-4xl font-bold text-slate-800 dark:text-white">
+          <div className="text-center md:text-left">
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
               {first_name || "John"} {last_name || "Doe"}
             </h1>
+            <p className="text-gray-500 dark:text-gray-300 mt-2">Welcome back to your Profile</p>
           </div>
         </div>
 
-        {/* Info Grid */}
-        <div className="grid md:grid-cols-2 gap-8 mb-10">
-          {/* Contact Info */}
-          <div className="p-6 rounded-xl border border-cyan-300 bg-white dark:bg-slate-800 shadow hover:shadow-lg transition">
-            <h2 className="text-xl font-semibold text-cyan-600 dark:text-cyan-400 mb-4">
-              Contact Information
-            </h2>
-            <p className="text-slate-700 dark:text-slate-300">
-              <span className="font-semibold">📞 Phone:</span> {phone || "N/A"}
-            </p>
-            <p className="text-slate-700 dark:text-slate-300">
-              <span className="font-semibold">✉️ Email:</span>{" "}
-              {isAuthenticated ? user.email : "N/A"}
-            </p>
-            <p className="text-slate-700 dark:text-slate-300">
-              <span className="font-semibold">📍 Address:</span> {address || "N/A"}
-            </p>
+        {/* Info Section */}
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-md">
+            <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">📞 Contact</h2>
+            <p className="text-gray-700 dark:text-gray-300"><strong>Phone:</strong> {phone || "N/A"}</p>
+            <p className="text-gray-700 dark:text-gray-300"><strong>Email:</strong> {isAuthenticated ? user.email : "N/A"}</p>
+          </div>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-md">
+            <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">📍 Address</h2>
+            <p className="text-gray-700 dark:text-gray-300">{address || "N/A"}</p>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-4">
+        {/* Action Button */}
+        <div className="mt-8 flex justify-center md:justify-end">
           <button
             onClick={() => navigate("/user/edit-profile")}
-            className="px-6 py-2 bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300 font-semibold rounded-xl shadow hover:bg-cyan-200 dark:hover:bg-cyan-800 transition"
+            className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl shadow hover:bg-indigo-700 transition"
           >
             Edit Profile
           </button>

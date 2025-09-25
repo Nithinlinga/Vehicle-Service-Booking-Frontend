@@ -1,36 +1,83 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-
-const mechanics = [
-  "Rahul Sharma",
-  "Amit Verma",
-  "Priya Singh",
-  "Suresh Kumar",
-  "Neha Patel",
-  "Vikram Joshi",
-  "Anjali Mehra",
-  "Rohit Gupta",
-];
-
-const getRandomMechanic = () =>
-  mechanics[Math.floor(Math.random() * mechanics.length)];
+import React, { useState, useEffect } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import MechanicServices from "../../services/MechanicServices";
+import VehicleServices from "../../services/VehiclesServices";
+import ServiceTypeServices from "../../services/ServiceTypeServices";
+import {useSelector} from "react-redux";
 
 const Invoice = () => {
+  const {isAuthenticated , user} = useSelector((state) => state.auth);
   const location = useLocation();
-  let appointments = [];
+  const { id } = useParams();
 
-  // If navigated with state, show only that appointment
-  if (location.state && location.state.appointment) {
-    appointments = [location.state.appointment];
-  } else {
-    // Otherwise, show all from localStorage
-    try {
-      const data = localStorage.getItem("appointments");
-      appointments = data ? JSON.parse(data) : [];
-    } catch {
-      appointments = [];
+  const [appointments, setAppointments] = useState([]);
+  const [mechanics, setMechanics] = useState([]);
+  const [vehicles, setVehicles] = useState({});
+  const [services, setServices] = useState({});
+
+  // Load appointments from location state or localStorage
+  useEffect(() => {
+    if (location.state && location.state.appointment) {
+      setAppointments([location.state.appointment]);
+    } else {
+      try {
+        const data = localStorage.getItem("appointments");
+        setAppointments(data ? JSON.parse(data) : []);
+      } catch {
+        setAppointments([]);
+      }
     }
-  }
+  }, [location.state]);
+
+  // Fetch mechanics
+  useEffect(() => {
+    const fetchMechanics = async () => {
+      try {
+        const response = await MechanicServices.getMechanics();
+        setMechanics(response.data);
+      } catch (error) {
+        console.error("Failed to fetch mechanics:", error);
+      }
+    };
+    fetchMechanics();
+  }, []);
+
+  // Fetch vehicle and service type details
+  useEffect(() => {
+    const fetchDetails = async () => {
+      const vehicleMap = {};
+      const serviceMap = {};
+
+      for (const appt of appointments) {
+        try {
+          if (appt.vehicleId && !vehicleMap[appt.vehicleId]) {
+            const vehicleRes = await VehicleServices.getVehiclesByUserId(appt.vehicleId);
+            vehicleMap[appt.vehicleId] = vehicleRes.data;
+          }
+
+          if (appt.serviceId && !serviceMap[appt.serviceId]) {
+            const serviceRes = await ServiceTypeServices.getAllServiceTypesByServiceCenter(appt.serviceId);
+            serviceMap[appt.serviceId] = serviceRes.data;
+          }
+        } catch (error) {
+          console.error("Error fetching vehicle or service:", error);
+        }
+      }
+
+      setVehicles(vehicleMap);
+      setServices(serviceMap);
+    };
+
+    if (appointments.length > 0) {
+      fetchDetails();
+    }
+  }, [appointments]);
+
+  const getRandomMechanic = () => {
+    if (mechanics.length === 0) return "N/A";
+    const randomIndex = Math.floor(Math.random() * mechanics.length);
+    return mechanics[randomIndex].name;
+  };
 
   if (!appointments.length) {
     return (
@@ -64,7 +111,7 @@ const Invoice = () => {
                   Customer Name:
                 </span>{" "}
                 <span className="text-teal-800 dark:text-teal-300">
-                  {appt.name}
+                  {user.username}
                 </span>
               </div>
               <div>
@@ -83,7 +130,7 @@ const Invoice = () => {
                     Vehicle:
                   </span>{" "}
                   <span className="text-gray-800 dark:text-gray-100">
-                    {appt.vehicle}
+                    {vehicles[appt.vehicleId]?.name || "Loading..."}
                   </span>
                 </div>
                 <div>
@@ -109,7 +156,7 @@ const Invoice = () => {
                     Service:
                   </span>{" "}
                   <span className="text-gray-800 dark:text-gray-100">
-                    {appt.service}
+                    {appt.name || "Loading..."}
                   </span>
                 </div>
                 <div>
