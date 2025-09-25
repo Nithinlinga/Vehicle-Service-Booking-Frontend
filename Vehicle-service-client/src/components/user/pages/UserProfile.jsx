@@ -1,64 +1,94 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-  
+import UserServices from "../../services/UserServices";
+
 const UserProfile = () => {
-  const { name, username, email, phone, location, joined, bio } = useSelector((state) => state.user);
-  const user = {
-    avatar: "https://i.pravatar.cc/150?img=3"
-  };
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+  const [userData, setUserData] = useState({
+    first_name: "",
+    last_name: "",
+    address: "",
+    phone: ""
+  });
+
+  useEffect(() => {
+  if (user && user.id) {
+    UserServices.getUserById(user.id)
+      .then((response) => {
+        const { first_name , last_name , address , phone } = response.data;
+        setUserData({ first_name , last_name , address , phone });
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }
+}, [user]);
+
+  // Destructure the data from the state for use in JSX
+  const { first_name , last_name , address , phone } = userData;
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full overflow-hidden">
-        {/* Header / Cover */}
-        <div className="h-32 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
-
-        {/* Avatar */}
-        <div className="relative flex justify-center">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-500">
+      <main className="flex-1 p-10">
+        {/* Profile Header */}
+        <div className="flex items-center gap-6 mb-10">
           <img
-            src={user.avatar}
-            alt={name}
-            className="w-28 h-28 rounded-full border-4 border-white dark:border-gray-800 absolute -top-14"
+            src="https://tse2.mm.bing.net/th/id/OIP.qmESXk-tJOdCshigsLG6GAHaJQ"
+            alt="Profile"
+            className="rounded-full w-28 h-28 border-4 border-cyan-400 shadow-md"
           />
-        </div>
-
-        {/* Content */}
-        <div className="mt-16 px-6 pb-6 text-center">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{name}</h2>
-          <p className="text-gray-500 dark:text-gray-400">{username}</p>
-          <p className="mt-3 text-gray-600 dark:text-gray-300">{bio}</p>
-
-          {/* Info Grid */}
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
-            <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-              <p className="font-semibold">Email</p>
-              <p className="truncate">{email}</p>
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-              <p className="font-semibold">Phone</p>
-              <p>{phone}</p>
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-              <p className="font-semibold">Location</p>
-              <p>{location}</p>
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-              <p className="font-semibold">Joined</p>
-              <p>{joined}</p>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-            <button className="px-5 cursor-pointer py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg shadow" onClick={() => navigate("/user/edit-profile")}>
-              Edit Profile
-            </button>
-            
+          <div>
+            <h1 className="text-4xl font-bold text-slate-800 dark:text-white">
+              {name || "Loading..."}
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 flex items-center gap-2">
+              Senior Mechanic • {expertise || "N/A"}
+              <span className="flex items-center gap-1">
+                {renderStars(rating)}
+              </span>
+            </p>
           </div>
         </div>
-      </div>
+
+        {/* Info Grid */}
+        <div className="grid md:grid-cols-2 gap-8 mb-10">
+          {/* Contact Info */}
+          <div className="p-6 rounded-xl border border-cyan-300 bg-white dark:bg-slate-800 shadow hover:shadow-lg transition">
+            <h2 className="text-xl font-semibold text-cyan-600 dark:text-cyan-400 mb-4">
+              Contact Information
+            </h2>
+            <p className="text-slate-700 dark:text-slate-300">
+              <span className="font-semibold">📞 Phone:</span> {phone || "N/A"}
+            </p>
+            <p className="text-slate-700 dark:text-slate-300">
+              <span className="font-semibold">✉️ Email:</span>{" "}
+              {isAuthenticated ? user.email : "something@gmail.com"}
+            </p>
+            <p className="text-slate-700 dark:text-slate-300">
+              <span className="font-semibold">📍 Address:</span> {address || "N/A"}
+            </p>
+            <p className="text-slate-700 dark:text-slate-300">
+              <span className="font-semibold">📅 Availability:</span> {availability || "N/A"}
+            </p>
+            <p className="text-slate-700 dark:text-slate-300">
+              <span className="font-semibold">⭐ Rating:</span> {rating || "N/A"}
+            </p>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-4">
+          <button
+            onClick={() => navigate("/mechanic/edit-profile")}
+            className="px-6 py-2 bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300 font-semibold rounded-xl shadow hover:bg-cyan-200 dark:hover:bg-cyan-800 transition"
+          >
+            Edit Profile
+          </button>
+        </div>
+      </main>
     </div>
   );
 };

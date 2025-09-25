@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { updateSkills } from "../../../store/mechanicSlice";
+// import { updateSkills } from "../../../store/mechanicSlice";
 import { useNavigate } from "react-router-dom";
 import MechanicSkill from "../../services/MechanicSkill";
 import { toast } from "react-hot-toast";
@@ -11,7 +11,7 @@ const EditSkills = () => {
   const [skillInput, setSkillInput] = useState("");
   // Local state for the list of skills
   const [skillList, setSkillList] = useState([]);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const EditSkills = () => {
           // 1. Update local state
           setSkillList(fetchedSkills);
           // 2. Also update Redux store
-          dispatch(updateSkills(fetchedSkills));
+          // dispatch(updateSkills(fetchedSkills));
         })
         .catch((error) => {
           console.error("Error fetching mechanic skills:", error);

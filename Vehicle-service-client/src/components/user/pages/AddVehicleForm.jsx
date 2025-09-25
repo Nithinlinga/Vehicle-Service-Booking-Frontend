@@ -99,7 +99,7 @@ const AddVehicleForm = () => {
     model: '',
     year: '',
     registration_number: '',
-    engine_cc: '',
+    engine: '',
     abs: '',
     doors: '',
     ac: '',

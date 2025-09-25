@@ -298,7 +298,7 @@ app.post('/vehicles', (req, res) => {
   const {
     userId,
     registration_number,
-    engine_cc,
+    engine,
     abs,
     doors,
     ac,
@@ -318,8 +318,8 @@ app.post('/vehicles', (req, res) => {
     }
 
     db.query(
-      'INSERT INTO vehicles (userId, registration_number, make, model, year, engine_cc, abs, doors, ac, transmission, fuel, vehicle_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [userId, registration_number, make, model, year, engine_cc, abs, doors, ac, transmission, fuel, vehicle_type],
+      'INSERT INTO vehicles (userId, registration_number, make, model, year, engine, abs, doors, ac, transmission, fuel, vehicle_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [userId, registration_number, make, model, year, engine, abs, doors, ac, transmission, fuel, vehicle_type],
       (err, result) => {
         if (err) {
           if (err.code === 'ER_DUP_ENTRY') {

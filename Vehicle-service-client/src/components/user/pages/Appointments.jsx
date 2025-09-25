@@ -6,15 +6,13 @@ import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
 import ServiceTypeServices from "../../services/ServiceTypeServices";
 import BookingServices from "../../services/BookingServices";
-import { isAllOf } from "@reduxjs/toolkit";
 
 const Appointments = () => {
   const [searchParams] = useSearchParams();
-  const {user}=useSelector((state)=>state.auth);
+  const { user } = useSelector((state) => state.auth);
   const service_center = searchParams.get("service_center");
   const service_type = searchParams.get("service_type");
   const vehicleId = searchParams.get("vehicleId");
-  const [selectedVehicle,setSelectedVehicle]=useState();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,53 +20,31 @@ const Appointments = () => {
   const allVehicles = useSelector((state) => state.vehicles);
 
   const [allServiceCenters, setAllServiceCenters] = useState([]);
-  const [serviceType, setServiceType] = useState([]);
+  const [serviceTypes, setServiceTypes] = useState([]);
   const [submitted, setSubmitted] = useState(false);
 
-  const defaultVehicleOption = "Select Vehicle";
-useEffect(() => {
-  if (location.state?.vehicleId) {
-    const foundVehicle = allVehicles.find(
-      (av) => String(av.vehicleId) === String(location.state.vehicleId)
-    );
-    setSelectedVehicle(foundVehicle);
+  const [form, setForm] = useState({
+    name: "",
+    vehicle: "",
+    vehicleId: vehicleId || "",
+    date: "",
+    userId: user.id,
+    timeslot: "",
+    serviceCenterId: service_center || "",
+    service: "",
+    notes: "",
+  });
 
-    if (foundVehicle) {
-      setForm((prev) => ({
-        ...prev,
-        vehicle: `${foundVehicle.make.toUpperCase()} ${foundVehicle.model}`,
-      }));
-    }
-  }
-}, [location.state?.vehicleId, allVehicles]);
-
-  const vehicleOptions = allVehicles.map(
-    (v) => `${v.make.toUpperCase()} ${v.model}`
-  );
-  const vehiclesForDropdown = [defaultVehicleOption, ...vehicleOptions];
-console.log(vehiclesForDropdown)
-const [form, setForm] = useState({
-  name: "",
-  vehicle: "",
-  vehicleId:vehicleId || "",
-  date: "",
-  userId: user.id,
-  timeslot: "",
-  serviceCenterId: service_center || "",
-  service: "",
-  notes: "",
-});
-
-console.log(vehicleId," d")
-  // Fetch service types for a given center
   const fetchServiceTypes = async (centerId) => {
+    if (!centerId) return; // Prevents API call with invalid ID
     try {
-      const resp = await ServiceTypeServices.getAllServiceTypesByServiceCenter(centerId);
-      setServiceType(resp.data);
-
+      const resp = await ServiceTypeServices.getAllServiceTypesByServiceCenter(
+        centerId
+      );
+      setServiceTypes(resp.data);
       if (resp.data.length > 0) {
         const selected =
-          resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ??
+          resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ||
           resp.data[0];
         setForm((prev) => ({ ...prev, service: selected.name }));
       }
@@ -76,76 +52,47 @@ console.log(vehicleId," d")
       console.error("Error fetching service types:", error);
     }
   };
-useEffect(() => {
-  const fetchCentersAndTypes = async () => {
-    try {
-      const centers = await ServiceCenterServices.getAllServiceCenters();
-      setAllServiceCenters(centers.data);
 
-      let centerIdToFetch = service_center;
-
-      // If no service_center in URL, default to first center
-      if (!centerIdToFetch && centers.data.length > 0) {
-        centerIdToFetch = centers.data[0].servicecenterId;
-        setForm(prev => ({ ...prev, serviceCenterId: String(centerIdToFetch) }));
-      }
-
-      if (centerIdToFetch) {
-        await fetchServiceTypes(centerIdToFetch);
-      }
-    } catch (error) {
-      console.error("Error fetching service centers:", error);
-    }
-  };
-
-  fetchCentersAndTypes();
-}, [service_center, service_type]);
-
-  // Initial load: fetch centers and service types from search param
   useEffect(() => {
-    const fetchCenters = async () => {
+    const fetchInitialData = async () => {
       try {
         const centers = await ServiceCenterServices.getAllServiceCenters();
         setAllServiceCenters(centers.data);
+
+        let centerIdToFetch = service_center;
+
+        if (!centerIdToFetch && centers.data.length > 0) {
+          centerIdToFetch = String(centers.data[0].servicecenterId);
+        }
+
+        if (centerIdToFetch) {
+          setForm((prev) => ({ ...prev, serviceCenterId: centerIdToFetch }));
+          await fetchServiceTypes(centerIdToFetch);
+        }
       } catch (error) {
-        console.error("Error fetching service centers:", error);
+        console.error("Error fetching initial data:", error);
       }
     };
+    fetchInitialData();
+  }, [service_center, service_type]); // 👈 Depend on search params
 
-    fetchCenters();
-    if (service_center) {
-      fetchServiceTypes(service_center);
-    }
-  }, [service_center, service_type]);
-
-  // Update vehicle if passed from state
-  // useEffect(() => {
-  //   if (vehicleFromState) {
-  //     setForm((prev) => ({
-  //       ...prev,
-  //       vehicle: `${vehicleFromState.make.toUpperCase()} ${vehicleFromState.model}`,
-  //     }));
-  //   }
-  // }, [vehicleFromState]);
-
-  // Preselect service center in form when centers are loaded
   useEffect(() => {
-    if (allServiceCenters.length > 0 && service_center) {
-      const selected = allServiceCenters.find(
-        (sc) => sc.servicecenterId === Number(service_center)
+    if (location.state?.vehicleId) {
+      const foundVehicle = allVehicles.find(
+        (av) => String(av.vehicleId) === String(location.state.vehicleId)
       );
-      if (selected) {
+      if (foundVehicle) {
         setForm((prev) => ({
           ...prev,
-          serviceCenterId: String(selected.servicecenterId),
+          vehicle: `${foundVehicle.make.toUpperCase()} ${foundVehicle.model}`,
         }));
       }
     }
-  }, [allServiceCenters, service_center]);
+  }, [location.state?.vehicleId, allVehicles]);
 
   const handleServiceCenterChange = (e) => {
     const newCenterId = e.target.value;
-    setForm((prev) => ({ ...prev, serviceCenterId: newCenterId }));
+    setForm((prev) => ({ ...prev, serviceCenterId: newCenterId, service: "" }));
     fetchServiceTypes(newCenterId);
   };
 
@@ -156,23 +103,26 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.vehicle === defaultVehicleOption) {
+    const today = new Date().toISOString().split("T")[0];
+    if (form.date < today) {
+      toast.error("Please select a date on or after today.");
+      return;
+    }
+    if (!form.vehicleId) {
       toast.error("Please select a vehicle.");
       return;
     }
-    const today = new Date().toISOString().split("T")[0];
-    if (form.date < today) {
-      toast.error("Please select a date afterwards");
-      return;
-    }
     try {
-      const appointment=await BookingServices.addBooking(form)
-      dispatch(addAppointment(form));
+      const appointment = await BookingServices.addBooking(form);
+      dispatch(addAppointment(appointment.data));
+      setSubmitted(true);
+      toast.success("Appointment booked successfully!");
     } catch (error) {
-      console.log(error)
+      console.error("Error booking appointment:", error);
+      toast.error("Failed to book appointment. Please try again.");
     }
-    setSubmitted(true);
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-100 via-white to-teal-100 dark:from-gray-900 dark:via-gray-800 dark:to-teal-900 py-10">
       <div className="w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-10">
@@ -209,41 +159,39 @@ useEffect(() => {
                 required
                 value={form.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded border  border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
               />
             </div>
-<div>
-  <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
-    Select Vehicle
-  </label>
-  <select
-    name="vehicleId"
-    value={form.vehicleId || ""}   // 👈 controlled by vehicleId
-    onChange={(e) => {
-      const selectedId = e.target.value;
-      const selectedVehicle = allVehicles.find(
-        (v) => String(v.vehicleId) === selectedId
-      );
-      setForm((prev) => ({
-        ...prev,
-        vehicleId: selectedId,
-        vehicle: selectedVehicle
-          ? `${selectedVehicle.make.toUpperCase()} ${selectedVehicle.model}`
-          : "",
-      }));
-    }}
-    className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
-  >
-    <option value="">Select Vehicle</option>
-    {allVehicles.map((v) => (
-      <option key={v.vehicleId} value={v.vehicleId}>
-        {v.make.toUpperCase()} {v.model}
-      </option>
-    ))}
-  </select>
-</div>
-
-
+            <div>
+              <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
+                Select Vehicle
+              </label>
+              <select
+                name="vehicleId"
+                value={form.vehicleId}
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  const selectedVehicle = allVehicles.find(
+                    (v) => String(v.vehicleId) === selectedId
+                  );
+                  setForm((prev) => ({
+                    ...prev,
+                    vehicleId: selectedId,
+                    vehicle: selectedVehicle
+                      ? `${selectedVehicle.make.toUpperCase()} ${selectedVehicle.model}`
+                      : "",
+                  }));
+                }}
+                className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              >
+                <option value="">Select Vehicle</option>
+                {allVehicles.map((v) => (
+                  <option key={v.vehicleId} value={v.vehicleId}>
+                    {v.make.toUpperCase()} {v.model}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="flex gap-4">
               <div className="flex-1">
                 <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
@@ -255,12 +203,9 @@ useEffect(() => {
                   required
                   value={form.date}
                   onChange={handleChange}
-                  min={new Date(Date.now() + 24 * 60 * 60 * 1000) // tomorrow
+                  min={new Date(Date.now() + 24 * 60 * 60 * 1000)
                     .toISOString()
                     .split("T")[0]}
-                  // max={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from today
-                  //   .toISOString()
-                  //   .split("T")[0]}
                   className="w-full date-input px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 />
               </div>
@@ -274,7 +219,7 @@ useEffect(() => {
                   required
                   value={form.timeslot}
                   onChange={handleChange}
-                  className="w-full px-4 date-input  py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                  className="w-full px-4 date-input py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 />
               </div>
             </div>
@@ -286,7 +231,7 @@ useEffect(() => {
                 name="serviceCenterId"
                 value={form.serviceCenterId}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
-                onChange={handleServiceCenterChange} // 🔹 now triggers API call
+                onChange={handleServiceCenterChange}
               >
                 {allServiceCenters.map((s) => (
                   <option key={s.servicecenterId} value={s.servicecenterId}>
@@ -296,40 +241,32 @@ useEffect(() => {
               </select>
             </div>
             <div>
-              {/* Service Type */}
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Service Type
               </label>
-
               <select
                 name="service"
                 value={form.service}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
-
                 onChange={(e) => setForm((prev) => ({ ...prev, service: e.target.value }))}
               >
-                {serviceType.map((s) => (
-                  <option key={s.serviceTypeId} value={s.name}>
-                    {s.name}
+                {serviceTypes.map((s) => (
+                  <option key={s.serviceTypeId} value={s.description}>
+                    {s.description}
                   </option>
                 ))}
               </select>
-
-
-              {/* Price */}
               {form.service && (
                 <div className="mt-4">
                   <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                     Price
                   </label>
                   <div className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                    ₹{serviceType.find((s) => s.name === form.service)?.price}
+                    ₹{serviceTypes.find((s) => s.name === form.service)?.price}
                   </div>
                 </div>
               )}
-
             </div>
-
             <div>
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Additional Notes
@@ -342,7 +279,6 @@ useEffect(() => {
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 placeholder="Any specific requests?"
               />
-
             </div>
             <button
               type="submit"

@@ -45,6 +45,7 @@ import AdminEditProfile from "./components/admin/pages/AdminEditProfile";
 import AddServiceType from "./components/admin/pages/AddServiceType";
 import ServiceCenters from "./components/user/pages/ServiceCenters";
 import MechanicEntry from "./components/mechanic/pages/MechanicEntry";
+import UserEntry from "./components/user/pages/UserEntry";
 
 
 function App() {
@@ -116,7 +117,8 @@ function App() {
           {/* User-only */}
           <Route element={<RoleRoute roles={['user']} />}>
           <Route path="/user" element={<UserLayout />}>
-            <Route index element={<UserDashboard />} />
+            <Route index element={<UserEntry />} />
+            <Route path="dashboard" element={<UserDashboard />} />
             <Route path="viewappointment" element={<ViewAppointments />} />
             <Route path="appointment" element={<Appointments />} />
             <Route path="services/:id" element={<Services />} />
