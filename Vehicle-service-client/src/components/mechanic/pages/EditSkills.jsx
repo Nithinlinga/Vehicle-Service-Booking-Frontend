@@ -6,9 +6,7 @@ import MechanicSkill from "../../services/MechanicSkill";
 import { toast } from "react-hot-toast";
 
 const EditSkills = () => {
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
-  // Initial state is taken from Redux, but it will be updated by the useEffect
-  const skills = useSelector((state) => state.mechanic.skills ?? []); 
+  const { isAuthenticated, user } = useSelector((state) => state.auth); 
 
   const [skillInput, setSkillInput] = useState("");
   // Local state for the list of skills
