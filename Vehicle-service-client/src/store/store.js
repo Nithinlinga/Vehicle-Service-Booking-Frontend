@@ -31,6 +31,14 @@ const adminloadState = () => {
     return undefined;
   }
 };
+const authLoadState = () => {
+  try {
+    const serializedState = localStorage.getItem('auth');
+    return serializedState ? JSON.parse(serializedState) : undefined;
+  } catch {
+    return undefined;
+  }
+};
 
 const store = configureStore({
   reducer: {
@@ -45,6 +53,7 @@ const store = configureStore({
     mechanic: mechanicloadState(),
     user: userloadState(),
     admin: adminloadState(),
+    auth: authLoadState()
   },
 });
 
@@ -59,6 +68,7 @@ store.subscribe(() => {
   localStorage.setItem('mechanic', mechanicSerializedState);
   localStorage.setItem('user', userSerializedState);
   localStorage.setItem('admin', adminSerializedState);
+  localStorage.setItem('auth', JSON.stringify(state.auth));
 });
 
 export default store;
