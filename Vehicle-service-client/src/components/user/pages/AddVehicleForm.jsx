@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { addVehicle } from '../../../store/vehicleSlice';
 import VehiclesServices from '../../services/VehiclesServices';
 
 const carBrands = [
@@ -133,8 +132,6 @@ const AddVehicleForm = () => {
 
   VehiclesServices.addVehicles(form)
     .then(respo => {
-      // Success block
-      dispatch(addVehicle({ vehicleType, ...form }));
       toast.success('Vehicle Added Successfully');
       setVehicleType('');
       setForm({

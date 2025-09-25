@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteAppointment } from "../../../store/appointmentSlice";
 import BookingServices from "../../services/BookingServices";
-import {toast} from 'react-hot-toast'
+import { toast } from 'react-hot-toast'
 
 const ViewAppointments = () => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-const [appointments, setAppointments] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [mappedAppointments, setMappedAppointments] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [previous, setPrevious] = useState([]);
@@ -36,42 +35,41 @@ const [appointments, setAppointments] = useState([]);
   }, []);
 
 
-  const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     try {
       const confirmed = window.confirm("Are you sure you want to delete this Booking?");
       if (confirmed) {
-      
-          const response=BookingServices.deleteBookingById(id);
+
+        const response = BookingServices.deleteBookingById(id);
       }
     } catch (error) {
       console.log(error);
-    }
-    dispatch(deleteAppointment(id));
+    } z
     fetchAppointments();
     toast.error("Booking Deleted Successfully")
-  
-  };
-useEffect(() => {
-  const mapped = (appointments || []).map((a) => {
-    const appointmentDate = new Date(a.date).toISOString().split("T")[0];
-    return {
-      ...a,
-      status: appointmentDate < today ? "completed" : "upcoming",
-    };
-  });
-  setMappedAppointments(mapped);
-}, [appointments, today]);
 
-useEffect(() => {
-  const upcomingFiltered = mappedAppointments.filter(
-    (a) => a.status === "upcoming" && a.vehicle_type === vehicleType
-  );
-  const previousFiltered = mappedAppointments.filter(
-    (a) => a.status === "completed" && a.vehicle_type === vehicleType
-  );
-  setUpcoming(upcomingFiltered);
-  setPrevious(previousFiltered);
-}, [mappedAppointments, vehicleType]);
+  };
+  useEffect(() => {
+    const mapped = (appointments || []).map((a) => {
+      const appointmentDate = new Date(a.date).toISOString().split("T")[0];
+      return {
+        ...a,
+        status: appointmentDate < today ? "completed" : "upcoming",
+      };
+    });
+    setMappedAppointments(mapped);
+  }, [appointments, today]);
+
+  useEffect(() => {
+    const upcomingFiltered = mappedAppointments.filter(
+      (a) => a.status === "upcoming" && a.vehicle_type === vehicleType
+    );
+    const previousFiltered = mappedAppointments.filter(
+      (a) => a.status === "completed" && a.vehicle_type === vehicleType
+    );
+    setUpcoming(upcomingFiltered);
+    setPrevious(previousFiltered);
+  }, [mappedAppointments, vehicleType]);
 
 
   return (
@@ -84,21 +82,19 @@ useEffect(() => {
         {/* 🚗 Bike/Car Toggle */}
         <div className="flex w-full h-12 bg-slate-200 dark:bg-slate-700 rounded-full mb-8 relative">
           <button
-            className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors duration-300 cursor-pointer ${
-              vehicleType === "car"
+            className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors duration-300 cursor-pointer ${vehicleType === "car"
                 ? "bg-teal-600 text-white"
                 : "text-slate-700 dark:text-slate-200"
-            }`}
+              }`}
             onClick={() => setVehicleType("car")}
           >
             Cars
           </button>
           <button
-            className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors duration-300 cursor-pointer ${
-              vehicleType === "bike"
+            className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors duration-300 cursor-pointer ${vehicleType === "bike"
                 ? "bg-teal-600 text-white"
                 : "text-slate-700 dark:text-slate-200"
-            }`}
+              }`}
             onClick={() => setVehicleType("bike")}
           >
             Bikes
@@ -137,8 +133,8 @@ useEffect(() => {
                       <span className="font-semibold">Verified:</span> {a.isVerified}
                     </div>
                     <div className="font-bold text-lg text-teal-800 dark:text-teal-200">
-  {a.make} {a.model} ({a.year})
-</div>
+                      {a.make} {a.model} ({a.year})
+                    </div>
 
                   </div>
                   <div className="mt-3 md:mt-0 flex flex-col gap-2">

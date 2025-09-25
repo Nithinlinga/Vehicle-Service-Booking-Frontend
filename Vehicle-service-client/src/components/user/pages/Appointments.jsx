@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addAppointment } from "../../../store/appointmentSlice";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
@@ -114,7 +113,6 @@ const Appointments = () => {
     }
     try {
       const appointment = await BookingServices.addBooking(form);
-      dispatch(addAppointment(appointment.data));
       setSubmitted(true);
       toast.success("Appointment booked successfully!");
     } catch (error) {
