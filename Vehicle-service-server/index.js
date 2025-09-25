@@ -428,10 +428,24 @@ app.post('/mechanics', (req, res) => {
 
 // GET: All mechanics
 app.get('/mechanics', (req, res) => {
-  db.query('SELECT * FROM mechanic', (err, result) => {
-    if (err) return res.status(500).send(err);
+  db.query(
+  `SELECT m.*,
+          sc.name AS serviceCenterName,
+          sc.location,
+          sc.contact
+   FROM mechanic m
+   INNER JOIN servicecenter sc
+     ON m.servicecenterId = sc.servicecenterId`,
+  (err, result) => {
+    if (err) {
+      console.error("Error fetching mechanics with service centers:", err);
+      return;
+    }
     res.json(result);
-  });
+    // console.log(result); // result will have both mechanic + service center info
+  }
+);
+
 });
 
 // GET: Mechanic by ID
@@ -462,10 +476,10 @@ app.delete('/mechanics', (req, res) => {
 
 // PUT: Update all fields by ID
 app.put('/mechanics/:id', (req, res) => {
-  const { mechanicId, servicecenterId, name, expertise, availability, rating } = req.body;
+  const { servicecenterId, name, expertise, availability, rating,status } = req.body;
   db.query(
-    'UPDATE mechanic SET mechanicId = ?, servicecenterId = ?, name = ?, expertise = ?, availability = ?, rating = ? WHERE id = ?',
-    [mechanicId, servicecenterId, name, expertise, availability, rating, req.params.id],
+    'UPDATE mechanic SET servicecenterId = ?, name = ?, expertise = ?, availability = ?, rating = ?,status=? WHERE mechanicId = ?',
+    [servicecenterId, name, expertise, availability, rating,status, req.params.id],
     (err, result) => {
       if (err) return res.status(500).send(err);
       if (result.affectedRows === 0) return res.status(404).send('Mechanic not found');

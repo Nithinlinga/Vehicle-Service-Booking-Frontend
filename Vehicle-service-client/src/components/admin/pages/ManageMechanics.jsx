@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import MechanicServices from "../../services/MechanicServices";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
+import ManageMechanicModal from "./ManageMechanicModal";
 
 export default function ManageMechanics() {
   const [showVerified, setShowVerified] = useState(false);
@@ -52,19 +53,21 @@ const getServiceCenterById=async(id)=>{
     }
   };
 
-  // Open modal for Active/Inactive edit (verified mechanics)
-  const openStatusModal =async (mechanic) => {
-    await getServiceCenterById(mechanic.servicecenterId)
-    setSelectedMechanic(mechanic);
-    // If backend doesn't have a "status" field yet, default to "active"
-    setSelectedStatus(mechanic.status || "active");
-    setIsStatusModalOpen(true);
-  };
+  const openStatusModal = async (mechanic) => {
+  setSelectedMechanic(mechanic);
+  setIsStatusModalOpen(true);
+};
+
+const handleSaveMechanic = async(updatedMechanic) => {
+  console.log("Updated mechanic:", updatedMechanic);
+  // call API to save changes here
+await MechanicServices.editMechanics(updatedMechanic.mechanicId,updatedMechanic)
+await fetchMechanics()
+};
 
   const closeStatusModal = () => {
     setIsStatusModalOpen(false);
     setSelectedMechanic(null);
-    setSelectedStatus("active");
   };
 
   const handleStatusSave = async () => {
@@ -162,7 +165,8 @@ const getServiceCenterById=async(id)=>{
                   <p>Expertise: {m.expertise}</p>
                   <p>Availability: {m.availability}</p>
                   <p>Rating: {m.rating}</p>
-                  <p>Service Center ID: {m.servicecenterId}</p>
+                  <p>Service Center Name: {m.serviceCenterName}</p>
+                  <p>Address: {m.address}</p>
                   {/* Optional display of current Active/Inactive if present */}
                   {m.status && <p>Status: {m.status}</p>}
                 </div>
@@ -229,7 +233,7 @@ const getServiceCenterById=async(id)=>{
       </div>
 
       {/* Status Edit Modal (Active/Inactive) */}
-      {isStatusModalOpen && selectedMechanic && (
+      {/* {isStatusModalOpen && selectedMechanic && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
             <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
@@ -275,7 +279,15 @@ const getServiceCenterById=async(id)=>{
             </div>
           </div>
         </div>
-      )}
+      )} */}
+
+      <ManageMechanicModal
+  isStatusModalOpen={isStatusModalOpen}
+  closeStatusModal={() => setIsStatusModalOpen(false)}
+  selectedMechanic={selectedMechanic}
+  isEdit={!!selectedMechanic?.servicecenterId}
+  onSave={handleSaveMechanic}
+/>;
     </div>
   );
 }
