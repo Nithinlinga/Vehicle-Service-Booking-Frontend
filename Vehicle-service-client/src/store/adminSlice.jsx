@@ -5,7 +5,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     name: "Sarah Johnson",
     role: "System Administrator",
-    email: "admin@example.com",
+    email: "admin@gmail.com",
     phone: "+91 98765 43210",
     location: "Coimbatore, India",
     department: "IT & Infrastructure",

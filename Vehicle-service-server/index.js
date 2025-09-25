@@ -434,7 +434,7 @@ app.get('/mechanics', (req, res) => {
           sc.location,
           sc.contact
    FROM mechanic m
-   INNER JOIN servicecenter sc
+   LEFT JOIN servicecenter sc
      ON m.servicecenterId = sc.servicecenterId`,
   (err, result) => {
     if (err) {

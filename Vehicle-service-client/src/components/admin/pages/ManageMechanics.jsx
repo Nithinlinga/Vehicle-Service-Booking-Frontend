@@ -114,7 +114,7 @@ await fetchMechanics()
                   <p>Expertise: {m.expertise}</p>
                   <p>Availability: {m.availability}</p>
                   <p>Rating: {m.rating}</p>
-                  <p>Service Center ID: {m.servicecenterId}</p>
+                  <p>Address: {m.address}</p>
                 </div>
                 <div className="mt-3 sm:mt-0 flex gap-2">
                   <button

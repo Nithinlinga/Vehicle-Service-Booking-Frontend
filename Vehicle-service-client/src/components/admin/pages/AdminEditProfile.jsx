@@ -25,6 +25,7 @@ const AdminEditProfile = () => {
             type="text"
             placeholder={field}
             value={formData[field]}
+            disabled={field==="email"}
             onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
             className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:text-white"
           />
