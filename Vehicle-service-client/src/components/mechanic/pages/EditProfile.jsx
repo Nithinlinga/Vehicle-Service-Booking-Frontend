@@ -1,30 +1,29 @@
 // src/components/EditProfile.jsx
-import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { updateProfile } from "../../../store/mechanicSlice";
 import { useNavigate } from "react-router-dom";
 import MechanicServices from "../../services/MechanicServices";
 import { toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
+
 
 const EditProfile = () => {
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const mechanicState = useSelector((state) => state.mechanic);
+  const {isAuthenticated, user} = useSelector((state) => state.auth);
+
   const [formData, setFormData] = useState({
-    name: mechanicState.name,
-    phone: mechanicState.phone,
-    email: user.email,
-    address: mechanicState.address,
-    expertise: mechanicState.expertise || '',
-    availability: mechanicState.availability || '',
-    rating: mechanicState.rating || '',
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+    expertise: '',
+    availability: '',
+    rating: '',
   });
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Initial data fetch on component mount
   useEffect(() => {
-    if (isAuthenticated && user?.id) {
+    if (user?.id) {
       MechanicServices.getMechanicsById(user.id)
         .then((response) => {
           const { name, phone, address, expertise, availability, rating } = response.data;
@@ -43,14 +42,13 @@ const EditProfile = () => {
           toast.error("Failed to load profile data.");
         });
     }
-  }, [isAuthenticated, user]);
+  }, [user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     MechanicServices.editMechanics(user.id, formData)
-      .then((res) => {
-        dispatch(updateProfile(formData));
+      .then(() => {
         toast.success("Profile updated successfully!");
         navigate("/mechanic/profile");
       })

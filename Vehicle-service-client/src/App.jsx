@@ -34,7 +34,6 @@ import ViewAppointments from "./components/user/pages/ViewAppointments";
 import Invoice from "./components/user/pages/Invoice";
 import MechanicProfile from "./components/mechanic/pages/MechanicProfile";
 import Servicelog from "./components/mechanic/pages/Servicelog";
-import Earnings from "./components/mechanic/pages/Earnings";
 import EditProfile from "./components/mechanic/pages/EditProfile";
 import EditSkills from "./components/mechanic/pages/EditSkills";
 import UserLayout from "./components/user/UserLayout";
@@ -45,7 +44,6 @@ import UserEditProfile from "./components/user/pages/UserEditProfile";
 import AdminEditProfile from "./components/admin/pages/AdminEditProfile";
 import AddServiceType from "./components/admin/pages/AddServiceType";
 import ServiceCenters from "./components/user/pages/ServiceCenters";
-// import InitialForm from "./components/mechanic/pages/InitialForm";
 import MechanicEntry from "./components/mechanic/pages/MechanicEntry";
 
 
@@ -108,7 +106,6 @@ function App() {
             <Route path="/mechanic" element={<MechanicLayout />} >
             <Route index element={<MechanicEntry />} />
             <Route path="dashboard" element={<MechanicDashboard />}/>
-            <Route path="earnings"element={<Earnings/>}/>
             <Route path="profile" element={<MechanicProfile />} />
             <Route path="service-history" element={<Servicelog />} />
             <Route path="edit-profile" element={<EditProfile />} />
