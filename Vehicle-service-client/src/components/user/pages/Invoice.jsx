@@ -1,5 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import BookingServices from "../../services/BookingServices";
+import { useSelector } from "react-redux";
 
 const mechanics = [
   "Rahul Sharma",
@@ -16,6 +18,7 @@ const getRandomMechanic = () =>
   mechanics[Math.floor(Math.random() * mechanics.length)];
 
 const Invoice = () => {
+  const {user}=useSelector((state)=>state.auth)
   const location = useLocation();
   let appointments = [];
 
@@ -25,7 +28,7 @@ const Invoice = () => {
   } else {
     // Otherwise, show all from localStorage
     try {
-      const data = localStorage.getItem("appointments");
+      const data = BookingServices.getBookingsByUserId(user.id);
       appointments = data ? JSON.parse(data) : [];
     } catch {
       appointments = [];

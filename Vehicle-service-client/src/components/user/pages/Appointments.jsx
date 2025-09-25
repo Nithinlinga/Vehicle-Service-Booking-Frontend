@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addAppointment } from "../../../store/appointmentSlice";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
@@ -167,7 +166,7 @@ useEffect(() => {
     }
     try {
       const appointment=await BookingServices.addBooking(form)
-      dispatch(addAppointment(form));
+      console.log(appointment)
     } catch (error) {
       console.log(error)
     }

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteAppointment } from "../../../store/appointmentSlice";
 import BookingServices from "../../services/BookingServices";
 import {toast} from 'react-hot-toast'
 
@@ -46,7 +45,7 @@ const [appointments, setAppointments] = useState([]);
     } catch (error) {
       console.log(error);
     }
-    dispatch(deleteAppointment(id));
+    // dispatch(deleteAppointment(id));
     fetchAppointments();
     toast.error("Booking Deleted Successfully")
   

@@ -34,7 +34,6 @@ import ViewAppointments from "./components/user/pages/ViewAppointments";
 import Invoice from "./components/user/pages/Invoice";
 import MechanicProfile from "./components/mechanic/pages/MechanicProfile";
 import Servicelog from "./components/mechanic/pages/Servicelog";
-import Earnings from "./components/mechanic/pages/Earnings";
 import EditProfile from "./components/mechanic/pages/EditProfile";
 import EditSkills from "./components/mechanic/pages/EditSkills";
 import UserLayout from "./components/user/UserLayout";
@@ -108,7 +107,7 @@ function App() {
             <Route path="/mechanic" element={<MechanicLayout />} >
             <Route index element={<MechanicEntry />} />
             <Route path="dashboard" element={<MechanicDashboard />}/>
-            <Route path="earnings"element={<Earnings/>}/>
+            {/* <Route path="earnings"element={<Earnings/>}/> */}
             <Route path="profile" element={<MechanicProfile />} />
             <Route path="service-history" element={<Servicelog />} />
             <Route path="edit-profile" element={<EditProfile />} />

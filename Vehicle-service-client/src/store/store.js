@@ -1,7 +1,6 @@
 // src/store/store.js
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
-import appointmentsReducer from './appointmentSlice';
 import VehicleReducer from './vehicleSlice';
 import mechanicReducer from './mechanicSlice';
 import userReducer from './userSlice';
@@ -43,7 +42,6 @@ const authLoadState = () => {
 const store = configureStore({
   reducer: {
     auth: authReducer,
-    appointments: appointmentsReducer,
     vehicles: VehicleReducer,
     mechanic: mechanicReducer,
     user: userReducer,
@@ -63,7 +61,6 @@ store.subscribe(() => {
   const userSerializedState = JSON.stringify(state.user);
   const adminSerializedState = JSON.stringify(state.admin);
 
-  localStorage.setItem("appointments", JSON.stringify(state.appointments));
   localStorage.setItem("vehicles", JSON.stringify(state.vehicles));
   localStorage.setItem('mechanic', mechanicSerializedState);
   localStorage.setItem('user', userSerializedState);
