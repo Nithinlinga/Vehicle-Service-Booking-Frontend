@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast';
 import MechanicServices from '../../services/MechanicServices';
 import ServiceCenterServices from '../../services/ServiceCenterServices';
 import { useNavigate } from 'react-router-dom';
-import RegisterServices from '../../services/RegisterServices';
+
 const InitialForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

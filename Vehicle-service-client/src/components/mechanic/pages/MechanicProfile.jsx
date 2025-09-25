@@ -8,7 +8,6 @@ import { Star, StarHalf } from "lucide-react";
 const MechanicProfile = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  // const { skills } = useSelector((state) => state.mechanic);
 
   const [mechanicData, setMechanicData] = useState({
     name: "",
