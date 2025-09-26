@@ -5,88 +5,7 @@ import ServiceTypeServices from '../../services/ServiceTypeServices';
 import { useNavigate, useParams } from 'react-router-dom';
 import ServiceCenterServices from '../../services/ServiceCenterServices';
 
-// Array of services with title, description, icon, price, and details
-const servicesList = [
-  {
-    title: "General Service",
-    description: "A comprehensive health check for your vehicle, including fluid top-ups and safety inspections.",
-    icon: <FaCarSide />,
-    price: "$150",
-    about: "Our General Service package is designed to keep your car in optimal condition. It includes a thorough inspection of all major systems and essential maintenance tasks.",
-    details: [
-      "Fluid top-up and checks (oil, coolant, brake fluid)",
-      "Tire pressure and tread inspection",
-      "Brake system inspection",
-      "Battery health check",
-      "Full vehicle safety report",
-    ],
-  },
-  {
-    title: "Oil Change",
-    description: "Quick and professional engine oil and filter replacement to ensure engine longevity.",
-    icon: <FaOilCan />,
-    price: "$75",
-    about: "An essential service to maintain your engine's health and performance. We use high-quality oils and filters suitable for your vehicle's make and model.",
-    details: [
-      "Engine oil replacement with premium oil",
-      "New oil filter installation",
-      "Quick inspection of other fluids",
-      "Grease chassis as needed",
-    ],
-  },
-  {
-    title: "Engine Check & Diagnostics",
-    description: "Advanced computer diagnostics to identify and resolve any engine-related issues.",
-    icon: <FaBolt />,
-    price: "$90",
-    about: "Our state-of-the-art diagnostic tools can pinpoint the exact cause of any engine or performance issues, saving you time and money on unnecessary repairs.",
-    details: [
-      "Full engine system scan",
-      "Read and clear fault codes",
-      "Sensor and component testing",
-      "Fuel and exhaust system analysis",
-    ],
-  },
-  {
-    title: "Tire Replacement & Repair",
-    description: "Expert service for tire repair, rotation, and new tire installation to ensure your safety.",
-    icon: <GiFlatTire />,
-    price: "Starts from $25",
-    about: "Proper tire maintenance is crucial for safety and fuel efficiency. We offer a full range of tire services, from simple repairs to full replacements.",
-    details: [
-      "Puncture repair and balancing",
-      "Tire rotation and alignment",
-      "New tire installation (wide selection of brands)",
-      "Tire pressure monitoring system (TPMS) service",
-    ],
-  },
-  {
-    title: "AC & Climate Control",
-    description: "Full service for your vehicle's air conditioning system, from gas refilling to component repair.",
-    icon: <FaCarCrash />,
-    price: "$120",
-    about: "Stay cool and comfortable with our AC service. We handle everything from simple recharges to complex repairs of the climate control system.",
-    details: [
-      "AC system performance test",
-      "Refrigerant refill",
-      "Leak detection and repair",
-      "Cabin air filter replacement",
-    ],
-  },
-  {
-    title: "Brake & Suspension",
-    description: "Maintenance and repair of your vehicle's braking system and suspension for a smooth ride.",
-    icon: <FaWrench />,
-    price: "Varies",
-    about: "Your safety is our top priority. Our brake and suspension services ensure your vehicle handles and stops reliably in all conditions.",
-    details: [
-      "Brake pad and rotor replacement",
-      "Brake fluid flush and replacement",
-      "Shock and strut inspection and replacement",
-      "Wheel bearing and axle service",
-    ],
-  },
-];
+
 
 const Services = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -143,6 +62,9 @@ useEffect(() => {
               <h2 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white">
                 {service.title}
               </h2>
+              <p className="text-center text-gray-600 dark:text-gray-400">
+                {service.name}
+              </p>
               <p className="text-center text-gray-600 dark:text-gray-400">
                 {service.description}
               </p>
