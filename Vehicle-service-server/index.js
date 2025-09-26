@@ -13,7 +13,7 @@ app.use(express.json());
 const db = mysql.createConnection({ 
   host: 'localhost', 
   user: 'root',  
-  password: 'root', 
+  password: '19263543', 
   database: 'sb'
 });
 
@@ -233,7 +233,7 @@ app.get('/users/:userId', (req, res) => {
 // Create a new user
 
 app.post('/users', (req, res) => {
-  const { userId, first_name, last_name, email, address, phone, status } = req.body;
+  const { userId, first_name, last_name, email, address, phone} = req.body;
 
   // Step 1: Validate userId and email against auth table
   db.query('SELECT * FROM auth WHERE id = ? AND email = ?', [userId, email], (err, result) => {
@@ -245,8 +245,8 @@ app.post('/users', (req, res) => {
 
     // Step 2: Insert into users table
     db.query(
-      'INSERT INTO users (userId, first_name, last_name, email, address, phone, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [userId, first_name, last_name, email, address, phone, status],
+      'INSERT INTO users (userId, first_name, last_name, email, address, phone) VALUES (?, ?, ?, ?, ?, ?)',
+      [userId, first_name, last_name, email, address, phone],
       (err, insertResult) => {
         if (err) return res.status(500).send({ message: 'Error inserting user details' });
         res.status(201).json({ id: insertResult.insertId, ...req.body });
