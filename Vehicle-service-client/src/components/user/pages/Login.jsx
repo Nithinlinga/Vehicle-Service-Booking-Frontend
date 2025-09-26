@@ -13,7 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const api = import.meta.env.VITE_SERVER_URL;
-  const [showPassword,setShowPassword]=useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [params] = useSearchParams();
   const role = params.get("role") || "User";
@@ -206,18 +206,18 @@ const Login = () => {
             )}
           </button>
         </form>
-{
-!role==='Admin' &&
-        <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
-          Don't have an account?{" "}
-          <Link
-            to={`/register?role=${role}`}
-            className="text-green-600 hover:underline dark:text-green-400"
+        {role !== 'Admin' && (
+          <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
+            Don't have an account?{" "}
+            <Link
+              to={`/register?role=${role}`}
+              className="text-green-600 hover:underline dark:text-green-400"
             >
-            Sign Up
-          </Link>
-        </p>
-          }
+              Sign Up
+            </Link>
+          </p>
+        )}
+
       </div>
     </div>
   );

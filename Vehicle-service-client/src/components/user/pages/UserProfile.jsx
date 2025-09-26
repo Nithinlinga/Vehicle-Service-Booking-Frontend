@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UserServices from "../../services/UserServices";
 import { toast } from 'react-hot-toast';
+import Loader from "../../Loader";
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const UserProfile = () => {
   const { first_name, last_name, address, phone } = userData;
 
   if (isLoading) {
-    return <div className="text-center mt-20 text-lg text-gray-600">Loading user profile...</div>;
+    return <Loader/>;
   }
 
   return (

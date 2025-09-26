@@ -4,6 +4,7 @@ import InitialForm from './InitialForm';
 import MechanicServices from '../../services/MechanicServices';
 import { useSelector } from 'react-redux';
 import MechanicDashboard from '../MechanicDashboard';
+import Loader from '../../Loader';
 
 const MechanicEntry = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const MechanicEntry = () => {
   }, [isAuthenticated, user?.id]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader/>;
   }
 
   // Render the appropriate component based on the profile check

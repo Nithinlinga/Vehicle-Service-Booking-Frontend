@@ -161,6 +161,7 @@ const AddVehicleForm = () => {
       toast.success('Vehicle Added Successfully');
       setVehicleType('');
       setForm({
+        userId:user.id,
         make: '',
         model: '',
         year: '',

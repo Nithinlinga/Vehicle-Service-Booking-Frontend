@@ -4,6 +4,7 @@ import StartForm from './StartForm';
 import UserServices from '../../services/UserServices';
 import { useSelector } from 'react-redux';
 import UserDashboard from './UserDashboard';
+import Loader from '../../Loader';
 
 const UserEntry = () => {
   const navigate = useNavigate();
@@ -41,11 +42,11 @@ const UserEntry = () => {
   }, [isAuthenticated, user?.id]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader/>;
   }
 
   // Render the appropriate component based on the profile check
-  return hasProfile ? <UserDashboard /> : <InitialForm />;
+  return hasProfile ? <UserDashboard /> : <StartForm />;
 };
 
 export default UserEntry;
