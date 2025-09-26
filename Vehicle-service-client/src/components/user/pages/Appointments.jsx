@@ -280,7 +280,7 @@ const Appointments = () => {
                     Price
                   </label>
                   <div className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                    ₹{serviceTypes.find((s) => s.description === form.service)?.price}
+                    ₹{serviceTypes.find((s) => s.name === form.service)?.price}
                   </div>
                 </div>
               )}
