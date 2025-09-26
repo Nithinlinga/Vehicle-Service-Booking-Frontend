@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 
 
 const EditProfile = () => {
-  const {isAuthenticated, user} = useSelector((state) => state.auth);
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -46,7 +46,33 @@ const EditProfile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const regex = {
+      name: /^[a-zA-Z]{2,50}$/, // Only letters, 2–50 characters
+      phone: /^\d{10}$/, // Exactly 10 digits
+      address: /^[a-zA-Z0-9\s,.'-]{5,100}$/, // Letters, numbers, spaces, and common punctuation
+      expertise: /^[a-zA-Z\s]{2,50}$/ // Letters and spaces only, 2–50 characters
+    };
 
+    // Validation checks
+    if (!regex.name.test(formData.name)) {
+      toast.error("Invalid name. Should contain only letters, 2 to 50 characters.");
+      return;
+    }
+
+    if (!regex.phone.test(formData.phone)) {
+      toast.error("Invalid phone number. Must be exactly 10 digits.");
+      return;
+    }
+
+    if (!regex.address.test(formData.address)) {
+      toast.error("Invalid address. Must be 5 to 100 characters including letters, numbers, commas, apostrophes, dots, and spaces.");
+      return;
+    }
+
+    if (!regex.expertise.test(formData.expertise)) {
+      toast.error("Invalid expertise. Should contain only letters and spaces, 2 to 50 characters.");
+      return;
+    }
     MechanicServices.editMechanics(user.id, formData)
       .then(() => {
         toast.success("Profile updated successfully!");
@@ -78,7 +104,7 @@ const EditProfile = () => {
             placeholder="Enter Name"
             value={formData.name || ''}
             onChange={handleInputChange}
-            className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
+            className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white" required
           />
         </div>
 
@@ -92,7 +118,7 @@ const EditProfile = () => {
             placeholder="Enter Phone Number"
             value={formData.phone || ''}
             onChange={handleInputChange}
-            className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
+            className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white" required
           />
         </div>
 
@@ -121,7 +147,7 @@ const EditProfile = () => {
             placeholder="Enter Address"
             value={formData.address || ''}
             onChange={handleInputChange}
-            className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
+            className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white" required
           />
         </div>
 
@@ -136,6 +162,7 @@ const EditProfile = () => {
             value={formData.expertise || ''}
             onChange={handleInputChange}
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
+            required
           />
         </div>
 

@@ -50,7 +50,24 @@ const InitialForm = () => {
   // Handle form submission
   const handleSubmit = (e) => {
   e.preventDefault();
-
+  const regex = {
+    name: /^[a-zA-Z]{2,50}$/,
+    phone: /^\d{10}$/,
+    address: /^[a-zA-Z0-9\s,.'-]{5,100}$/,
+    expertise: /^[a-zA-Z\s]{2,50}$/
+  };
+  if(!regex.name.test(formData.name)){
+    toast.error("Invalid name. Should contain at least 2 and at max 5 letters");
+  }
+  if(!regex.phone.test(formData.phone)){
+    toast.error("Invalid phone number. Should contain only 10 numbers");
+  }
+  if(!regex.address.test(formData.address)){
+    toast.error("Invalid address. Should contain at least 5 and at max 100 characters including letters,commas,apostopys,dot,numbers");
+  }
+  if(!regex.expertise.test(formData.expertise)){
+    toast.error("Invalid expertise. Should contain at least 2 and at max 50 letters");
+  }
   const authString = localStorage.getItem('auth');
   if (!authString) {
     toast.error('User not authenticated');

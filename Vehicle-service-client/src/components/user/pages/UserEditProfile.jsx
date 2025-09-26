@@ -41,6 +41,28 @@ const UserEditProfile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const regex = {
+      first_name: /^[a-zA-Z]{2,50}$/,
+      last_name: /^[a-zA-Z]{2,50}$/,
+      phone: /^\d{10}$/,
+      address: /^[a-zA-Z0-9\s,.'-]{5,100}$/
+    }
+    if(!regex.first_name.test(formData.first_name)){
+      toast.error('Invalid first name. Only letters, 2–50 characters.');
+      return;
+    }
+    if(!regex.last_name.test(formData.last_name)){
+      toast.error('Invalid last name. Only letters, 2–50 characters.');
+      return;
+    }
+    if(!regex.phone.test(formData.phone)){
+      toast.error('Invalid phone number. Only 10 numbers');
+      return;
+    }
+    if(!regex.address.test(formData.address)){
+      toast.error('Invalid address. At least 5 and at max 100 characters or numbers could be included');
+      return;
+    }
 
     UserServices.updateUserById(user.id, formData)
       .then(() => {
@@ -74,6 +96,7 @@ const UserEditProfile = () => {
             value={formData.first_name || ''}
             onChange={handleInputChange}
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
+            required
           />
         </div>
         <div>
@@ -86,6 +109,7 @@ const UserEditProfile = () => {
             value={formData.last_name || ''}
             onChange={handleInputChange}
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
+            required
           />
         </div>
 
@@ -100,6 +124,7 @@ const UserEditProfile = () => {
             value={formData.phone || ''}
             onChange={handleInputChange}
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
+            required
           />
         </div>
 
@@ -129,6 +154,7 @@ const UserEditProfile = () => {
             value={formData.address || ''}
             onChange={handleInputChange}
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
+            required
           />
         </div>
 
