@@ -476,7 +476,9 @@ app.delete('/mechanics', (req, res) => {
 
 // PUT: Update all fields by ID
 app.put('/mechanics/:id', (req, res) => {
-  const { servicecenterId, name, expertise, availability, rating,status,address } = req.body;
+  const { name, expertise, availability, rating,status,address } = req.body;
+  const servicecenterId = req.body.servicecenterId === 'none' ? null : req.body.servicecenterId;
+
   db.query(
     'UPDATE mechanic SET servicecenterId = ?, name = ?, expertise = ?, availability = ?, rating = ?,status=?,address=? WHERE mechanicId = ?',
     [servicecenterId, name, expertise, availability, rating,status,address, req.params.id],

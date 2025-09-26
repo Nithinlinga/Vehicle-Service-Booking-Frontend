@@ -107,7 +107,7 @@ const ManageMechanicModal = ({
               onChange={(e) => setSelectedServiceCenterId(e.target.value)}
               className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
             >
-              <option value="">-- Select Service Center --</option>
+              <option value="none">-- Select Service Center --</option>
               {serviceCenters.map((sc) => (
                 <option key={sc.servicecenterId} value={sc.servicecenterId}>
                   {sc.name} - {sc.location}
