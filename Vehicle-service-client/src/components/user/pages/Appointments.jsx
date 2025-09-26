@@ -269,8 +269,8 @@ const Appointments = () => {
                 onChange={(e) => setForm((prev) => ({ ...prev, service: e.target.value }))}
               >
                 {serviceTypes?.map((s) => (
-                  <option key={s.serviceTypeId} value={s.description}>
-                    {s.description}
+                  <option key={s.serviceTypeId} value={s.name}>
+                    {s.name}
                   </option>
                 ))}
               </select>
