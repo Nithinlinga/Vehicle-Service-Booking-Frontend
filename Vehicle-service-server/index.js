@@ -13,7 +13,7 @@ app.use(express.json());
 const db = mysql.createConnection({ 
   host: 'localhost', 
   user: 'root',  
-  password: '19263543', 
+  password: 'root', 
   database: 'sb'
 });
 
@@ -258,10 +258,10 @@ app.post('/users', (req, res) => {
 
 // Update all user fields by ID
 app.put('/users/:userId', (req, res) => {
-  const { first_name, last_name, email, address, phone, status } = req.body;
+  const { first_name, last_name, email, address, phone } = req.body;
   db.query(
-    'UPDATE users SET first_name = ?, last_name = ?, email = ?, address = ?, phone = ?, status = ? WHERE userId = ?',
-    [first_name, last_name, email , address, phone, status, req.params.userId],
+    'UPDATE users SET first_name = ?, last_name = ?, email = ?, address = ?, phone = ? WHERE userId = ?',
+    [first_name, last_name, email , address, phone, req.params.userId],
     (err) => {
       if (err) return res.status(500).send(err);
       res.sendStatus(200);
