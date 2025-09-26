@@ -156,14 +156,10 @@ const AddVehicleForm = () => {
   e.preventDefault();
   const regex = {
     registration_number: /^[A-Z]{2}[-]?[0-9]{1,2}[-]?[A-Z]{1,2}[-]?[0-9]{4}$/i,
-    engine: /^\d+(\.\d+)?(cc)?$/i,
   };
   if(!regex.registration_number.test(form.registration_number)){
       toast.error('Invalid registration number.');
       return;
-  }
-  if(!regex.engine.test(form.engine)){
-    toast.error('Invalid engine format');
   }
   VehiclesServices.addVehicles(form)
     .then(respo => {

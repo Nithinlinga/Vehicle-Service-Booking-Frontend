@@ -287,7 +287,7 @@ await fetchMechanics()
   selectedMechanic={selectedMechanic}
   isEdit={!!selectedMechanic?.servicecenterId}
   onSave={handleSaveMechanic}
-/>;
+/>
     </div>
   );
 }
