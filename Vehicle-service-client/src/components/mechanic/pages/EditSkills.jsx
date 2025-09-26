@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-// import { updateSkills } from "../../../store/mechanicSlice";
 import { useNavigate } from "react-router-dom";
 import MechanicSkill from "../../services/MechanicSkill";
 import { toast } from "react-hot-toast";
@@ -9,9 +8,7 @@ const EditSkills = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth); 
 
   const [skillInput, setSkillInput] = useState("");
-  // Local state for the list of skills
   const [skillList, setSkillList] = useState([]);
-  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,16 +16,13 @@ const EditSkills = () => {
       MechanicSkill.getAllSkills(user.id)
         .then((response) => {
           const fetchedSkills = response.data.map(skill => skill.skill_name);
-          // 1. Update local state
           setSkillList(fetchedSkills);
-          // 2. Also update Redux store
-          // dispatch(updateSkills(fetchedSkills));
         })
         .catch((error) => {
           console.error("Error fetching mechanic skills:", error);
         });
     }
-  }, [user, dispatch]);
+  }, [user]);
 
   const addSkill = () => {
     if (skillInput.trim()) {
@@ -42,7 +36,6 @@ const EditSkills = () => {
           // ✅ If successful, then update the local state and Redux store
           const updatedList = [...skillList, skillInput.trim()];
           setSkillList(updatedList);
-          dispatch(updateSkills(updatedList));
           setSkillInput(""); // Clear input on success
           toast.success("Skill added successfully");
           console.log(res);
@@ -62,7 +55,6 @@ const EditSkills = () => {
         // ✅ If successful, then update the local state and Redux store
         const updatedList = skillList.filter((_, i) => i !== index);
         setSkillList(updatedList);
-        dispatch(updateSkills(updatedList));
         toast.success("Skill removed successfully");
         console.log(res);
       })
