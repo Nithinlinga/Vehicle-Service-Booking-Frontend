@@ -3,7 +3,7 @@ import React from 'react'
 const Loader = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen text-center">
-    <div role="status">
+      <div role="status">
         <svg
           aria-hidden="true"
           className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
@@ -22,7 +22,7 @@ const Loader = () => {
         </svg>
         <span className="sr-only">Loading...</span>
       </div>
-      </div>
+    </div>
   )
 }
 
