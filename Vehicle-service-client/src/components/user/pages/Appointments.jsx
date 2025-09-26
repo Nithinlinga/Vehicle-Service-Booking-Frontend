@@ -158,12 +158,12 @@ const Appointments = () => {
             >
               View Appointments
             </button>
-            <button
+            {/* <button
               onClick={() => navigate("/user/invoice", { state: { appointment: form } })}
               className="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 rounded-xl shadow transition text-lg"
             >
               Generate Invoice
-            </button>
+            </button> */}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">

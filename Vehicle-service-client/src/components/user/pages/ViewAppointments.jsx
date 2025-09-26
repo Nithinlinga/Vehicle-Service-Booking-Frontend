@@ -141,14 +141,14 @@ const ViewAppointments = () => {
                     <span className="inline-block px-4 py-1 rounded-full bg-teal-600 text-white font-semibold text-sm mb-2">
                       Upcoming
                     </span>
-                    <button
+                    {/* <button
                       onClick={() =>
                         navigate("/user/invoice", { state: { appointment: a } })
                       }
                       className="bg-cyan-600 cursor-pointer hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-full shadow"
                     >
                       Invoice
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => handleDelete(a.bookingId)}
                       className="bg-red-400 cursor-pointer hover:bg-red-600 text-white font-bold py-2 px-3 rounded-full shadow"
