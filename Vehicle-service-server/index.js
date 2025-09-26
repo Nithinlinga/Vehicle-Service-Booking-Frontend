@@ -13,7 +13,7 @@ app.use(express.json());
 const db = mysql.createConnection({ 
   host: 'localhost', 
   user: 'root',  
-  password: '19263543', 
+  password: '123456', 
   database: 'sb'
 });
 
@@ -177,10 +177,10 @@ app.get('/serviceTypes/serviceCenter/:id', (req, res) => {
 
 // Add a new service type
 app.post('/serviceTypes', (req, res) => {
-  const { description, price, status, serviceCenterId } = req.body;
+  const { name,description, price, status, serviceCenterId } = req.body;
   db.query(
-    'INSERT INTO serviceType (description, price, status, serviceCenterId) VALUES (?, ?, ?, ?)',
-    [description, price, status, serviceCenterId],
+    'INSERT INTO serviceType (name,description, price, status, serviceCenterId) VALUES (?, ?, ?, ?, ?)',
+    [name,description, price, status, serviceCenterId],
     (err, result) => {
       if (err) return res.status(500).send(err);
       res.json({ id: result.insertId, description, price, status, serviceCenterId });
