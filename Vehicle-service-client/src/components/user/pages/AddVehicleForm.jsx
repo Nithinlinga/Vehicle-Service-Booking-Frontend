@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import VehiclesServices from '../../services/VehiclesServices';
 
 const carBrands = [
@@ -116,7 +116,6 @@ const years = Array.from({ length: 30 }, (_, i) => currentYear - i);
 
 const AddVehicleForm = () => {
   const {user}=useSelector((state)=>state.auth);
-  const dispatch = useDispatch(); 
   const [vehicleType, setVehicleType] = useState('');
   const [form, setForm] = useState({
     userId:user.id,
@@ -155,7 +154,17 @@ const AddVehicleForm = () => {
 
   const handleSubmit = (e) => {
   e.preventDefault();
-
+  const regex = {
+    registration_number: /^[A-Z]{2}[-]?[0-9]{1,2}[-]?[A-Z]{1,2}[-]?[0-9]{4}$/i,
+    engine: /^\d+(\.\d+)?(cc)?$/i,
+  };
+  if(!regex.registration_number.test(form.registration_number)){
+      toast.error('Invalid registration number.');
+      return;
+  }
+  if(!regex.engine.test(form.engine)){
+    toast.error('Invalid engine format');
+  }
   VehiclesServices.addVehicles(form)
     .then(respo => {
       toast.success('Vehicle Added Successfully');

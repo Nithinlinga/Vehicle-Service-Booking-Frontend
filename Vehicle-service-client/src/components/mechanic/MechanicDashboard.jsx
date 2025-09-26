@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CountUp from "react-countup";
 import BookingServices from "../services/BookingServices";
-import ServiceCenterServices from "../services/ServiceCenterServices";
+// import ServiceCenterServices from "../services/ServiceCenterServices";
 import MechanicServices from "../services/MechanicServices";
 
 const MechanicDashboard = () => {
@@ -75,12 +75,12 @@ const MechanicDashboard = () => {
       color: "text-green-400 border-green-400",
       status: "completed",
     },
-    {
-      title: "Cancelled Services",
-      value: statusCounts.cancelled || 0,
-      color: "text-red-400 border-red-400",
-      status: "cancelled",
-    },
+    // {
+    //   title: "Cancelled Services",
+    //   value: statusCounts.cancelled || 0,
+    //   color: "text-red-400 border-red-400",
+    //   status: "cancelled",
+    // },
   ];
 
   // Filter bookings by selected status
