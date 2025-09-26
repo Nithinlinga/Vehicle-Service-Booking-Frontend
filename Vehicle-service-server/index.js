@@ -1,8 +1,8 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
-
-
+require('dotenv').config();
+const PORT = process.env.PORT || 3001;
 const app = express();
 
 
@@ -11,9 +11,9 @@ app.use(express.json());
 
  
 const db = mysql.createConnection({ 
-  host: 'localhost', 
-  user: 'root',  
-  password: '123456', 
+  host: process.env.DB_HOST, 
+  user: process.env.DB_USER,  
+  password: process.env.DB_PASS, 
   database: 'sb'
 });
 
@@ -676,6 +676,6 @@ app.delete('/booking', (req, res) => {
   });
 });
 
-app.listen(3001, () => { 
+app.listen(PORT, () => { 
   console.log('Server running on http://localhost:3001'); 
 });
