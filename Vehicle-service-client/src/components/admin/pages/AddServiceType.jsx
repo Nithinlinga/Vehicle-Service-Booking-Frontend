@@ -41,10 +41,16 @@ const AddServiceType = () => {
   const validateService = (values) => {
     const errors = {};
 
+    const nameRegex = /^[A-Za-z\s]{5,50}$/; // only alphabets + spaces, 3–100 chars
     const descriptionRegex = /^[A-Za-z\s]{3,100}$/; // only alphabets + spaces, 3–100 chars
     const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;   // positive number, up to 2 decimals
 
     // Description validation
+    if (!values.name) {
+      errors.name = "Name is required";
+    } else if (!descriptionRegex.test(values.name)) {
+      errors.name = "Description must be 5-50 alphabets only";
+    }
     if (!values.description) {
       errors.description = "Description is required";
     } else if (!descriptionRegex.test(values.description)) {
@@ -92,6 +98,7 @@ const AddServiceType = () => {
   // ✅ Open modal for adding a new service
   const handleAddComponentClick = () => {
     setSelectedService({
+      name:"",
       description: "",
       price: "",
       status: "active",
@@ -160,6 +167,9 @@ const AddServiceType = () => {
               className="bg-white dark:bg-gray-700 shadow-md rounded-lg p-4 hover:shadow-lg transition duration-300"
             >
               <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+                {service.name}
+              </h2>
+              <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
                 {service.description}
               </h2>
               <p className="text-gray-700 dark:text-gray-300 mb-1">Price: ₹{service.price}</p>
@@ -204,6 +214,27 @@ const AddServiceType = () => {
 
             <div className="space-y-3">
               {/* Description */}
+              <div>
+                <input
+                  type="text"
+                  value={selectedService?.name || ""}
+                  onChange={(e) =>
+                    setSelectedService({
+                      ...selectedService,
+                      name: e.target.value,
+                    })
+                  }
+                  placeholder="Name"
+                  className={`w-full p-2 border rounded dark:bg-gray-700 dark:text-white ${
+                    errors.name ? "border-red-500" : ""
+                  }`}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.name}
+                  </p>
+                )}
+              </div>
               <div>
                 <input
                   type="text"
