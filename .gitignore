@@ -24,3 +24,4 @@ dist-ssr
 *.sln
 *.sw?
 Vehicle-service-client/.env
+Vehicle-service-server/.env
