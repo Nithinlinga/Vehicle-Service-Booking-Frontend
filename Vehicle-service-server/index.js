@@ -13,7 +13,7 @@ app.use(express.json());
 const db = mysql.createConnection({ 
   host: 'localhost', 
   user: 'root',  
-  password: '123456', 
+  password: '19263543', 
   database: 'sb'
 });
 
@@ -476,10 +476,10 @@ app.delete('/mechanics', (req, res) => {
 
 // PUT: Update all fields by ID
 app.put('/mechanics/:id', (req, res) => {
-  const { servicecenterId, name, expertise, availability, rating,status } = req.body;
+  const { servicecenterId, name, expertise, availability, rating,status,address } = req.body;
   db.query(
-    'UPDATE mechanic SET servicecenterId = ?, name = ?, expertise = ?, availability = ?, rating = ?,status=? WHERE mechanicId = ?',
-    [servicecenterId, name, expertise, availability, rating,status, req.params.id],
+    'UPDATE mechanic SET servicecenterId = ?, name = ?, expertise = ?, availability = ?, rating = ?,status=?,address=? WHERE mechanicId = ?',
+    [servicecenterId, name, expertise, availability, rating,status,address, req.params.id],
     (err, result) => {
       if (err) return res.status(500).send(err);
       if (result.affectedRows === 0) return res.status(404).send('Mechanic not found');
