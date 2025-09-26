@@ -64,7 +64,7 @@ const Appointments = () => {
         const selected =
           resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ||
           resp.data[0];
-        setForm((prev) => ({ ...prev, service: selected.description })); // Changed from s.name to s.description
+        setForm((prev) => ({ ...prev, service: selected.name })); // Changed from s.name to s.description
       }
     } catch (error) {
       console.error("Error fetching service types:", error);
