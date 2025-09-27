@@ -39,7 +39,7 @@ const MechanicDashboard = () => {
     fetchBookings();
   }, [serviceCenterId]);
   const normalizeStatus = (booking) => {
-    if (booking.status === "cancelled") return "cancelled";
+    if (booking.isVerified === "Rejected") return "cancelled";
 
     const bookingDate = new Date(booking.date);
     const now = new Date();
@@ -66,6 +66,12 @@ const MechanicDashboard = () => {
       value: statusCounts.completed || 0,
       color: "text-green-400 border-green-400",
       status: "completed",
+    },
+    {
+      title: "Cancelled Services",
+      value: statusCounts.cancelled || 0,
+      color: "text-green-400 border-green-400",
+      status: "cancelled",
     },
   ];
   const filteredBookings = selectedStatus
