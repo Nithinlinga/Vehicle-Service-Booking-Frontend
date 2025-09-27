@@ -12,8 +12,8 @@ const ServiceCentreForm = () => {
     name: "",
     location: "",
     contact: "",
-    rating: 4.5,
-    feedback: "Great service!"
+    rating: "",
+    feedback: ""
   });
 
   useEffect(() => {
@@ -146,25 +146,28 @@ const validate = (values) => {
               <div className="text-red-500 text-sm">{formik.errors.contact}</div>
             )}
           </div>
-
           <div>
             <label className="block font-medium mb-1">Rating</label>
-            <input
-              type="text"
+            <select
               name="rating"
               value={formik.values.rating}
-              disabled
-              className="w-full p-2 border rounded bg-gray-400 cursor-not-allowed"
-            />
+              onChange={formik.handleChange}
+              className="w-full p-2 border rounded"
+            >
+              <option value="">Select rating</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Poor">Poor</option>
+            </select>
           </div>
-
           <div>
             <label className="block font-medium mb-1">Feedback</label>
             <textarea
               name="feedback"
               value={formik.values.feedback}
-              disabled
-              className="w-full p-2 border rounded bg-gray-400 cursor-not-allowed"
+              onChange={formik.handleChange}
+              className="w-full p-2 border rounded"
             />
           </div>
           <div className="text-right">
