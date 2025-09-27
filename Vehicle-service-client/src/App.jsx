@@ -9,7 +9,6 @@ import NotFound from "./components/notFound/NotFound";
 import Login from "./components/user/pages/Login";
 import Register from "./components/user/pages/Register";
 import LoginPage from "./components/LoginPage";
-import { WelcomeUser } from "./components/WelcomeUser";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import MechanicDashboard from "./components/mechanic/MechanicDashboard";
 
@@ -69,7 +68,6 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
-        <Route path="/welcome" element={<WelcomeUser />} />
         <Route path="/admin-dashboard" element={<Navigate to={"/admin"} />} />
 
         {/* Public-only pages (redirect if already logged in) */}

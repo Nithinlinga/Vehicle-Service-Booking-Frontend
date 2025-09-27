@@ -38,14 +38,13 @@ const ViewAppointments = () => {
     try {
       const confirmed = window.confirm("Are you sure you want to delete this Booking?");
       if (confirmed) {
-
         const response = BookingServices.deleteBookingById(id);
       }
     } catch (error) {
       console.log(error);
-    } z
+    }
     fetchAppointments();
-    toast.error("Booking Deleted Successfully")
+    toast.success("Booking Deleted Successfully")
 
   };
   useEffect(() => {

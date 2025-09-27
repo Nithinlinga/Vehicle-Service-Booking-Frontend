@@ -33,6 +33,7 @@ const Appointments = () => {
     serviceCenterId: service_center || "",
     service: "",
     notes: "",
+    status: ""
   });
 
   useEffect(() => {
@@ -64,6 +65,7 @@ const Appointments = () => {
           resp.data[0];
         setForm((prev) => ({ ...prev, service: selected.name }));
       }
+      
     } catch (error) {
       console.error("Error fetching service types:", error);
     }
@@ -131,8 +133,9 @@ const Appointments = () => {
     }
     try {
       const appointment = await BookingServices.addBooking(form);
+      if(appointment){
       setSubmitted(true);
-      toast.success("Appointment booked successfully!");
+      toast.success("Appointment booked successfully!");}
     } catch (error) {
       console.error("Error booking appointment:", error);
       toast.error("Failed to book appointment. Please try again.");
@@ -261,9 +264,11 @@ const Appointments = () => {
                 onChange={(e) => setForm((prev) => ({ ...prev, service: e.target.value }))}
               >
                 {serviceTypes?.map((s) => (
-                  <option key={s.serviceTypeId} value={s.decription}>
-                    {s.description}
+                  s.status === 'active' ? 
+                  <option key={s.serviceTypeId} value={s.name}>
+                    {s.name}
                   </option>
+                  :<option></option>
                 ))}
               </select>
               {form.service && (
@@ -272,7 +277,7 @@ const Appointments = () => {
                     Price
                   </label>
                   <div className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                    ₹{serviceTypes.find((s) => s.description === form.service)?.price}
+                    ₹{serviceTypes.find((s) => s.name === form.service)?.price}
                   </div>
                 </div>
               )}
