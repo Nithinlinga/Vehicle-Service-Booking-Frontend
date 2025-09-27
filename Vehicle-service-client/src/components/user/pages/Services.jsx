@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { FaCarSide, FaOilCan, FaWrench, FaBolt, FaCarCrash } from 'react-icons/fa';
-import {GiFlatTire} from 'react-icons/gi';
+import { useEffect, useState } from 'react';
+import { FaBolt } from "react-icons/fa";
 import ServiceTypeServices from '../../services/ServiceTypeServices';
 import { useNavigate, useParams } from 'react-router-dom';
 import ServiceCenterServices from '../../services/ServiceCenterServices';
-
-
-
 const Services = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
@@ -37,7 +33,7 @@ useEffect(() => {
   };
 
   fetchData();
-}, [id]); // include id as a dependency if it can change
+}, [id]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4">
@@ -72,8 +68,6 @@ useEffect(() => {
           ))}
         </div>
       </div>
-
-      {/* Modal */}
       {isModalOpen && selectedService && (
         <div 
           onClick={handleCloseModal}
@@ -103,11 +97,6 @@ useEffect(() => {
             <h4 className="text-lg font-bold mb-2 text-teal-800 dark:text-teal-400">
               Includes:
             </h4>
-            {/* <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-              {selectedService.details.map((detail, index) => (
-                <li key={index}>{detail}</li>
-              ))}
-            </ul> */}
             <button
             onClick={() => navigate(`/user/appointment?service_center=${selectedService.serviceCenterId}&service_type=${selectedService.serviceTypeId}`)}
             className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"

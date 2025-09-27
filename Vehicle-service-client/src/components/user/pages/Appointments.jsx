@@ -17,7 +17,6 @@ const Appointments = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 👇 Initialize state for vehicles
   const [allVehicles, setAllVehicles] = useState([]);
 
   const [allServiceCenters, setAllServiceCenters] = useState([]);
@@ -36,7 +35,6 @@ const Appointments = () => {
     notes: "",
   });
 
-  // 👇 New useEffect to fetch vehicles
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
@@ -51,7 +49,7 @@ const Appointments = () => {
     if (user && user.id) {
       fetchVehicles();
     }
-  }, [user]); // Re-run when the user object changes
+  }, [user]);
 
   const fetchServiceTypes = async (centerId) => {
     if (!centerId) return;
@@ -64,7 +62,7 @@ const Appointments = () => {
         const selected =
           resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ||
           resp.data[0];
-        setForm((prev) => ({ ...prev, service: selected.name })); // Changed from s.name to s.description
+        setForm((prev) => ({ ...prev, service: selected.name }));
       }
     } catch (error) {
       console.error("Error fetching service types:", error);
@@ -103,7 +101,7 @@ const Appointments = () => {
         setForm((prev) => ({
           ...prev,
           vehicle: `${foundVehicle.make.toUpperCase()} ${foundVehicle.model}`,
-          vehicleId: foundVehicle.vehicleId, // Ensure vehicleId is also set
+          vehicleId: foundVehicle.vehicleId,
         }));
       }
     }
@@ -158,12 +156,6 @@ const Appointments = () => {
             >
               View Appointments
             </button>
-            {/* <button
-              onClick={() => navigate("/user/invoice", { state: { appointment: form } })}
-              className="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 rounded-xl shadow transition text-lg"
-            >
-              Generate Invoice
-            </button> */}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">

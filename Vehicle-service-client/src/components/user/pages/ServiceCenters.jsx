@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ServiceCenters = () => {
   const [serviceCentre, setServiceCentre] = useState([]);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -27,49 +27,39 @@ const ServiceCenters = () => {
         <h2 className="text-2xl font-bold text-center flex-1">
           All Service Centres
         </h2>
-        
+
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {serviceCentre.map((s) => (
+          <div
+            key={s.servicecenterId}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-5 hover:shadow-lg transition-shadow duration-300"
+          >
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+              {s.name}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">📍 {s.location}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">📞 {s.contact}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">⭐ Rating: {s.rating}</p>
+            {s.feedback && (
+              <p className="mt-2 text-sm italic text-gray-500 dark:text-gray-400">
+                "{s.feedback}"
+              </p>
+            )}
+            <div className="flex space-x-2  ">
+
+              <button
+                onClick={() => navigate(`/user/services/${s.servicecenterId}`)}
+                className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"
+              >
+                View
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Service Centre Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {serviceCentre.map((s) => (
-        <div
-          key={s.servicecenterId}
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-5 hover:shadow-lg transition-shadow duration-300"
-        >
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-            {s.name}
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">📍 {s.location}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-300">📞 {s.contact}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-300">⭐ Rating: {s.rating}</p>
-          {s.feedback && (
-            <p className="mt-2 text-sm italic text-gray-500 dark:text-gray-400">
-              "{s.feedback}"
-            </p>
-          )}
 
-          {/* Edit Button */}
-          <div className="flex space-x-2  ">
-
-          <button
-            onClick={() => navigate(`/user/services/${s.servicecenterId}`)}
-            className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"
-          >
-            View
-          </button>
-          {/* <button
-            onClick={() => navigate(`/user/appointment?service_center=${s.servicecenterId}`)}
-            className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"
-          >
-            Book Appointment
-          </button> */}
-            </div>
-        </div>
-      ))}
-    </div>
-
-     
     </div>
   );
 };

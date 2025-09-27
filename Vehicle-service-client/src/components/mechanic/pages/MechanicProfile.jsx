@@ -38,17 +38,10 @@ const MechanicProfile = () => {
       });
   }
 }, [user]);
-
-  // Destructure the data from the state for use in JSX
   const { name, phone, address, expertise, availability, rating } = mechanicData;
   console.log(skills);
-  
-
-  // Helper function to render stars based on a numeric rating
   const renderStars = (rating) => {
       let numericRating = 0;
-
-      // Convert string ratings to numbers
       if (typeof rating === 'string') {
         switch (rating.toLowerCase()) {
           case 'excellent':
@@ -98,7 +91,6 @@ const MechanicProfile = () => {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-500">
       <main className="flex-1 p-10">
-        {/* Profile Header */}
         <div className="flex items-center gap-6 mb-10">
           <img
             src="https://tse2.mm.bing.net/th/id/OIP.qmESXk-tJOdCshigsLG6GAHaJQ"
@@ -117,10 +109,7 @@ const MechanicProfile = () => {
             </p>
           </div>
         </div>
-
-        {/* Info Grid */}
         <div className="grid md:grid-cols-2 gap-8 mb-10">
-          {/* Contact Info */}
           <div className="p-6 rounded-xl border border-cyan-300 bg-white dark:bg-slate-800 shadow hover:shadow-lg transition">
             <h2 className="text-xl font-semibold text-cyan-600 dark:text-cyan-400 mb-4">
               Contact Information
@@ -142,8 +131,6 @@ const MechanicProfile = () => {
               <span className="font-semibold">⭐ Rating:</span> {rating || "N/A"}
             </p>
           </div>
-
-          {/* Skills */}
             <div className="p-6 rounded-xl border border-purple-300 bg-white dark:bg-slate-800 shadow hover:shadow-lg transition">
               <h2 className="text-xl font-semibold text-purple-600 dark:text-purple-400 mb-4">
                 Skills
@@ -161,8 +148,6 @@ const MechanicProfile = () => {
               )}
             </div>
         </div>
-
-        {/* Action Buttons */}
         <div className="flex gap-4">
           <button
             onClick={() => navigate("/mechanic/edit-profile")}

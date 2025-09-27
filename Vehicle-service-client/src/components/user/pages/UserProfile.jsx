@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UserServices from "../../services/UserServices";
@@ -51,7 +51,6 @@ const UserProfile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-800 dark:to-slate-900 transition-colors duration-500">
       <main className="max-w-4xl mx-auto py-12 px-6">
-        {/* Profile Card */}
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 flex flex-col md:flex-row items-center gap-8">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4qdBAfjlSTjoaOGeV22tf8jgUjl_0KvJcTbOBMPWDNNX3r2MetzGgSapJFR0SpCDhCcM&usqp=CAU"
@@ -65,8 +64,6 @@ const UserProfile = () => {
             <p className="text-gray-500 dark:text-gray-300 mt-2">Welcome back to your Profile</p>
           </div>
         </div>
-
-        {/* Info Section */}
         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-md">
             <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4">📞 Contact</h2>
@@ -78,8 +75,6 @@ const UserProfile = () => {
             <p className="text-gray-700 dark:text-gray-300">{address || "N/A"}</p>
           </div>
         </div>
-
-        {/* Action Button */}
         <div className="mt-8 flex justify-center md:justify-end">
           <button
             onClick={() => navigate("/user/edit-profile")}

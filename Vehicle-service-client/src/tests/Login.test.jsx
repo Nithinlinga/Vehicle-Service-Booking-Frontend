@@ -9,7 +9,6 @@ import store from "../store/store";
 
 describe('Login Component', () => {
     it('It should render two inputs for email and password', () => {
-        // expect(1).toBeTruthy();
         render(
             <Provider store={store}>
             <BrowserRouter>

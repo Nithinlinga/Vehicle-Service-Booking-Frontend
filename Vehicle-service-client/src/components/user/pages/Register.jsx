@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { TiTick } from "react-icons/ti";
@@ -10,18 +8,14 @@ import RegisterServices from '../../services/RegisterServices';
 
 const Register = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const api = import.meta.env.VITE_SERVER_URL;
 
     const [params] = useSearchParams();
     const role = params.get("role") || "User";
 
     const [serverError, setServerError] = useState("");
-    // Local UI state
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    // Convenience flag for the tick
-
     const formik = useFormik({
         initialValues: {
             email: "",
@@ -30,13 +24,10 @@ const Register = () => {
             confirmPassword: "",
             role: role.toLowerCase(),
         },
-        // Validate on blur 
         validateOnBlur: true,
         validateOnChange: true,
         validate: (values) => {
             const errors = {};
-
-            // Email
             if (!values.email) {
                 errors.email = "Email required";
             } else if (
@@ -44,8 +35,6 @@ const Register = () => {
             ) {
                 errors.email = "Invalid email address";
             }
-
-            // Username
             if (!values.username) {
                 errors.username = "Username required";
             } else if (["admin", "null", "god"].includes(values.username)) {
@@ -57,15 +46,11 @@ const Register = () => {
             } else if (values.username.length > 50) {
                 errors.username = "Cannot be more than 50 characters";
             }
-
-            // Password
             if (!values.password) {
                 errors.password = "Password required";
             } else if (values.password.length < 8) {
                 errors.password = "Password must be at least 8 characters";
             }
-
-            // Confirm Password
             if (!values.confirmPassword) {
                 errors.confirmPassword = "Please confirm your password";
             } else if (values.password !== values.confirmPassword) {
@@ -119,7 +104,6 @@ const Register = () => {
                     className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5"
                     noValidate
                 >
-                    {/* Email */}
                     <div className="flex flex-col">
                         <label
                             htmlFor="email"
@@ -140,7 +124,6 @@ const Register = () => {
                             aria-invalid={Boolean(formik.touched.email && formik.errors.email)}
                             aria-describedby="email-error"
                         />
-                        {/* Keep a fixed height so layout doesn't jump */}
                         <div id="email-error" className="h-5 mt-1">
                             {formik.touched.email && formik.errors.email && (
                                 <span className="text-xs text-red-600">
@@ -149,8 +132,6 @@ const Register = () => {
                             )}
                         </div>
                     </div>
-
-                    {/* Username */}
                     <div className="flex flex-col">
                         <label
                             htmlFor="username"
@@ -181,9 +162,6 @@ const Register = () => {
                             )}
                         </div>
                     </div>
-
-                    {/* Password */}
-                    {/* Password */}
                     <div className="flex flex-col">
                         <label
                             htmlFor="password"
@@ -206,12 +184,10 @@ const Register = () => {
                                 aria-invalid={Boolean(formik.touched.password && formik.errors.password)}
                                 aria-describedby="password-error"
                             />
-
-                            {/* Show/Hide toggle */}
                             <button
                                 type="button"
                                 onClick={() => setShowPassword((s) => !s)}
-                                onMouseDown={(e) => e.preventDefault()} // keep input focus
+                                onMouseDown={(e) => e.preventDefault()}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white"
                                 aria-label={showPassword ? "Hide password" : "Show password"}
                                 aria-pressed={showPassword}
@@ -227,9 +203,6 @@ const Register = () => {
                             )}
                         </div>
                     </div>
-
-                    {/* Confirm Password */}
-                    {/* Confirm Password */}
                     <div className="flex flex-col">
                         <label
                             htmlFor="confirmPassword"
@@ -254,27 +227,21 @@ const Register = () => {
                                 )}
                                 aria-describedby="confirmPassword-error"
                             />
-
-                            {/* Tick icon — positioned just left of the eye */}
                             <TiTick
                                 color="green"
                                 size={24}
                                 className={[
-                                    // Move left of the eye (eye is right-3)
                                     "absolute right-10 top-1/4 -translate-y-1/2 pointer-events-none",
-                                    // Smooth animation; respects reduced motion
                                     "transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none",
                                     showTick ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95",
                                 ].join(" ")}
                                 aria-hidden={!showTick}
                                 title={showTick ? "Passwords match" : ""}
                             />
-
-                            {/* Show/Hide toggle (eye) */}
                             <button
                                 type="button"
                                 onClick={() => setShowConfirmPassword((s) => !s)}
-                                onMouseDown={(e) => e.preventDefault()} // keep input focus
+                                onMouseDown={(e) => e.preventDefault()}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 z-10 text-slate-600 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white"
                                 aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                                 aria-pressed={showConfirmPassword}
@@ -293,8 +260,6 @@ const Register = () => {
                             )}
                         </div>
                     </div>
-
-                    {/* Submit */}
                     <div className="w-full flex justify-center md:col-span-2 pt-2">
                         <button
                             type="submit"

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CountUp from "react-countup";
 import BookingServices from "../services/BookingServices";
-// import ServiceCenterServices from "../services/ServiceCenterServices";
 import MechanicServices from "../services/MechanicServices";
 
 const MechanicDashboard = () => {
@@ -27,7 +26,6 @@ const MechanicDashboard = () => {
   useEffect(()=>{
     fetchServiceCenter()
   },[])
-  // Fetch bookings from API
   const fetchBookings = async () => {
     try {
       const response = await BookingServices.getBookingsByServiceCenterId(serviceCenterId);
@@ -40,8 +38,6 @@ const MechanicDashboard = () => {
   useEffect(() => {
     fetchBookings();
   }, [serviceCenterId]);
-
-  // Normalize booking status
   const normalizeStatus = (booking) => {
     if (booking.status === "cancelled") return "cancelled";
 
@@ -50,8 +46,6 @@ const MechanicDashboard = () => {
 
     return bookingDate > now ? "upcoming" : "completed";
   };
-
-  // Count bookings by status
   const statusCounts = bookings.reduce(
     (acc, booking) => {
       const status = normalizeStatus(booking);
@@ -60,8 +54,6 @@ const MechanicDashboard = () => {
     },
     {}
   );
-
-  // Cards for dashboard
   const cards = [
     {
       title: "Upcoming Services",
@@ -75,26 +67,16 @@ const MechanicDashboard = () => {
       color: "text-green-400 border-green-400",
       status: "completed",
     },
-    // {
-    //   title: "Cancelled Services",
-    //   value: statusCounts.cancelled || 0,
-    //   color: "text-red-400 border-red-400",
-    //   status: "cancelled",
-    // },
   ];
-
-  // Filter bookings by selected status
   const filteredBookings = selectedStatus
     ? bookings.filter((b) => normalizeStatus(b) === selectedStatus)
     : [];
 
   return (
     <div className="flex-1 overflow-auto">
-      {/* Main Content */}
       <div
         className={`flex-1 ml-${sidebarOpen ? "64" : "20"} transition-all duration-300 p-8`}
       >
-        {/* Status Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {cards.map(({ title, value, color, status }) => (
             <div
@@ -117,8 +99,6 @@ const MechanicDashboard = () => {
             </div>
           ))}
         </div>
-
-        {/* Filtered Bookings */}
         {selectedStatus && (
           <div className="mt-6">
             <h2 className="text-xl font-bold mb-4 capitalize text-slate-700 dark:text-white">

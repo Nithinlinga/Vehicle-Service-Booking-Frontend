@@ -8,7 +8,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 overflow-auto">
-      {/* Sidebar */}
       <div
         className={`h-screen bg-white dark:bg-gray-800 shadow-md z-20 overflow-hidden
     ${open ? "w-64" : "w-20"} transition-[width] duration-500 ease-in-out`}
@@ -32,8 +31,6 @@ const AdminDashboard = () => {
             )}
           </button>
         </div>
-
-        {/* Sidebar Links */}
         <nav className="mt-10 space-y-4 px-4">
           <NavLink to="" end className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "Dashboard" : <span className="text-xl"><LayoutDashboard /></span>}
@@ -55,8 +52,6 @@ const AdminDashboard = () => {
           </NavLink>
         </nav>
       </div>
-
-      {/* Main Content */}
       <div className="flex-1 overflow-auto">
         <Outlet />
       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import BookingServices from "../../services/BookingServices";
 
@@ -10,7 +10,6 @@ export default function ManageAppointments() {
   const fetchBookings = async () => {
     try {
       const response = await BookingServices.getAllBookings();
-      // console.log(response.data); 
       setBookings(response.data);
     } catch (error) {
       console.error("Error fetching bookings:", error);
@@ -25,14 +24,14 @@ export default function ManageAppointments() {
       status === "Yes"
         ? "Are you sure you want to ACCEPT this Booking?"
         : status === "Rejected"
-        ? "Are you sure you want to REJECT this Booking?"
-        : "Are you sure you want to mark this Booking as UNVERIFIED?";
+          ? "Are you sure you want to REJECT this Booking?"
+          : "Are you sure you want to mark this Booking as UNVERIFIED?";
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      
-      await BookingServices.patchBookingVerifyById(id,{
-        verify:status,
+
+      await BookingServices.patchBookingVerifyById(id, {
+        verify: status,
       })
       fetchBookings();
     } catch (err) {
@@ -41,7 +40,6 @@ export default function ManageAppointments() {
   };
   return (
     <div className="w-full gap-4">
-      {/* Unverified Appointments */}
       <div className="flex-1">
         <button
           onClick={() => setShowUnverified(!showUnverified)}
@@ -63,7 +61,6 @@ export default function ManageAppointments() {
                   <div key={b.bookingId} className="p-3 rounded shadow-sm border">
                     <p className="font-bold text-amber-700">{b.name}</p>
                     <p>Service Center Id: {b.serviceCenterId}</p>
-                    {/* <p>Service Type: {b.serviceType}</p> */}
                     <p>Date: {b.date}</p>
                     <p>Time: {b.timeslot}</p>
                     <p>Vehicle Id: {b.vehicleId}</p>
@@ -74,12 +71,6 @@ export default function ManageAppointments() {
                       >
                         Accept
                       </button>
-                      {/* <button
-                        onClick={() => handleVerification(b.bookingId, "Rejected")}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                      >
-                        Schedule
-                      </button> */}
                       <button
                         onClick={() => handleVerification(b.bookingId, "Rejected")}
                         className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
@@ -94,8 +85,6 @@ export default function ManageAppointments() {
           </div>
         </div>
       </div>
-
-      {/* Verified Appointments */}
       <div className="flex-1">
         <button
           onClick={() => setShowVerified(!showVerified)}
@@ -117,7 +106,6 @@ export default function ManageAppointments() {
                   <div key={b.bookingId} className="p-3 rounded shadow-sm border">
                     <p className="font-bold text-amber-700">{b.name}</p>
                     <p>Service Center Id: {b.serviceCenterId}</p>
-                    {/* <p>Service Type: {b.serviceType}</p> */}
                     <p>Date: {b.date}</p>
                     <p>Time: {b.timeslot}</p>
                     <p>Vehicle Id: {b.vehicleId}</p>
@@ -148,7 +136,6 @@ export default function ManageAppointments() {
                   <div key={b.bookingId} className="p-3 rounded shadow-sm border">
                     <p className="font-bold text-amber-700">{b.name}</p>
                     <p>Service Center Id: {b.serviceCenterId}</p>
-                    {/* <p>Service Type: {b.serviceType}</p> */}
                     <p>Date: {b.date}</p>
                     <p>Time: {b.timeslot}</p>
                     <p>Vehicle Id: {b.vehicleId}</p>
@@ -158,7 +145,7 @@ export default function ManageAppointments() {
                         className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
                       >
                         Accept
-                    </button>
+                      </button>
                     </div>
                   </div>
                 )

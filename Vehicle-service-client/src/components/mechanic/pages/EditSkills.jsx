@@ -1,11 +1,11 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MechanicSkill from "../../services/MechanicSkill";
 import { toast } from "react-hot-toast";
 
 const EditSkills = () => {
-  const { isAuthenticated, user } = useSelector((state) => state.auth); 
+  const { user } = useSelector((state) => state.auth); 
 
   const [skillInput, setSkillInput] = useState("");
   const [skillList, setSkillList] = useState([]);
@@ -27,16 +27,14 @@ const EditSkills = () => {
   const addSkill = () => {
     if (skillInput.trim()) {
       const newSkillData = {
-        skill_id: user.id, // Ensure your API handles this correctly
+        skill_id: user.id,
         skill_name: skillInput.trim()
       };
-      // ⚠️ Add to database first
       MechanicSkill.addSkill(newSkillData)
         .then((res) => {
-          // ✅ If successful, then update the local state and Redux store
           const updatedList = [...skillList, skillInput.trim()];
           setSkillList(updatedList);
-          setSkillInput(""); // Clear input on success
+          setSkillInput("");
           toast.success("Skill added successfully");
           console.log(res);
         })
@@ -49,10 +47,8 @@ const EditSkills = () => {
 
   const removeSkill = (index) => {
     const skillToDelete = skillList[index];
-    // ⚠️ Delete from database first
     MechanicSkill.deleteSkillByName(skillToDelete)
       .then((res) => {
-        // ✅ If successful, then update the local state and Redux store
         const updatedList = skillList.filter((_, i) => i !== index);
         setSkillList(updatedList);
         toast.success("Skill removed successfully");
@@ -66,8 +62,6 @@ const EditSkills = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // The Redux state is already updated in addSkill/removeSkill,
-    // so just navigate
     navigate("/mechanic/profile");
   };
 
@@ -79,7 +73,6 @@ const EditSkills = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Input + Add Button */}
           <div className="flex gap-3">
             <input
               type="text"
@@ -96,8 +89,6 @@ const EditSkills = () => {
               Add
             </button>
           </div>
-
-          {/* Skill List */}
           <div className="space-y-3">
             {skillList.length === 0 ? (
               <p className="text-gray-500 dark:text-slate-400 text-center">No skills added yet.</p>
@@ -121,8 +112,6 @@ const EditSkills = () => {
               </ul>
             )}
           </div>
-
-          {/* Submit Button */}
           <div className="text-center">
             <button
               type="submit"

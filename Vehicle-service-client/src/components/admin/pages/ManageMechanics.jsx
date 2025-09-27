@@ -9,9 +9,7 @@ export default function ManageMechanics() {
   const [showUnverified, setShowUnverified] = useState(false);
   const [showRejected, setShowRejected] = useState(false);
   const [mechanics, setMechanics] = useState([]);
-  const [serviceCentreName,setServiceCentreName]=useState("");
-
-  // Modal state for editing Active/Inactive (verified mechanics)
+  const [serviceCentreName, setServiceCentreName] = useState("");
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [selectedMechanic, setSelectedMechanic] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("active");
@@ -24,14 +22,14 @@ export default function ManageMechanics() {
       console.error("Error fetching mechanics:", err);
     }
   };
-const getServiceCenterById=async(id)=>{
-  try {
-    const response=await ServiceCenterServices.getServiceCenterById(id)
-    setServiceCentreName(response.data.name)
-  } catch (error) {
-    console.error("Service centre not found",error)
+  const getServiceCenterById = async (id) => {
+    try {
+      const response = await ServiceCenterServices.getServiceCenterById(id)
+      setServiceCentreName(response.data.name)
+    } catch (error) {
+      console.error("Service centre not found", error)
+    }
   }
-}
   useEffect(() => {
     fetchMechanics();
   }, []);
@@ -41,8 +39,8 @@ const getServiceCenterById=async(id)=>{
       status === "yes"
         ? "Are you sure you want to ACCEPT this mechanic?"
         : status === "rejected"
-        ? "Are you sure you want to REJECT this mechanic?"
-        : "Are you sure you want to mark this mechanic as UNVERIFIED?";
+          ? "Are you sure you want to REJECT this mechanic?"
+          : "Are you sure you want to mark this mechanic as UNVERIFIED?";
     if (!window.confirm(confirmMsg)) return;
 
     try {
@@ -54,16 +52,15 @@ const getServiceCenterById=async(id)=>{
   };
 
   const openStatusModal = async (mechanic) => {
-  setSelectedMechanic(mechanic);
-  setIsStatusModalOpen(true);
-};
+    setSelectedMechanic(mechanic);
+    setIsStatusModalOpen(true);
+  };
 
-const handleSaveMechanic = async(updatedMechanic) => {
-  console.log("Updated mechanic:", updatedMechanic);
-  // call API to save changes here
-await MechanicServices.editMechanics(updatedMechanic.mechanicId,updatedMechanic)
-await fetchMechanics()
-};
+  const handleSaveMechanic = async (updatedMechanic) => {
+    console.log("Updated mechanic:", updatedMechanic);
+    await MechanicServices.editMechanics(updatedMechanic.mechanicId, updatedMechanic)
+    await fetchMechanics()
+  };
 
   const closeStatusModal = () => {
     setIsStatusModalOpen(false);
@@ -72,7 +69,7 @@ await fetchMechanics()
 
   const handleStatusSave = async () => {
     try {
-      await MechanicServices.updateStatus(selectedMechanic.mechanicId,selectedStatus)
+      await MechanicServices.updateStatus(selectedMechanic.mechanicId, selectedStatus)
 
       await fetchMechanics()
 
@@ -98,9 +95,8 @@ await fetchMechanics()
           {showUnverified ? <IoIosArrowUp /> : <IoIosArrowDown />}
         </button>
         <div
-          className={`overflow-hidden transition-all duration-1000 ease-in-out ${
-            showUnverified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`overflow-hidden transition-all duration-1000 ease-in-out ${showUnverified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+            }`}
         >
           {/* Scrollable list */}
           <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
@@ -149,9 +145,8 @@ await fetchMechanics()
           {showVerified ? <IoIosArrowUp /> : <IoIosArrowDown />}
         </button>
         <div
-          className={`overflow-hidden transition-all duration-1000 ease-in-out ${
-            showVerified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`overflow-hidden transition-all duration-1000 ease-in-out ${showVerified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+            }`}
         >
           {/* Scrollable list */}
           <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
@@ -167,7 +162,6 @@ await fetchMechanics()
                   <p>Rating: {m.rating}</p>
                   <p>Service Center Name: {m.serviceCenterName}</p>
                   <p>Address: {m.address}</p>
-                  {/* Optional display of current Active/Inactive if present */}
                   {m.status && <p>Status: {m.status}</p>}
                 </div>
                 <div className="mt-3 sm:mt-0 flex gap-2">
@@ -197,9 +191,8 @@ await fetchMechanics()
           {showRejected ? <IoIosArrowUp /> : <IoIosArrowDown />}
         </button>
         <div
-          className={`overflow-hidden transition-all duration-1000 ease-in-out ${
-            showRejected ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`overflow-hidden transition-all duration-1000 ease-in-out ${showRejected ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+            }`}
         >
           {/* Scrollable list */}
           <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
@@ -231,63 +224,13 @@ await fetchMechanics()
           </div>
         </div>
       </div>
-
-      {/* Status Edit Modal (Active/Inactive) */}
-      {/* {isStatusModalOpen && selectedMechanic && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
-            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-              Edit Mechanic Status
-            </h3>
-
-            <div className="space-y-3">
-              <input
-                type="text"
-                value={selectedMechanic.name}
-                disabled
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
-              />
-              <input
-                type="text"
-                value={serviceCentreName}
-                disabled
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
-              />
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
-              >
-                <option value="active">Active</option>
-                <option value="inActive">InActive</option>
-              </select>
-            </div>
-
-            <div className="flex justify-end mt-6 space-x-2">
-              <button
-                onClick={closeStatusModal}
-                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleStatusSave}
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
-
       <ManageMechanicModal
-  isStatusModalOpen={isStatusModalOpen}
-  closeStatusModal={() => setIsStatusModalOpen(false)}
-  selectedMechanic={selectedMechanic}
-  isEdit={!!selectedMechanic?.servicecenterId}
-  onSave={handleSaveMechanic}
-/>
+        isStatusModalOpen={isStatusModalOpen}
+        closeStatusModal={() => setIsStatusModalOpen(false)}
+        selectedMechanic={selectedMechanic}
+        isEdit={!!selectedMechanic?.servicecenterId}
+        onSave={handleSaveMechanic}
+      />
     </div>
   );
 }

@@ -14,7 +14,7 @@ useEffect(() => {
   const fetchVehicle = async () => {
     try {
       const resp = await VehiclesServices.getVehiclesByUserId(user.id)
-      setVehicles(resp.data || []); // fallback to empty array if no data
+      setVehicles(resp.data || []);
       console.log(resp.data);
       localStorage.setItem("vehicles",JSON.stringify(resp.data))
     } catch (error) {
@@ -23,18 +23,17 @@ useEffect(() => {
   };
 
   fetchVehicle();
-}, []); // runs once on mount
+}, []);
 
 useEffect(() => {
   if (vehicles.length > 0 && vehicleType) {
     const filtered = vehicles.filter(
       (v) => v.vehicle_type === vehicleType
     );
-    // console.log('vehcile',vehicleType,vehicles,filtered)
     console.log(selected);
     
     setFilteredVehicles(filtered);
-    setSelected(filtered[0] || null); // avoid undefined
+    setSelected(filtered[0] || null);
   } else {
     setFilteredVehicles([]);
     setSelected(null);
@@ -44,7 +43,6 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-cyan-50 to-teal-100 dark:from-slate-900 dark:via-slate-800 dark:to-teal-900 py-10 px-2">
-      {/* Vehicle Type Selector */}
       <div className="flex justify-center mb-8">
         <div className="relative w-56 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center shadow-inner">
           <span
@@ -77,7 +75,6 @@ useEffect(() => {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
-        {/* Vehicle List */}
         <div className="w-full lg:w-1/3 flex flex-col gap-4">
           {filteredVehicles.length === 0 ? (
             <div className="text-center text-gray-500 dark:text-gray-300">
@@ -95,7 +92,7 @@ useEffect(() => {
                 }`}
               >
                 <img
-                  src={v.image || "https://www.pngmart.com/files/22/Car-PNG-Image.png"} // fallback image
+                  src={v.image || "https://www.pngmart.com/files/22/Car-PNG-Image.png"}
                   alt={v.model}
                   className="w-16 h-16 object-contain rounded-lg bg-slate-100 dark:bg-slate-700"
                 />
@@ -107,7 +104,6 @@ useEffect(() => {
           )}
         </div>
 
-        {/* Vehicle Details */}
         <div className="flex-1 flex h-screen justify-center">
           {selected && (
             <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 flex flex-col items-center">
@@ -134,8 +130,6 @@ useEffect(() => {
                     <td className="py-1 text-slate-900 dark:text-slate-100">{selected.vehicle_type}</td>
                   </tr>
 
-                  
-                  {/* Conditional Rows based on vehicle type */}
                   {selected.vehicle_type === 'car' ? (
                     <>
                     

@@ -15,7 +15,6 @@ const Invoice = () => {
   const [vehicles, setVehicles] = useState({});
   const [services, setServices] = useState({});
 
-  // Load appointments from location state or localStorage
   useEffect(() => {
     if (location.state && location.state.appointment) {
       setAppointments([location.state.appointment]);
@@ -29,7 +28,7 @@ const Invoice = () => {
     }
   }, [location.state]);
 
-  // Fetch mechanics
+
   useEffect(() => {
     const fetchMechanics = async () => {
       try {
@@ -42,7 +41,6 @@ const Invoice = () => {
     fetchMechanics();
   }, []);
 
-  // Fetch vehicle and service type details
   useEffect(() => {
     const fetchDetails = async () => {
       const vehicleMap = {};

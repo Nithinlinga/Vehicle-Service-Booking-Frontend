@@ -1,8 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { FaDiscord, FaInstagram, FaYoutube } from "react-icons/fa";
 import { useState } from "react";
-
-// Reusable modal for both policies
 const PolicyModal = ({ type, onClose }) => {
   if (!type) return null;
   return (
@@ -105,33 +103,14 @@ const Footer = () => {
 
   return (
     <>
-      {/* Contact Short Section */}
-      {/* <section className="max-w-[90vw] md:max-w-[60vw] mx-auto p-8 md:p-[5rem_10rem] rounded-lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 items-center text-center md:text-left">
-          <div className="mb-4 md:mb-0">
-            <h3 className="text-xl font-semibold">Ready to get started?</h3>
-            <h3 className="text-xl font-semibold">Talk to us today</h3>
-          </div>
-          <div className="justify-self-center md:justify-self-end self-center">
-            <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-              <NavLink to="/">Get Started</NavLink>
-            </button>
-          </div>
-        </div>
-      </section> */}
-
-      {/* Footer Section */}
       <footer className="pt-10 md:pt-20 pb-6">
         <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-4">
-          {/* About */}
           <div className="mb-8 sm:mb-0 text-center sm:text-left">
             <h3 className="text-xl font-extrabold mb-4 ml-25">Xcelerate Auto</h3>
             <p className="text-gray-600 dark:text-gray-400 font-semibold ml-20">
               Book. Service. Drive happy
             </p>
           </div>
-
-          {/* Subscribe */}
           <div className="mb-8 sm:mb-0 text-center sm:text-left">
             <h3 className="text-lg font-semibold mb-4 ml-20">Subscribe to get important updates</h3>
             <form
@@ -154,8 +133,6 @@ const Footer = () => {
               </NavLink>
             </form>
           </div>
-
-          {/* Social */}
           <div className="mb-8 sm:mb-0 text-center sm:text-left">
             <h3 className="text-lg font-semibold mb-4 ml-30">Follow Us</h3>
             <div className="flex gap-4 justify-center sm:justify-start">
@@ -179,15 +156,11 @@ const Footer = () => {
               </Link>
             </div>
           </div>
-
-          {/* Contact */}
           <div className="mb-8 sm:mb-0 text-center sm:text-left">
             <h3 className="text-lg font-semibold mb-2 ml-15">Call Us</h3>
             <h3 className="text-lg font-semibold ml-14">+91 12345678978</h3>
           </div>
         </div>
-
-        {/* Footer Bottom */}
         <div className="pt-8 md:pt-36 px-4">
           <hr className="mb-4 border-gray-300" />
           <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 items-center text-center md:text-left">

@@ -31,7 +31,6 @@ const Login = () => {
     validate: (values) => {
       const errors = {};
 
-      // Email
       if (!values.email) {
         errors.email = "Email required";
       } else if (
@@ -39,8 +38,6 @@ const Login = () => {
       ) {
         errors.email = "Invalid email address";
       }
-
-      // Password (keep simple for login)
       if (!values.password) {
         errors.password = "Password required";
       }
@@ -51,7 +48,6 @@ const Login = () => {
       setServerError("");
       try {
         const response = await LoginServices.postLogin(values);
-        // Update store & local storage
         dispatch(login(response.data.user));
         localStorage.setItem("auth", JSON.stringify(response.data.user));
         toast.success("Login success");
@@ -92,7 +88,6 @@ const Login = () => {
           className="flex flex-col gap-5"
           noValidate
         >
-          {/* Email */}
           <div className="flex flex-col">
             <label
               htmlFor="email"
@@ -113,7 +108,6 @@ const Login = () => {
               aria-invalid={Boolean(formik.touched.email && formik.errors.email)}
               aria-describedby="email-error"
             />
-            {/* Fixed-height error container to avoid layout shift */}
             <div id="email-error" className="h-5 mt-1">
               {formik.touched.email && formik.errors.email && (
                 <span className="text-xs text-red-600">
@@ -123,7 +117,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Password */}
           <div className="flex flex-col">
             <label
               htmlFor="password"
@@ -170,8 +163,6 @@ const Login = () => {
               )}
             </div>
           </div>
-
-          {/* Submit */}
           <button
             type="submit"
             disabled={formik.isSubmitting}

@@ -79,14 +79,12 @@ app.post('/login', (req, res) => {
   );
 });
 
-//skills of mechanic
 app.get('/skill/:id', (req, res) => {
   db.query('SELECT * FROM skill where skill_id = ?', [req.params.id], (err, result) => {
     if (err) return res.status(500).send(err);
     res.json(result);
   });
 });
-// Add a new skill
 app.post('/skill', (req, res) => {
   const { skill_id, skill_name } = req.body;
   db.query('INSERT INTO skill (skill_id, skill_name) VALUES (?, ?)', [skill_id, skill_name], (err, result) => {
@@ -94,7 +92,6 @@ app.post('/skill', (req, res) => {
     res.json({ id: result.insertId, skill_id, skill_name });
   });
 });
-// Delete a skill by name
 app.delete('/skill/:name', (req, res) => {
   db.query('DELETE FROM skill WHERE skill_name = ?', [req.params.name], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -104,7 +101,6 @@ app.delete('/skill/:name', (req, res) => {
 });
 //Service Center Page of Admin dashboard
 
-// Get all service centers
 app.get('/serviceCenters', (req, res) => {
   db.query('SELECT * FROM serviceCenter', (err, result) => {
     if (err) return res.status(500).send(err);
@@ -112,7 +108,6 @@ app.get('/serviceCenters', (req, res) => {
   });
 });
 
-// Add a new service center
 app.post('/serviceCenters', (req, res) => {
   const { name, location, contact, rating, feedback } = req.body;
   db.query(
@@ -125,7 +120,6 @@ app.post('/serviceCenters', (req, res) => {
   );
 });
 
-// get service center by id
 app.get('/serviceCenters/:id', (req, res) => {
   db.query(
     'Select * from serviceCenter where serviceCenterId = ?',
@@ -136,7 +130,6 @@ app.get('/serviceCenters/:id', (req, res) => {
     }
   );
 });
-// Update a service center
 app.put('/serviceCenters/:id', (req, res) => {
   const { name, location, contact, rating, feedback } = req.body;
   db.query(
@@ -149,7 +142,6 @@ app.put('/serviceCenters/:id', (req, res) => {
   );
 });
 
-// Delete a service center
 app.delete('/serviceCenters/:id', (req, res) => {
   db.query('DELETE FROM serviceCenter WHERE serviceCenterId = ?', [req.params.id], (err) => {
     if (err) return res.status(500).send(err);
@@ -159,14 +151,13 @@ app.delete('/serviceCenters/:id', (req, res) => {
 
 //serviceTypes
 
-// Get all service types
 app.get('/serviceTypes', (req, res) => {
   db.query('SELECT * FROM serviceType', (err, result) => {
     if (err) return res.status(500).send(err);
     res.json(result);
   });
 });
-// Get all service types by service centre id
+
 app.get('/serviceTypes/serviceCenter/:id', (req, res) => {
   db.query('SELECT * FROM serviceType where serviceCenterId=?',[req.params.id]
     ,(err, result) => {
@@ -175,7 +166,6 @@ app.get('/serviceTypes/serviceCenter/:id', (req, res) => {
   });
 });
 
-// Add a new service type
 app.post('/serviceTypes', (req, res) => {
   const { name,description, price, status, serviceCenterId } = req.body;
   db.query(
@@ -188,7 +178,6 @@ app.post('/serviceTypes', (req, res) => {
   );
 });
 
-// Update a service type
 app.put('/serviceTypes/:id', (req, res) => {
   const { description, price, status, serviceCenterId } = req.body;
   db.query(
@@ -201,7 +190,6 @@ app.put('/serviceTypes/:id', (req, res) => {
   );
 });
 
-// Delete a service type
 app.delete('/serviceTypes/:id', (req, res) => {
   db.query('DELETE FROM serviceType WHERE serviceTypeId = ?', [req.params.id], (err) => {
     if (err) return res.status(500).send(err);
@@ -210,8 +198,6 @@ app.delete('/serviceTypes/:id', (req, res) => {
 });
 
 //Users end points 
-
-// Get user by ID
 
 app.get('/users', (req, res) => {
   db.query('SELECT * FROM users', (err, result) => {
@@ -230,20 +216,15 @@ app.get('/users/:userId', (req, res) => {
 });
 
 
-// Create a new user
 
 app.post('/users', (req, res) => {
   const { userId, first_name, last_name, email, address, phone} = req.body;
-
-  // Step 1: Validate userId and email against auth table
   db.query('SELECT * FROM auth WHERE id = ? AND email = ?', [userId, email], (err, result) => {
     if (err) return res.status(500).send({ message: 'Server error during validation' });
 
     if (result.length === 0) {
       return res.status(400).send({ message: 'Invalid userId or email. Please register first.' });
     }
-
-    // Step 2: Insert into users table
     db.query(
       'INSERT INTO users (userId, first_name, last_name, email, address, phone) VALUES (?, ?, ?, ?, ?, ?)',
       [userId, first_name, last_name, email, address, phone],
@@ -256,7 +237,6 @@ app.post('/users', (req, res) => {
 });
 
 
-// Update all user fields by ID
 app.put('/users/:userId', (req, res) => {
   const { first_name, last_name, email, address, phone } = req.body;
   db.query(
@@ -269,7 +249,6 @@ app.put('/users/:userId', (req, res) => {
   );
 });
 
-// Patch user status by ID
 
 app.patch('/users/:userId/status', (req, res) => {
   const { status } = req.body;
@@ -284,7 +263,6 @@ app.patch('/users/:userId/status', (req, res) => {
 });
 
 
-// Delete user by ID
 app.delete('/users/:userId', (req, res) => {
   db.query('DELETE FROM users WHERE userId = ?', [req.params.userId], (err) => {
     if (err) return res.status(500).send(err);
@@ -342,7 +320,6 @@ app.post('/vehicles', (req, res) => {
   });
 });
 
-// GET: All vehicles by userId
 app.get('/vehicles/:userId', (req, res) => {
   db.query('SELECT * FROM vehicles WHERE userId = ?', [req.params.userId], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -350,16 +327,12 @@ app.get('/vehicles/:userId', (req, res) => {
   });
 });
 
-//GET
 app.get('/vehicles', (req, res) => {
   db.query('SELECT * FROM vehicles',  (err, result) => {
     if (err) return res.status(500).send(err);
     res.json(result);
   });
 });
-
-
-// GET: Vehicle details by registration number
 app.get('/vehicles/:registration_number', (req, res) => {
   db.query('SELECT * FROM vehicles WHERE registration_number = ?', [req.params.registration_number], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -368,7 +341,6 @@ app.get('/vehicles/:registration_number', (req, res) => {
   });
 });
 
-// PATCH: Update vehicle details by registration number
 app.patch('/vehicles/:registration_number', (req, res) => {
   const { make, model, year, color } = req.body;
   db.query(
@@ -382,7 +354,6 @@ app.patch('/vehicles/:registration_number', (req, res) => {
   );
 });
 
-// PUT: Edit vehicle by vehicleId
 app.put('/vehicles/:vehicleId', (req, res) => {
   const { registration_number, make, model, year} = req.body;
 
@@ -402,7 +373,6 @@ app.put('/vehicles/:vehicleId', (req, res) => {
   );
 });
 
-// DELETE: Vehicle by vehicleId
 app.delete('/vehicles/:vehicleId', (req, res) => {
   db.query('DELETE FROM vehicles WHERE vehicleId = ?', [req.params.vehicleId], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -413,7 +383,7 @@ app.delete('/vehicles/:vehicleId', (req, res) => {
 
 //mechanic end points 
 
-// Create a new mechanic
+
 app.post('/mechanics', (req, res) => {
   const { mechanicId, serviceCenterId, name, expertise , availability , rating , phone , address } = req.body;
   db.query(
@@ -426,7 +396,6 @@ app.post('/mechanics', (req, res) => {
   );
 });
 
-// GET: All mechanics
 app.get('/mechanics', (req, res) => {
   db.query(
   `SELECT m.*,
@@ -442,13 +411,12 @@ app.get('/mechanics', (req, res) => {
       return;
     }
     res.json(result);
-    // console.log(result); // result will have both mechanic + service center info
   }
 );
 
 });
 
-// GET: Mechanic by ID
+
 app.get('/mechanics/:id', (req, res) => {
   db.query('SELECT * FROM mechanic WHERE mechanicId = ?', [req.params.id], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -457,7 +425,6 @@ app.get('/mechanics/:id', (req, res) => {
   });
 });
 
-// DELETE: Mechanic by ID
 app.delete('/mechanics/:id', (req, res) => {
   db.query('DELETE FROM mechanic WHERE mechanicId = ?', [req.params.id], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -466,7 +433,7 @@ app.delete('/mechanics/:id', (req, res) => {
   });
 });
 
-// DELETE: All mechanics
+
 app.delete('/mechanics', (req, res) => {
   db.query('DELETE FROM mechanic', (err) => {
     if (err) return res.status(500).send(err);
@@ -474,7 +441,6 @@ app.delete('/mechanics', (req, res) => {
   });
 });
 
-// PUT: Update all fields by ID
 app.put('/mechanics/:id', (req, res) => {
   const { name, expertise, availability, rating,status,address } = req.body;
   const servicecenterId = req.body.servicecenterId === 'none' ? null : req.body.servicecenterId;
@@ -490,7 +456,6 @@ app.put('/mechanics/:id', (req, res) => {
   );
 });
 
-// PATCH: Update availability by ID
 app.patch('/mechanics/:id', (req, res) => {
   const { availability } = req.body;
   db.query(
@@ -503,7 +468,6 @@ app.patch('/mechanics/:id', (req, res) => {
     }
   );
 });
-//verify mechanic by id
 app.patch('/mechanics/verify/:id', (req, res) => {
   const { verify } = req.body;
   db.query(
@@ -516,7 +480,6 @@ app.patch('/mechanics/verify/:id', (req, res) => {
     }
   );
 });
-//change status mechanic by id
 app.patch('/mechanics/status/:id', (req, res) => {
   const { status } = req.body;
   db.query(
@@ -530,7 +493,6 @@ app.patch('/mechanics/status/:id', (req, res) => {
   );
 });
 
-// PATCH: Update rating by ID
 app.patch('/mechanics/:id', (req, res) => {
   const { rating } = req.body;
   db.query(
@@ -548,7 +510,6 @@ app.patch('/mechanics/:id', (req, res) => {
 
 //bookings
 
-// GET: All bookings
 app.get('/booking', (req, res) => {
   db.query('SELECT * FROM booking', (err, result) => {
     if (err) return res.status(500).send(err);
@@ -556,7 +517,6 @@ app.get('/booking', (req, res) => {
   });
 });
 
-// GET: Booking by ID
 app.get('/booking/:id', (req, res) => {
   db.query('SELECT * FROM booking WHERE bookingId = ?', [req.params.id], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -565,13 +525,6 @@ app.get('/booking/:id', (req, res) => {
   });
 });
 
-// GET: Bookings by User ID
-// app.get('/booking/user/:userId', (req, res) => {
-//   db.query('SELECT * FROM booking WHERE userId = ?', [req.params.userId], (err, result) => {
-//     if (err) return res.status(500).send(err);
-//     res.json(result);
-//   });
-// });
 app.get('/booking/user/:userId', (req, res) => {
   const userId = req.params.userId;
 
@@ -592,7 +545,6 @@ app.get('/booking/user/:userId', (req, res) => {
     res.json(result);
   });
 });
-// GET: Bookings by Vehicle ID
 app.get('/booking/vehicle/:vehicleId', (req, res) => {
   db.query('SELECT * FROM booking WHERE vehicleId = ?', [req.params.vehicleId], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -600,7 +552,6 @@ app.get('/booking/vehicle/:vehicleId', (req, res) => {
   });
 });
 
-// GET: Bookings by Service Center ID
 app.get('/booking/service/:serviceCenterId', (req, res) => {
   db.query('SELECT * FROM booking WHERE serviceCenterId = ?', [req.params.serviceCenterId], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -608,7 +559,6 @@ app.get('/booking/service/:serviceCenterId', (req, res) => {
   });
 });
 
-// POST: Create new booking
 app.post('/booking', (req, res) => {
   const { userId, vehicleId, serviceCenterId, date, timeslot, status } = req.body;
   db.query(
@@ -621,7 +571,6 @@ app.post('/booking', (req, res) => {
   );
 });
 
-// PUT: Update all fields by booking ID
 app.put('/booking/:id', (req, res) => {
   const { userId, vehicleId, serviceCenterId, date, timeslot, status } = req.body;
   db.query(
@@ -635,7 +584,6 @@ app.put('/booking/:id', (req, res) => {
   );
 });
 
-// PATCH: Update status by booking ID
 app.patch('/booking/:id/status', (req, res) => {
   const { status } = req.body;
   db.query(
@@ -661,7 +609,6 @@ app.patch('/booking/verify/:id', (req, res) => {
   );
 });
 
-// DELETE: Booking by ID
 app.delete('/booking/:id', (req, res) => {
   db.query('DELETE FROM booking WHERE bookingId = ?', [req.params.id], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -670,7 +617,6 @@ app.delete('/booking/:id', (req, res) => {
   });
 });
 
-// DELETE: All bookings
 app.delete('/booking', (req, res) => {
   db.query('DELETE FROM booking', (err) => {
     if (err) return res.status(500).send(err);

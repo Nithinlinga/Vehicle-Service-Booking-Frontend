@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
 
 const ManageMechanicModal = ({
@@ -6,8 +6,8 @@ const ManageMechanicModal = ({
   closeStatusModal,
   selectedMechanic,
   isEdit = false,
-  onSave, // callback to parent with updated mechanic info
-  isVerificationFlow = false, // NEW: flag to switch between verification vs service center assignment
+  onSave,
+  isVerificationFlow = false,
 }) => {
   const [serviceCenters, setServiceCenters] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState(
@@ -16,8 +16,6 @@ const ManageMechanicModal = ({
   const [selectedServiceCenterId, setSelectedServiceCenterId] = useState(
     selectedMechanic?.servicecenterId || ""
   );
-
-  // Fetch service centers
   const getServiceCenters = async () => {
     try {
       const response = await ServiceCenterServices.getAllServiceCenters();
@@ -45,10 +43,10 @@ const ManageMechanicModal = ({
       ...selectedMechanic,
       status: selectedStatus,
       servicecenterId: isVerificationFlow
-        ? selectedMechanic?.servicecenterId // don’t change service center in verification flow
+        ? selectedMechanic?.servicecenterId
         : selectedServiceCenterId,
     };
-    onSave(updatedMechanic); // pass back to parent
+    onSave(updatedMechanic);
     closeStatusModal();
   };
 
@@ -66,7 +64,6 @@ const ManageMechanicModal = ({
         </h3>
 
         <div className="space-y-3">
-          {/* Mechanic Name */}
           <input
             type="text"
             value={selectedMechanic?.name || ""}
@@ -79,8 +76,6 @@ const ManageMechanicModal = ({
             disabled
             className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
           />
-
-          {/* Status */}
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
@@ -99,8 +94,6 @@ const ManageMechanicModal = ({
               </>
             )}
           </select>
-
-          {/* Service Center Selection (only for assignment/change flow) */}
           {!isVerificationFlow && (
             <select
               value={selectedServiceCenterId}
@@ -116,8 +109,6 @@ const ManageMechanicModal = ({
             </select>
           )}
         </div>
-
-        {/* Buttons */}
         <div className="flex justify-end mt-6 space-x-2">
           <button
             onClick={closeStatusModal}

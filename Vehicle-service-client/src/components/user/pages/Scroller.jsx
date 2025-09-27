@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import './UserDashboard.css';
 import img1 from '../../../assets/logos/1.png';
 import img2 from '../../../assets/logos/2.avif';
@@ -21,7 +21,6 @@ import img18 from '../../../assets/logos/18.png';
 import img19 from '../../../assets/logos/19.jpg';
 import img20 from '../../../assets/logos/20.png';
 
-// The array of images
 const images = [
   [img1],
   [img2, img3],
@@ -55,7 +54,6 @@ const Scroller = ({ direction = 'left', speed = 'normal' }) => {
     });
   };
 
-  // Flatten the array of arrays into a single array
   const flatImages = images.flat();
 
   return (

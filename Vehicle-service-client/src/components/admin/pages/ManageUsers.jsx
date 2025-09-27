@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
-import UserServices from "../../services/UserServices"; // adjust path if needed
+import { useEffect, useState } from "react";
+import UserServices from "../../services/UserServices";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-
-  // Fetch all users
   const fetchUsers = async () => {
     try {
       const response = await UserServices.getAllUsers();
@@ -36,7 +34,7 @@ const ManageUsers = () => {
         selectedUser.userId,
         selectedUser.status
       );
-      await fetchUsers(); // refresh list
+      await fetchUsers();
       handleModalClose();
     } catch (error) {
       console.error("Error updating user status:", error);
@@ -46,67 +44,59 @@ const ManageUsers = () => {
   return (
     <div className="p-4 sm:p-6">
       <h2 className="text-2xl font-bold mb-6 text-center">Users List</h2>
-
-      {/* Table view for md and lg */}
-<div className="overflow-x-auto rounded-lg shadow hidden sm:block">
-  <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-    <thead className="bg-gray-50 dark:bg-gray-900">
-      <tr>
-        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">#</th>
-        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Name</th>
-        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Email</th>
-        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Phone</th>
-        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Status</th>
-        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Actions</th>
-      </tr>
-    </thead>
-    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-      {users.map((u, i) => (
-        <tr key={u.userId} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{i + 1}</td>
-          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{u.first_name} {u.last_name}</td>
-          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.email}</td>
-          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.phone}</td>
-          <td className="px-6 py-4 whitespace-nowrap">
-            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-              {u.status === "active" ? "Active" : "inActive"}
-            </span>
-          </td>
-          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <button onClick={() => handleEditClick(u)} className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-3 py-1 rounded text-sm shadow-sm">
-              Edit
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
-{/* Card view for small screens */}
-<div className="block sm:hidden space-y-4">
-  {users.map((u, i) => (
-    <div key={u.userId} className="border border-gray-300 rounded-lg p-4 shadow-sm bg-white dark:bg-gray-800 hover:shadow-md transition-shadow">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="font-semibold text-lg">{i + 1}. {u.first_name} {u.last_name}</h3>
-        <span className={`px-2 py-1 text-xs rounded-full ${u.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-          {u.status === "active" ? "Active" : "inActive"}
-        </span>
+      <div className="overflow-x-auto rounded-lg shadow hidden sm:block">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-900">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">#</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Email</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Phone</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            {users.map((u, i) => (
+              <tr key={u.userId} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{i + 1}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{u.first_name} {u.last_name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.phone}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                    {u.status === "active" ? "Active" : "inActive"}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <button onClick={() => handleEditClick(u)} className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-3 py-1 rounded text-sm shadow-sm">
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">📧 {u.email}</p>
-      <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">📞 {u.phone}</p>
-      <div className="text-right">
-        <button onClick={() => handleEditClick(u)} className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-          Edit
-        </button>
+      <div className="block sm:hidden space-y-4">
+        {users.map((u, i) => (
+          <div key={u.userId} className="border border-gray-300 rounded-lg p-4 shadow-sm bg-white dark:bg-gray-800 hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-semibold text-lg">{i + 1}. {u.first_name} {u.last_name}</h3>
+              <span className={`px-2 py-1 text-xs rounded-full ${u.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                {u.status === "active" ? "Active" : "inActive"}
+              </span>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">📧 {u.email}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">📞 {u.phone}</p>
+            <div className="text-right">
+              <button onClick={() => handleEditClick(u)} className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                Edit
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
-
-
-
-      {/* Modal */}
       {isModalOpen && selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-4">

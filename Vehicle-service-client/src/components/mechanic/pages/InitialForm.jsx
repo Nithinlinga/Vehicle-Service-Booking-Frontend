@@ -14,11 +14,7 @@ const InitialForm = () => {
     availability: 'Available',
     rating: 'Excellent',
   });
-
-  // State to control the submission message visibility
   const [showSubmissionMessage, setShowSubmissionMessage] = useState(false);
-
-  // useEffect to set the initial name from local storage on component load
   useEffect(() => {
     const authString = localStorage.getItem('auth');
     if (authString) {
@@ -34,20 +30,14 @@ const InitialForm = () => {
         console.error("Failed to parse auth data from localStorage:", error);
       }
     }
-  }, []); // Empty dependency array ensures this effect runs only once on mount
-
-  // Handle changes for all form inputs
+  }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    // Update local state for all fields
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
-
-  // Handle form submission
   const handleSubmit = (e) => {
   e.preventDefault();
   const regex = {
@@ -89,7 +79,6 @@ const InitialForm = () => {
         toast.success('Form submitted successfully!');
         localStorage.setItem('profileCompleted', 'true');
         navigate('/mechanic/dashboard');
-        // setShowSubmissionMessage(true);
       })
       .catch((error) => {
         console.error('Error submitting mechanic:', error);
@@ -112,7 +101,6 @@ const InitialForm = () => {
         </div>
         <h2 className="text-3xl font-extrabold text-slate-800 dark:text-white text-center mb-8 transition-colors duration-500">Complete Your Profile First</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Name Field */}
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1 transition-colors duration-500">
               Name
@@ -128,8 +116,6 @@ const InitialForm = () => {
               required
             />
           </div>
-
-          {/* Phone Field */}
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1 transition-colors duration-500">
               Phone
@@ -145,8 +131,6 @@ const InitialForm = () => {
               required
             />
           </div>
-
-          {/* Address Field */}
           <div>
             <label htmlFor="address" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1 transition-colors duration-500">
               Address
@@ -162,8 +146,6 @@ const InitialForm = () => {
               required
             />
           </div>
-
-          {/* Expertise Field */}
           <div>
             <label htmlFor="expertise" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1 transition-colors duration-500">
               Expertise
@@ -179,8 +161,6 @@ const InitialForm = () => {
               required
             />
           </div>
-
-          {/* Availability Dropdown */}
           <div>
             <label htmlFor="availability" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1 transition-colors duration-500">
               Availability
@@ -196,8 +176,6 @@ const InitialForm = () => {
               <option value="Unavailable">Unavailable</option>
             </select>
           </div>
-
-          {/* Rating Dropdown */}
           <div>
             <label htmlFor="rating" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1 transition-colors duration-500">
               Rating
@@ -215,8 +193,6 @@ const InitialForm = () => {
               <option value="Bad">Bad</option>
             </select>
           </div>
-
-          {/* Submit Button */}
           <div>
             <button
               type="submit"
@@ -226,8 +202,6 @@ const InitialForm = () => {
             </button>
           </div>
         </form>
-
-        {/* Custom Submission Message */}
         {showSubmissionMessage && (
           <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="bg-green-500 dark:bg-green-700 text-white px-6 py-4 rounded-lg shadow-lg text-lg font-semibold animate-bounce">

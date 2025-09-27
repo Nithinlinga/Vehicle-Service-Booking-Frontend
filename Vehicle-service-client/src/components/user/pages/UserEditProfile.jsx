@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 
 const UserEditProfile = () => {
-  const {isAuthenticated, user} = useSelector((state) => state.auth);
+  const {user} = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     first_name: '',
@@ -17,8 +17,6 @@ const UserEditProfile = () => {
   });
 
   const navigate = useNavigate();
-
-  // Initial data fetch on component mount
   useEffect(() => {
     if (user?.id) {
       UserServices.getUserById(user.id)
@@ -84,8 +82,6 @@ const UserEditProfile = () => {
     <div className="max-w-xl mx-auto p-6 bg-white dark:bg-slate-800 rounded-lg shadow-xl">
       <h2 className="text-2xl font-bold mb-4 text-cyan-600 dark:text-cyan-400">Edit Profile</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-
-        {/* Name Input */}
         <div>
           <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">First Name</label>
           <input
@@ -112,8 +108,6 @@ const UserEditProfile = () => {
             required
           />
         </div>
-
-        {/* Phone Input */}
         <div>
           <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
           <input
@@ -127,8 +121,6 @@ const UserEditProfile = () => {
             required
           />
         </div>
-
-        {/* Email Input */}
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
           <input
@@ -139,11 +131,9 @@ const UserEditProfile = () => {
             value={formData.email || ''}
             onChange={handleInputChange}
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
-            readOnly // Email should be read-only if it's tied to the user's login
+            readOnly
           />
         </div>
-
-        {/* Address Input */}
         <div>
           <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
           <input

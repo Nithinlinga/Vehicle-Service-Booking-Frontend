@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
 import ServiceTypeServices from "../../services/ServiceTypeServices";
 import { toast } from "react-hot-toast";
@@ -7,8 +7,6 @@ import { toast } from "react-hot-toast";
 const AddServiceType = () => {
   const { id } = useParams();
   console.log(id);
-  
-  const navigate = useNavigate();
   const isEditMode = Boolean(id);
   const [serviceCentreName, setServiceCentreName] = useState("");
   const [serviceTypes, setServiceTypes] = useState([]);
@@ -32,8 +30,6 @@ const AddServiceType = () => {
     };
     fetchServiceCentre();
   }, [id, isEditMode]);
-
-  // Function to handle opening the modal for editing
   const handleEditClick = (service) => {
     setSelectedService({ ...service });
     setIsModalOpen(true);
@@ -41,11 +37,9 @@ const AddServiceType = () => {
   const validateService = (values) => {
     const errors = {};
 
-    const nameRegex = /^[A-Za-z\s]{5,50}$/; // only alphabets + spaces, 3–100 chars
-    const descriptionRegex = /^[A-Za-z\s]{3,100}$/; // only alphabets + spaces, 3–100 chars
-    const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;   // positive number, up to 2 decimals
-
-    // Description validation
+    const nameRegex = /^[A-Za-z\s]{5,50}$/;
+    const descriptionRegex = /^[A-Za-z\s]{3,100}$/;
+    const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
     if (!values.name) {
       errors.name = "Name is required";
     } else if (!descriptionRegex.test(values.name)) {
@@ -56,8 +50,6 @@ const AddServiceType = () => {
     } else if (!descriptionRegex.test(values.description)) {
       errors.description = "Description must be 3-100 alphabets only";
     }
-
-    // Price validation
     if (!values.price) {
       errors.price = "Price is required";
     } else if (!priceRegex.test(values.price)) {
@@ -65,8 +57,6 @@ const AddServiceType = () => {
     } else if (parseFloat(values.price) <= 0) {
       errors.price = "Price must be greater than 0";
     }
-
-    // Status validation
     if (!values.status) {
       errors.status = "Status is required";
     } else if (!["active", "inactive"].includes(values.status)) {
@@ -75,27 +65,19 @@ const AddServiceType = () => {
 
     return errors;
   };
-
-  // ✅ Save handler
   const handleModalSave = () => {
     const validationErrors = validateService(selectedService);
     if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors); // show errors in UI
+      setErrors(validationErrors);
       return;
     }
     else{
       handleSave();
     }
-    // If no errors, clear them and proceed
     setErrors({});
     console.log("Saving service:", selectedService);
-    // ... your save logic here (API call, state update, etc.)
     setIsModalOpen(false);
   };
-
-
-  
-  // ✅ Open modal for adding a new service
   const handleAddComponentClick = () => {
     setSelectedService({
       name:"",
@@ -116,27 +98,19 @@ const AddServiceType = () => {
     if (!selectedService) return;
 
     try {
-      // Create a copy and convert price to a number before sending
       const serviceToUpdate = {
         ...selectedService,
         price: Number(selectedService.price)
       };
-
-      // Check if it's an existing service to update or a new one to add
       if (selectedService.serviceTypeId) {
         await ServiceTypeServices.updateServiceType(selectedService.serviceTypeId, serviceToUpdate);
         toast.success("Service type updated successfully!");
       } else {
-        // Assuming your service has an addServiceType method
         await ServiceTypeServices.addServiceType(serviceToUpdate); 
         toast.success("Service type added successfully!");
       }
-
-      // Fetch the updated list from the server to refresh the UI
       const updatedListResponse = await ServiceTypeServices.getAllServiceTypesByServiceCenter(id);
       setServiceTypes(updatedListResponse.data);
-      
-      // Close the modal after a successful save
       handleModalClose();
     } catch (error) {
       console.error("Error saving service type:", error);
@@ -194,15 +168,6 @@ const AddServiceType = () => {
       </div>
 
       <div>
-      {/* Button to open modal */}
-      {/* <button
-        onClick={handleAddComponentClick}
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Add Service Type
-      </button> */}
-
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
@@ -213,7 +178,6 @@ const AddServiceType = () => {
             </h3>
 
             <div className="space-y-3">
-              {/* Description */}
               <div>
                 <input
                   type="text"
@@ -256,8 +220,6 @@ const AddServiceType = () => {
                   </p>
                 )}
               </div>
-
-              {/* Price */}
               <div>
                 <input
                   type="number"
@@ -277,8 +239,6 @@ const AddServiceType = () => {
                   <p className="text-red-500 text-sm mt-1">{errors.price}</p>
                 )}
               </div>
-
-              {/* Status */}
               <div>
                 <select
                   value={selectedService?.status || "active"}
@@ -300,8 +260,6 @@ const AddServiceType = () => {
                 )}
               </div>
             </div>
-
-            {/* Buttons */}
             <div className="flex justify-end mt-6 space-x-2">
               <button
                 onClick={handleModalClose}

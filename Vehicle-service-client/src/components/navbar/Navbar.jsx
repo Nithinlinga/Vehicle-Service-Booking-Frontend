@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoMdPower } from "react-icons/io";
@@ -27,8 +27,6 @@ const Navbar = () => {
   return (
     <div className="sticky top-6 z-30 mx-auto px-4 mb-8">
       <div className="flex items-center justify-between rounded-xl bg-white/80 backdrop-blur-md shadow-md ring-1 ring-slate-200 dark:bg-slate-900/80 dark:ring-slate-700 transition-colors duration-700 px-6 py-4">
-        
-        {/* Left Section */}
         <div className="flex items-center gap-6 text-sm font-medium text-slate-700 dark:text-slate-200">
           <Link to="/" className="hover:text-cyan-600 dark:hover:text-cyan-400">Home</Link>
           {isAuthenticated && (
@@ -42,8 +40,6 @@ const Navbar = () => {
             </Link>
           )}
         </div>
-
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-700 dark:text-slate-200">
           {!isAuthenticated && <Link to="/access-account" className="hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>}
           {isAuthenticated && role === "user" && (
@@ -65,8 +61,6 @@ const Navbar = () => {
           )}
           <ThemeToggle />
         </div>
-
-        {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-3">
           <ThemeToggle />
           <button onClick={toggleMenu} className="text-slate-700 cursor-pointer dark:text-slate-200">
@@ -74,8 +68,6 @@ const Navbar = () => {
           </button>
         </div>
       </div>
-
-      {/* Mobile Dropdown */}
       {menuOpen && (
         <div className="md:hidden mt-2 rounded-xl bg-white/90 backdrop-blur-md shadow-md ring-1 ring-slate-200 dark:bg-slate-900/90 dark:ring-slate-700 p-4 space-y-3 text-sm font-medium text-slate-700 dark:text-slate-200">
           {!isAuthenticated && <Link to="/access-account" onClick={() => setMenuOpen(false)} className="block hover:text-cyan-600 dark:hover:text-cyan-400">Log in</Link>}

@@ -1,7 +1,4 @@
-// src/store/mechanicSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-
-
 const initialState = {
     name: "Sarah Johnson",
     role: "System Administrator",

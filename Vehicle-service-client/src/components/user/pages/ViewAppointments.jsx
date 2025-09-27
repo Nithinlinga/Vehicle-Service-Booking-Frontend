@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import BookingServices from "../../services/BookingServices";
 import { toast } from 'react-hot-toast'
 
 const ViewAppointments = () => {
   const { user } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [mappedAppointments, setMappedAppointments] = useState([]);
@@ -78,8 +77,6 @@ const ViewAppointments = () => {
         <h2 className="text-3xl font-extrabold text-teal-700 dark:text-teal-300 mb-8 text-center">
           Your Appointments
         </h2>
-
-        {/* 🚗 Bike/Car Toggle */}
         <div className="flex w-full h-12 bg-slate-200 dark:bg-slate-700 rounded-full mb-8 relative">
           <button
             className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors duration-300 cursor-pointer ${vehicleType === "car"
@@ -100,8 +97,6 @@ const ViewAppointments = () => {
             Bikes
           </button>
         </div>
-
-        {/* Upcoming Appointments */}
         <div className="mb-10">
           <h3 className="text-xl font-bold text-teal-700 dark:text-teal-300 mb-4">
             Upcoming Appointments ({vehicleType})
@@ -141,14 +136,6 @@ const ViewAppointments = () => {
                     <span className="inline-block px-4 py-1 rounded-full bg-teal-600 text-white font-semibold text-sm mb-2">
                       Upcoming
                     </span>
-                    {/* <button
-                      onClick={() =>
-                        navigate("/user/invoice", { state: { appointment: a } })
-                      }
-                      className="bg-cyan-600 cursor-pointer hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-full shadow"
-                    >
-                      Invoice
-                    </button> */}
                     <button
                       onClick={() => handleDelete(a.bookingId)}
                       className="bg-red-400 cursor-pointer hover:bg-red-600 text-white font-bold py-2 px-3 rounded-full shadow"
@@ -161,8 +148,6 @@ const ViewAppointments = () => {
             </div>
           )}
         </div>
-
-        {/* Previous Appointments */}
         <div>
           <h3 className="text-xl font-bold text-gray-700 dark:text-gray-200 mb-4">
             Previous Appointments ({vehicleType})

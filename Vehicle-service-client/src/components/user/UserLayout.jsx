@@ -13,12 +13,10 @@ const UserLayout = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 overflow-auto">
-      {/* Sidebar */}
       <div
         className={`h-screen bg-white dark:bg-gray-800 shadow-md z-20 overflow-hidden
         ${open ? "w-64" : "w-20"} transition-[width] duration-500 ease-in-out`}
       >
-        {/* Header + Toggle */}
         <div className="flex items-center justify-between p-4 transition-[width] duration-500 ease-in-out">
           {open && (
             <h1 className="ml-2 text-lg font-bold text-blue-700 dark:text-white">
@@ -36,8 +34,6 @@ const UserLayout = () => {
             )}
           </button>
         </div>
-
-        {/* Sidebar Links */}
         <nav className="mt-10 space-y-4 px-4">
           <NavLink to="" end className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "Dashboard" : <span className="text-xl"><FaHome /></span>}
@@ -56,8 +52,6 @@ const UserLayout = () => {
           </NavLink>
         </nav>
       </div>
-
-      {/* Main Content */}
       <div className="flex-1 overflow-auto">
         <Outlet />
       </div>

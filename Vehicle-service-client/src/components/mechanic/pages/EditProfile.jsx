@@ -1,4 +1,3 @@
-// src/components/EditProfile.jsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MechanicServices from "../../services/MechanicServices";
@@ -7,7 +6,7 @@ import { useSelector } from "react-redux";
 
 
 const EditProfile = () => {
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -20,8 +19,6 @@ const EditProfile = () => {
   });
 
   const navigate = useNavigate();
-
-  // Initial data fetch on component mount
   useEffect(() => {
     if (user?.id) {
       MechanicServices.getMechanicsById(user.id)
@@ -47,13 +44,11 @@ const EditProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const regex = {
-      name: /^[a-zA-Z]{2,50}$/, // Only letters, 2–50 characters
-      phone: /^\d{10}$/, // Exactly 10 digits
-      address: /^[a-zA-Z0-9\s,.'-]{5,100}$/, // Letters, numbers, spaces, and common punctuation
-      expertise: /^[a-zA-Z\s]{2,50}$/ // Letters and spaces only, 2–50 characters
+      name: /^[a-zA-Z]{2,50}$/,
+      phone: /^\d{10}$/,
+      address: /^[a-zA-Z0-9\s,.'-]{5,100}$/,
+      expertise: /^[a-zA-Z\s]{2,50}$/
     };
-
-    // Validation checks
     if (!regex.name.test(formData.name)) {
       toast.error("Invalid name. Should contain only letters, 2 to 50 characters.");
       return;
@@ -93,8 +88,6 @@ const EditProfile = () => {
     <div className="max-w-xl mx-auto p-6 bg-white dark:bg-slate-800 rounded-lg shadow-xl">
       <h2 className="text-2xl font-bold mb-4 text-cyan-600 dark:text-cyan-400">Edit Profile</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-
-        {/* Name Input */}
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
           <input
@@ -107,8 +100,6 @@ const EditProfile = () => {
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white" required
           />
         </div>
-
-        {/* Phone Input */}
         <div>
           <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
           <input
@@ -121,8 +112,6 @@ const EditProfile = () => {
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white" required
           />
         </div>
-
-        {/* Email Input */}
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
           <input
@@ -133,11 +122,9 @@ const EditProfile = () => {
             value={formData.email || ''}
             onChange={handleInputChange}
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
-            readOnly // Email should be read-only if it's tied to the user's login
+            readOnly
           />
         </div>
-
-        {/* Address Input */}
         <div>
           <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
           <input
@@ -150,8 +137,6 @@ const EditProfile = () => {
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white" required
           />
         </div>
-
-        {/* Expertise Input */}
         <div>
           <label htmlFor="expertise" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Expertise</label>
           <input
@@ -165,8 +150,6 @@ const EditProfile = () => {
             required
           />
         </div>
-
-        {/* Availability Dropdown */}
         <div>
           <label htmlFor="availability" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Availability</label>
           <select
@@ -182,8 +165,6 @@ const EditProfile = () => {
             <option value="On Leave">On Leave</option>
           </select>
         </div>
-
-        {/* Rating Dropdown */}
         <div>
           <label htmlFor="rating" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Rating</label>
           <select
