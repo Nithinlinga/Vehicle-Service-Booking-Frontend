@@ -35,15 +35,37 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  const { username,email,password,role} = req.body;
-  if(role==="Admin" || role==="admin"){
-    return res.sendStatus(400)
+  const { username, email, password, role } = req.body;
+
+  if (role === "Admin" || role === "admin") {
+    return res.status(400).json({ error: "Admin registration not allowed" });
   }
-  db.query('INSERT INTO auth (username,email,password,role) VALUES (?, ?, ?,?)', [username,email,password,role],(err, result) => {
-      if (err) return res.send(err);
-      res.json({ id: result.insertId, username,email,password,role });
+
+  // Check if username or email already exists
+  db.query('SELECT * FROM auth WHERE username = ? OR email = ?', [username, email], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+
+    if (results.length > 0) {
+      const existing = results[0];
+      if (existing.username === username && existing.email === email) {
+        return res.status(409).json({ error: "Username and email already exist" });
+      } else if (existing.username === username) {
+        return res.status(409).json({ error: "Username already exists" });
+      } else {
+        return res.status(409).json({ error: "Email already exists" });
+      }
     }
-  );
+
+    // Insert new user
+    db.query(
+      'INSERT INTO auth (username, email, password, role) VALUES (?, ?, ?, ?)',
+      [username, email, password, role],
+      (err, result) => {
+        if (err) return res.status(500).json({ error: "Failed to register user" });
+        res.status(201).json({ id: result.insertId, username, email, role });
+      }
+    );
+  });
 });
 
 app.put('/register/:id', (req, res) => {

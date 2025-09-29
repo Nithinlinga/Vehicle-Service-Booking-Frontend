@@ -64,7 +64,7 @@ const Register = () => {
             try {
                 const response = await RegisterServices.addAuth(values);
                 toast.success("Registration successful");
-                navigate("/");
+                navigate(`/login?role=${role}`);
             } catch (error) {
                 console.error("Submission failed:", error);
                 const msg =

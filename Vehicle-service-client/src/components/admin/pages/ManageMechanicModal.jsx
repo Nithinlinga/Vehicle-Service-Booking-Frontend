@@ -90,7 +90,7 @@ const ManageMechanicModal = ({
             ) : (
               <>
                 <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="inActive">inActive</option>
               </>
             )}
           </select>

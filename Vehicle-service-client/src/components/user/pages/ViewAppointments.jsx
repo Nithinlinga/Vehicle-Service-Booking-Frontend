@@ -39,12 +39,12 @@ const ViewAppointments = () => {
       const confirmed = window.confirm("Are you sure you want to delete this Booking?");
       if (confirmed) {
         const response = BookingServices.deleteBookingById(id);
+        toast.success("Booking Deleted Successfully")
       }
     } catch (error) {
       console.log(error);
     }
     fetchAppointments();
-    toast.success("Booking Deleted Successfully")
 
   };
   useEffect(() => {
@@ -179,14 +179,14 @@ const ViewAppointments = () => {
                     <span className="inline-block px-4 py-1 rounded-full bg-gray-400 text-white font-semibold text-sm mb-2">
                       Completed
                     </span>
-                    <button
+                    {/* <button
                       onClick={() =>
                         navigate("/user/invoice", { state: { appointment: a } })
                       }
                       className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded shadow"
                     >
                       Invoice
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               ))}

@@ -152,7 +152,7 @@ const validate = (values) => {
               name="rating"
               value={formik.values.rating}
               onChange={formik.handleChange}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded dark:bg-gray-900"
             >
               <option value="">Select rating</option>
               <option value="Excellent">Excellent</option>

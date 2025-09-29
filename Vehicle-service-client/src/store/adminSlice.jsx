@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
-    name: "Sarah Johnson",
+    name: "Nithin Linga",
     role: "System Administrator",
     email: "admin@gmail.com",
-    phone: "+91 98765 43210",
+    phone: "+91 87904 68868",
     location: "Coimbatore, India",
-    department: "IT & Infrastructure",
-    joined: "March 2022",
+    department: "IT",
+    joined: "Sept 2025",
     bio: "Oversees system operations, manages user access, and ensures platform security.",
 };
 
