@@ -1,9 +1,15 @@
     import { useState } from 'react';
     import { NavLink, Outlet } from 'react-router-dom';
     import { MdOutlineKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
-    import { FaHome } from "react-icons/fa";
-    import { MdOutlineMiscellaneousServices } from "react-icons/md";
-    
+    import { FaHome,
+      FaCalendarAlt,
+      FaWrench,
+      FaUser,
+      FaToolbox,
+      FaChartBar,
+      FaCog,
+      FaSignOutAlt } from "react-icons/fa";
+
     const MechanicLayout = () => {
       const [open, setOpen] = useState(false);
     
@@ -34,8 +40,21 @@
               <NavLink to="" end className="block text-gray-700 dark:text-white hover:text-cyan-600">
                 {open ? "Dashboard" : <span className="text-xl"><FaHome /></span>}
               </NavLink>
+
               <NavLink to="profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-                {open ? "profilP" : <span className="text-xl"><MdOutlineMiscellaneousServices /></span>}
+                {open ? "Profile" : <span className="text-xl"><FaUser /></span>}
+              </NavLink>
+
+              <NavLink to="bookings" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+                {open ? "Bookings" : <span className="text-xl"><FaCalendarAlt /></span>}
+              </NavLink>
+
+              <NavLink to="services" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+                {open ? "Services" : <span className="text-xl"><FaWrench /></span>}
+              </NavLink>
+
+              <NavLink to="reports" className="block text-gray-700 dark:text-white hover:text-cyan-600">
+                {open ? "Reports" : <span className="text-xl"><FaChartBar /></span>}
               </NavLink>
             </nav>
           </div>
