@@ -83,7 +83,7 @@ const AddServiceType = () => {
       name:"",
       description: "",
       price: "",
-      status: "active",
+      status: "ACTIVE",
       serviceCenterId: id,
     });
     setIsModalOpen(true);
@@ -149,7 +149,7 @@ const AddServiceType = () => {
               <p className="text-gray-700 dark:text-gray-300 mb-1">Price: ₹{service.price}</p>
               <p
                 className={`font-medium ${
-                  service.status === "active"
+                  service.status === "ACTIVE"
                     ? "text-green-600 dark:text-green-400"
                     : "text-red-500 dark:text-red-400"
                 }`}
@@ -241,7 +241,7 @@ const AddServiceType = () => {
               </div>
               <div>
                 <select
-                  value={selectedService?.status || "active"}
+                  value={selectedService?.status || "ACTIVE"}
                   onChange={(e) =>
                     setSelectedService({
                       ...selectedService,
