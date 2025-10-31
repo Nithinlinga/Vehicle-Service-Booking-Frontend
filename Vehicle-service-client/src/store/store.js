@@ -1,15 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
 import adminReducer from './adminSlice';
-
+import { decodeToken } from '../utils/jwtUtils';
 const userloadState = () => {
   try {
-    const serializedState = localStorage.getItem('user');
-    return serializedState ? JSON.parse(serializedState) : undefined;
-  } catch {
-    return undefined;
+    const token = localStorage.getItem("authToken");
+    if (!token) return null;
+
+    const decoded = decodeToken(token);
+    const isExpired = decoded.exp && Date.now() >= decoded.exp * 1000;
+    return isExpired ? null : decoded;
+  } catch (e) {
+    console.error("Invalid token:", e);
+    return null;
   }
 };
+
 const adminloadState = () => {
   try {
     const serializedState = localStorage.getItem('admin');
@@ -19,25 +25,30 @@ const adminloadState = () => {
   }
 };
 
+// ✅ Fix: wrap decoded user inside `auth` key
 const store = configureStore({
   reducer: {
     auth: authReducer,
     admin: adminReducer,
   },
   preloadedState: {
-    user: userloadState(),
+    auth: {
+      isAuthenticated: !!userloadState(),
+      user: userloadState(),
+      role: userloadState()?.role || '',
+    },
     admin: adminloadState(),
   },
 });
 
+// ✅ Fix: persist `auth` instead of `user`
 store.subscribe(() => {
   const state = store.getState();
-  const userSerializedState = JSON.stringify(state.user);
+  const authSerializedState = JSON.stringify(state.auth);
   const adminSerializedState = JSON.stringify(state.admin);
-  
-  localStorage.setItem('user', userSerializedState);
+
+  localStorage.setItem('authUser', authSerializedState);
   localStorage.setItem('admin', adminSerializedState);
 });
 
 export default store;
-

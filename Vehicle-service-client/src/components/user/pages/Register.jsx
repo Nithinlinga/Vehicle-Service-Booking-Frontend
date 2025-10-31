@@ -22,7 +22,7 @@ const Register = () => {
             username: "",
             password: "",
             confirmPassword: "",
-            role: role.toLowerCase(),
+            role: role.toUpperCase(),
         },
         validateOnBlur: true,
         validateOnChange: true,

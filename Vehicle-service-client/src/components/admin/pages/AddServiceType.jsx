@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 
 const AddServiceType = () => {
   const { id } = useParams();
-  console.log(id);
+  // console.log(id);
   const isEditMode = Boolean(id);
   const [serviceCentreName, setServiceCentreName] = useState("");
   const [serviceTypes, setServiceTypes] = useState([]);
@@ -21,7 +21,7 @@ const AddServiceType = () => {
         if (isEditMode) {
           const serviceCentre = await ServiceCenterServices.getServiceCenterById(id);
           setServiceCentreName(serviceCentre.data.name);
-          const response = await ServiceTypeServices.getAllServiceTypesByServiceCenter(id);
+          const response = await ServiceTypeServices.getAllServiceTypes(id);
           setServiceTypes(response.data);
         }
       } catch (error) {
@@ -59,7 +59,7 @@ const AddServiceType = () => {
     }
     if (!values.status) {
       errors.status = "Status is required";
-    } else if (!["active", "inactive"].includes(values.status)) {
+    } else if (!["ACTIVE", "INACTIVE"].includes(values.status)) {
       errors.status = "Invalid status";
     }
 
@@ -103,13 +103,13 @@ const AddServiceType = () => {
         price: Number(selectedService.price)
       };
       if (selectedService.serviceTypeId) {
-        await ServiceTypeServices.updateServiceType(selectedService.serviceTypeId, serviceToUpdate);
+        await ServiceTypeServices.updateServiceType(id,selectedService.serviceTypeId, serviceToUpdate);
         toast.success("Service type updated successfully!");
       } else {
-        await ServiceTypeServices.addServiceType(serviceToUpdate); 
+        await ServiceTypeServices.addServiceType(id,serviceToUpdate); 
         toast.success("Service type added successfully!");
       }
-      const updatedListResponse = await ServiceTypeServices.getAllServiceTypesByServiceCenter(id);
+      const updatedListResponse = await ServiceTypeServices.getAllServiceTypes(id);
       setServiceTypes(updatedListResponse.data);
       handleModalClose();
     } catch (error) {
@@ -252,8 +252,8 @@ const AddServiceType = () => {
                     errors.status ? "border-red-500" : ""
                   }`}
                 >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
+                  <option value="ACTIVE">Active</option>
+                  <option value="INACTIVE">Inactive</option>
                 </select>
                 {errors.status && (
                   <p className="text-red-500 text-sm mt-1">{errors.status}</p>

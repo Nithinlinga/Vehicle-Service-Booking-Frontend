@@ -1,22 +1,39 @@
 import axios from "axios";
+import { getAuthHeader } from "../../utils/getAuthHeader";
 
-const api = "http://localhost:3001/serviceTypes";
+const BASE = import.meta.env.VITE_SERVER_URL;
+const SERVICE_TYPE_API = `${BASE}/app3/api/v1/center/`;
+
 
 class ServiceTypeServices {
-  getAllServiceTypes() {
-    return axios.get(`${api}`);
+  getAllServiceTypes(centerId) {
+    return axios.get(`${SERVICE_TYPE_API}/${centerId}/service`, {
+      headers: getAuthHeader()
+    });
   }
-  getAllServiceTypesByServiceCenter(id){
-    return axios.get(`${api}/serviceCenter/${id}`)
+
+  getServiceTypeById(centerId, typeId) {
+    return axios.get(`${SERVICE_TYPE_API}/${centerId}/service/${typeId}`, {
+      headers: getAuthHeader()
+    });
   }
-  addServiceType(data) {
-    return axios.post(`${api}`, data);
+
+  addServiceType(centerId, data) {
+    return axios.post(`${SERVICE_TYPE_API}/${centerId}/service`, data, {
+      headers: getAuthHeader()
+    });
   }
-  updateServiceType(id, updatedData) {
-    return axios.put(`${api}/${id}`, updatedData);
+
+  updateServiceType(centerId, typeId, updatedData) {
+    return axios.put(`${SERVICE_TYPE_API}/${centerId}/service/${typeId}`, updatedData, {
+      headers: getAuthHeader()
+    });
   }
-  deleteServiceType(id) {
-    return axios.delete(`${api}/${id}`);
+
+  deleteServiceType(centerId, typeId) {
+    return axios.delete(`${SERVICE_TYPE_API}/${centerId}/service/${typeId}`, {
+      headers: getAuthHeader()
+    });
   }
 }
 

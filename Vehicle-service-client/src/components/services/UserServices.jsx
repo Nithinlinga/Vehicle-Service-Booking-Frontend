@@ -1,10 +1,11 @@
 import axios from "axios";
 
-const api = "http://localhost:3001/users";
+
+const api = import.meta.env.VITE_AUTH_URL;
 
 class UserServices {
   addUser(userData) {
-    return axios.post(`${api}`, userData);
+    return axios.post(`${api}/app2/api/users`, userData);
   }
   getAllUsers() {
     return axios.get(`${api}`);

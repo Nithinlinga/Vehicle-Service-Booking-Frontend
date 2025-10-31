@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
+
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { login } from "../../../store/authSlice";
 import LoginServices from '../../services/LoginServices';
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
+import { decodeToken } from "../../../utils/jwtUtils";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const api = import.meta.env.VITE_SERVER_URL;
   const [showPassword, setShowPassword] = useState(false);
 
   const [params] = useSearchParams();
@@ -23,7 +23,7 @@ const Login = () => {
     initialValues: {
       email: "",
       password: "",
-      role: role.toLowerCase(),
+      role: role.toUpperCase(),
     },
     validateOnBlur: true,
     validateOnChange: false,
@@ -47,10 +47,23 @@ const Login = () => {
       setServerError("");
       try {
         const response = await LoginServices.postLogin(values);
-        dispatch(login(response.data.user));
-        localStorage.setItem("auth", JSON.stringify(response.data.user));
-        toast.success("Login success");
-        navigate("/");
+        const token = response.data.accessToken; // assuming backend returns JWT as `token`
+      const decoded = decodeToken(token);
+
+      // Store decoded user info in Redux
+      dispatch(login(decoded));
+
+      // Optionally store token and decoded info in localStorage
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("authUser", JSON.stringify(decoded));
+
+      toast.success("Login success");
+      navigate("/");
+        // const response = await LoginServices.postLogin(values);
+        // dispatch(login(response.data.user));
+        // localStorage.setItem("auth", JSON.stringify(response.data.user));
+        // toast.success("Login success");
+        // navigate("/");
       } catch (error) {
         console.error("Submission failed:", error);
         const msg =

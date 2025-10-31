@@ -1,0 +1,5 @@
+// src/utils/authHeader.js
+export const getAuthHeader = () => {
+  const token = localStorage.getItem("authToken");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
