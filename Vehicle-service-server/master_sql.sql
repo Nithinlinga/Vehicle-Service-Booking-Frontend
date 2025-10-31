@@ -113,3 +113,7 @@ CREATE TABLE `vehicles` (
   CONSTRAINT `vehicles_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
+ALTER TABLE booking
+ADD COLUMN mechanicId INT NULL,
+ADD CONSTRAINT fk_mechanic FOREIGN KEY (mechanicId) REFERENCES mechanic(mechanicId) ON DELETE SET NULL;

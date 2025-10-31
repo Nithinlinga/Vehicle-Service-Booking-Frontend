@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import BookingServices from "../../services/BookingServices";
+import MechanicServices from "../../services/MechanicServices";
 
 export default function ManageAppointments() {
   const [showVerified, setShowVerified] = useState(false);
   const [showUnverified, setShowUnverified] = useState(false);
   const [bookings, setBookings] = useState([]);
+  const [mechanicsByCenter, setMechanicsByCenter] = useState({});
 
   const fetchBookings = async () => {
     try {
@@ -15,9 +17,31 @@ export default function ManageAppointments() {
       console.error("Error fetching bookings:", error);
     }
   };
+
+  const fetchMechanics = async (centers) => {
+    const dataMap = {};
+    for (const centerId of centers) {
+      try {
+        const response = await MechanicServices.getMechanicsByServiceCenter(centerId);
+        dataMap[centerId] = response.data;
+      } catch (error) {
+        console.error(`Error fetching mechanics for center ${centerId}:`, error);
+        dataMap[centerId] = [];
+      }
+    }
+    setMechanicsByCenter(dataMap);
+  };
+
   useEffect(() => {
     fetchBookings();
   }, []);
+
+  useEffect(() => {
+    if (bookings.length > 0) {
+      const centers = [...new Set(bookings.map((b) => b.serviceCenterId))];
+      fetchMechanics(centers);
+    }
+  }, [bookings]);
 
   const handleVerification = async (id, status) => {
     const confirmMsg =
@@ -59,11 +83,12 @@ export default function ManageAppointments() {
               b =>
                 b.isVerified === "No" && (
                   <div key={b.bookingId} className="p-3 rounded shadow-sm border">
-                    <p className="font-bold text-amber-700">{b.name}</p>
-                    <p>Service Center Id: {b.serviceCenterId}</p>
-                    <p>Date: {b.date}</p>
-                    <p>Time: {b.timeslot}</p>
-                    <p>Vehicle Id: {b.vehicleId}</p>
+                    <div key={b.bookingId} className="p-3 rounded shadow-sm border">
+                    <p><b>Service Center Id:</b> {b.serviceCenterId}</p>
+                    <p><b>Date:</b> {b.date?.split("T")[0]}</p>
+                    <p><b>Time:</b> {b.timeslot}</p>
+                    <p><b>Vehicle Id:</b> {b.vehicleId}</p>
+                  </div>
                     <div className="mt-3 sm:mt-0 flex gap-2">
                       <button
                         onClick={() => handleVerification(b.bookingId, "Yes")}
@@ -101,14 +126,39 @@ export default function ManageAppointments() {
         >
           <div className="mt-2 rounded p-3 space-y-3">
             {bookings.map(
-              b =>
+              (b) =>
                 b.isVerified === "Yes" && (
-                  <div key={b.bookingId} className="p-3 rounded shadow-sm border">
-                    <p className="font-bold text-amber-700">{b.name}</p>
-                    <p>Service Center Id: {b.serviceCenterId}</p>
-                    <p>Date: {b.date}</p>
-                    <p>Time: {b.timeslot}</p>
-                    <p>Vehicle Id: {b.vehicleId}</p>
+                  <div
+                    key={b.bookingId}
+                    className="p-4 rounded-lg shadow-md border bg-gray-50 dark:bg-gray-800 flex justify-between items-center text-gray-900 dark:text-gray-100"
+                  >
+                    {/* Booking Details */}
+                    <div className="space-y-1">
+                      <p><b>Service Center Id:</b> {b.serviceCenterId}</p>
+                      <p><b>Date:</b> {b.date?.split("T")[0]}</p>
+                      <p><b>Time:</b> {b.timeslot}</p>
+                      <p><b>Vehicle Id:</b> {b.vehicleId}</p>
+                    </div>
+
+                    {/* Dropdown for Mechanics */}
+                    <div className="ml-4">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Assign Mechanic
+                      </label>
+                      <select
+                        className="border rounded px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
+                        onChange={(e) =>
+                          console.log(`Mechanic for booking ${b.bookingId}:`, e.target.value)
+                        }
+                      >
+                        <option value="">Select</option>
+                        {mechanicsByCenter[b.serviceCenterId]?.map((m) => (
+                          <option key={m.mechanicId} value={m.mechanicId}>
+                            {m.name} ({m.expertise})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 )
             )}
@@ -134,11 +184,12 @@ export default function ManageAppointments() {
               b =>
                 b.isVerified === "Rejected" && (
                   <div key={b.bookingId} className="p-3 rounded shadow-sm border">
-                    <p className="font-bold text-amber-700">{b.name}</p>
-                    <p>Service Center Id: {b.serviceCenterId}</p>
-                    <p>Date: {b.date}</p>
-                    <p>Time: {b.timeslot}</p>
-                    <p>Vehicle Id: {b.vehicleId}</p>
+                    <div key={b.bookingId} className="p-3 rounded shadow-sm border">
+                    <p><b>Service Center Id:</b> {b.serviceCenterId}</p>
+                    <p><b>Date:</b> {b.date?.split("T")[0]}</p>
+                    <p><b>Time:</b> {b.timeslot}</p>
+                    <p><b>Vehicle Id:</b> {b.vehicleId}</p>
+                  </div>
                     <div className="mt-3 sm:mt-0 flex gap-2">
                       <button
                         onClick={() => handleVerification(b.bookingId, "Yes")}

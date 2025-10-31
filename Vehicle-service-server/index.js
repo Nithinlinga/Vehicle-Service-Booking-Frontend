@@ -528,6 +528,26 @@ app.patch('/mechanics/:id', (req, res) => {
   );
 });
 
+app.get('/mechanics/servicecenter/:serviceCenterId', (req, res) => {
+  const { serviceCenterId } = req.params;
+
+  db.query(
+    'SELECT * FROM mechanic WHERE serviceCenterId = ?',
+    [serviceCenterId],
+    (err, result) => {
+      if (err) {
+        console.error("Error fetching mechanics for service center:", err);
+        return res.status(500).send({ message: 'Error fetching mechanics', error: err });
+      }
+      if (result.length === 0) {
+        return res.status(404).send({ message: 'No mechanics found for this service center' });
+      }
+      res.json(result);
+    }
+  );
+});
+
+
 
 
 //bookings

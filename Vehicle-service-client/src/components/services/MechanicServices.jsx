@@ -37,9 +37,10 @@ class MechanicServices{
     }
     updateStatus(id,status){
         return axios.patch(`${api}/status/${id}`, { status });
-
     }
-
+    getMechanicsByServiceCenter(serviceCenterId) {
+        return axios.get(`${api}/servicecenter/${serviceCenterId}`);
+    }
 }
 
 export default new MechanicServices();
