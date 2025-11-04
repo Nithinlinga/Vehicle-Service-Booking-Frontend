@@ -77,7 +77,6 @@ const InitialForm = () => {
 
       .then((response) => {
         toast.success('Form submitted successfully!');
-        localStorage.setItem('profileCompleted', 'true');
         navigate('/mechanic/dashboard');
       })
       .catch((error) => {

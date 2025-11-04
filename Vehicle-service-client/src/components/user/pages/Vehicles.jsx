@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import VehiclesServices from "../../services/VehiclesServices";
+import UserServices from "../../services/UserServices";
+import { getAuthHeader } from "../../../utils/getAuthHeader";
 
 const Vehicles = () => {
   const navigate = useNavigate();
@@ -13,7 +14,12 @@ const Vehicles = () => {
 useEffect(() => {
   const fetchVehicle = async () => {
     try {
-      const resp = await VehiclesServices.getVehiclesByUserId(user.id)
+      const headers = {
+          ...getAuthHeader(),
+          "X-User-Id": user.id,
+          "X-Role": user.role,
+        };
+      const resp = await UserServices.getAllVehicles(headers);
       setVehicles(resp.data || []);
       console.log(resp.data);
       localStorage.setItem("vehicles",JSON.stringify(resp.data))
@@ -28,7 +34,7 @@ useEffect(() => {
 useEffect(() => {
   if (vehicles.length > 0 && vehicleType) {
     const filtered = vehicles.filter(
-      (v) => v.vehicle_type === vehicleType
+      (v) => v.vehicleType.toLowerCase() === vehicleType
     );
     console.log(selected);
     
@@ -122,15 +128,14 @@ useEffect(() => {
                     <td className="py-1 text-slate-900 dark:text-slate-100">{selected.year}</td>
                   </tr>
                   <tr>
-                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Regstaration Number</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.registration_number}</td>
+                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Registration Number</td>
+                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.registrationNumber}</td>
                   </tr>
                   <tr>
                     <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Type</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.vehicle_type}</td>
+                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.vehicleType}</td>
                   </tr>
-
-                  {selected.vehicle_type === 'car' ? (
+                  {selected.vehicleType === 'car' ? (
                     <>
                     
                       <tr>

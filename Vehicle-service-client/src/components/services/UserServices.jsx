@@ -1,26 +1,41 @@
 import axios from "axios";
 
-
-const api = import.meta.env.VITE_AUTH_URL;
+const api = import.meta.env.VITE_SERVER_URL;
 
 class UserServices {
-  addUser(userData) {
-    return axios.post(`${api}/app2/api/users`, userData);
+  // Create user profile
+  addUser(userData, headers = {}) {
+    return axios.post(`${api}/app2/api/v1/customer`, userData, { headers });
   }
-  getAllUsers() {
-    return axios.get(`${api}`);
+
+  // View user profile by authenticated ID (no path param, uses headers)
+  getUserProfile(headers = {}) {
+    return axios.get(`${api}/app2/api/v1/customer`, { headers });
   }
-  getUserById(userId) {
-    return axios.get(`${api}/${userId}`);
+
+  // Update user profile by authenticated ID (no path param, uses headers)
+  updateUserProfile(updatedData, headers = {}) {
+    return axios.put(`${api}/app2/api/v1/customer`, updatedData, { headers });
   }
-  updateUserById(userId, updatedData) {
-    return axios.put(`${api}/${userId}`, updatedData);
+
+  // Register a vehicle
+  addVehicle(vehicleData, headers = {}) {
+    return axios.post(`${api}/app2/api/v1/customer/vehicle`, vehicleData, { headers });
   }
-  updateUserStatus(userId, status) {
-    return axios.patch(`${api}/${userId}/status`, { status });
+
+  // Update a vehicle by ID
+  updateVehicle(vehicleId, vehicleData, headers = {}) {
+    return axios.put(`${api}/app2/api/v1/customer/vehicle/${vehicleId}`, vehicleData, { headers });
   }
-  deleteUserById(userId) {
-    return axios.delete(`${api}/${userId}`);
+
+  // View a vehicle by ID
+  getVehicleById(vehicleId, headers = {}) {
+    return axios.get(`${api}/app2/api/v1/customer/vehicle/${vehicleId}`, { headers });
+  }
+
+  // Get all vehicles for authenticated user
+  getAllVehicles(headers = {}) {
+    return axios.get(`${api}/app2/api/v1/customer/vehicle`, { headers });
   }
 }
 

@@ -5,7 +5,7 @@ import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
 import ServiceTypeServices from "../../services/ServiceTypeServices";
 import BookingServices from "../../services/BookingServices";
-import VehiclesServices from "../../services/VehiclesServices";
+import UserServices from "../../services/UserServices";
 
 const Appointments = () => {
   const [searchParams] = useSearchParams();

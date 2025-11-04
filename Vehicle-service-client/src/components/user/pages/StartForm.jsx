@@ -3,15 +3,15 @@ import { toast } from 'react-hot-toast';
 import UserServices from '../../services/UserServices';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { getAuthHeader } from '../../../utils/getAuthHeader';
 
 const StartForm = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
-    email: '',
+    firstName: '',
+    lastName: '',
     address: '',
     phone: '',
   });
@@ -20,9 +20,8 @@ const StartForm = () => {
     if (isAuthenticated && user) {
       setFormData((prevData) => ({
         ...prevData,
-        email: user.email,
-        first_name: user.firstName || '',
-        last_name: user.lastName || '',
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
       }));
     }
   }, [isAuthenticated, user]);
@@ -44,18 +43,18 @@ const StartForm = () => {
     }
 
     const regex = {
-      first_name: /^[a-zA-Z]{2,50}$/,
-      last_name: /^[a-zA-Z]{2,50}$/,
+      firstName: /^[a-zA-Z]{2,50}$/,
+      lastName: /^[a-zA-Z]{2,50}$/,
       address: /^[a-zA-Z0-9\s,.'-]{5,100}$/,
       phone: /^\d{10}$/,
     };
 
-    if (!regex.first_name.test(formData.first_name)) {
+    if (!regex.firstName.test(formData.firstName)) {
       toast.error('Invalid first name. Only letters, 2–50 characters.');
       return;
     }
 
-    if (!regex.last_name.test(formData.last_name)) {
+    if (!regex.lastName.test(formData.lastName)) {
       toast.error('Invalid last name. Only letters, 2–50 characters.');
       return;
     }
@@ -72,20 +71,19 @@ const StartForm = () => {
 
     const newData = {
       userId: user.id,
-      password: user.password,
       ...formData,
     };
 
-    UserServices.addUser(newData)
-      .then(() => {
-        toast.success('User profile created successfully!');
-        localStorage.setItem('profileCompleted', 'true');
-        navigate('/user/dashboard');
-      })
-      .catch((error) => {
-        console.error('Error submitting user profile:', error);
-        toast.error('Submission failed');
-      });
+    UserServices.addUser(newData, getAuthHeader())
+    .then(() => {
+      console.log(newData);
+      toast.success('User profile created successfully!'); 
+      navigate('/user/dashboard');
+    })
+    .catch((error) => {
+      console.error('Error submitting user profile:', error);
+      toast.error('Submission failed');
+    });
   };
 
   return (
@@ -96,14 +94,14 @@ const StartForm = () => {
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="first_name" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">
+            <label htmlFor="firstName" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">
               First Name
             </label>
             <input
               type="text"
-              id="first_name"
-              name="first_name"
-              value={formData.first_name}
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
               onChange={handleChange}
               placeholder="Enter your first name"
               className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-slate-900 dark:text-white"
@@ -112,32 +110,16 @@ const StartForm = () => {
           </div>
 
           <div>
-            <label htmlFor="last_name" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">
+            <label htmlFor="lastName" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">
               Last Name
             </label>
             <input
               type="text"
-              id="last_name"
-              name="last_name"
-              value={formData.last_name}
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
               onChange={handleChange}
               placeholder="Enter your last name"
-              className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-slate-900 dark:text-white"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="e.g., john.doe@example.com"
               className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-slate-900 dark:text-white"
               required
             />

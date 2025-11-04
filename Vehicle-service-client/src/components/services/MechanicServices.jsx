@@ -1,46 +1,38 @@
 import axios from "axios";
-import { cloneElement } from "react";
 
-const api = "http://localhost:3001/mechanics";
+const api = import.meta.env.VITE_SERVER_URL + "/api/v1/mechanic";
 
-class MechanicServices{
-    addMechanics(credentials){
-        return axios.post(`${api}` , credentials , {
-            "headers" : {
-                "Content-Type" : "application/json"
-            }
-        });
-    }
-    getMechanics(){
-        return axios.get(`${api}`);
-    }
-    getMechanicsById(id){
-        return axios.get(`${api}/${id}`);
-    }
-    deleteMechanicsById(id){
-        return axios.delete(`${api}/${id}`);
-    }
-    deleteMechanics(){
-        return axios.delete(`${api}`);
-    }
-    editMechanics(id , credentials){
-        return axios.put(`${api}/${id}`, credentials);
-    }
-    updateAvailability(id, availability) {
-        return axios.patch(`${api}/${id}`, { availability });
-    }
-    updateRating(id, rating) {
-        return axios.patch(`${api}/${id}`, { rating });
-    }
-    updateVerification(id,verify){
-        return axios.patch(`${api}/verify/${id}`, { verify });
-    }
-    updateStatus(id,status){
-        return axios.patch(`${api}/status/${id}`, { status });
-    }
-    getMechanicsByServiceCenter(serviceCenterId) {
-        return axios.get(`${api}/servicecenter/${serviceCenterId}`);
-    }
+class MechanicServices {
+  // Create mechanic profile
+  addMechanic(mechanicData, headers = {}) {
+    return axios.post(`${api}`, mechanicData, { headers });
+  }
+
+  // Update mechanic profile by authenticated ID
+  updateMechanic(mechanicData, headers = {}) {
+    return axios.put(`${api}`, mechanicData, { headers });
+  }
+
+  // Get mechanic profile by authenticated ID
+  getMechanic(headers = {}) {
+    return axios.get(`${api}`, { headers });
+  }
+
+  // Update mechanic's service center (admin only)
+  updateMechanicCenter(mechanicAuthId, centerId, headers = {}) {
+    return axios.patch(`${api}/center`, {
+      mechanicAuthId,
+      centerId,
+    }, { headers });
+  }
+
+  // Update mechanic verification status (admin only)
+  updateVerificationStatus(mechanicAuthId, isVerified, headers = {}) {
+    return axios.patch(`${api}/verify`, {
+      mechanicAuthId,
+      isVerified,
+    }, { headers });
+  }
 }
 
 export default new MechanicServices();
