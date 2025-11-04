@@ -30,7 +30,6 @@ import AddServiceCentre from "./components/admin/pages/AddServiceCentre";
 import ManageUsers from "./components/admin/pages/ManageUsers";
 import ManageMechanics from "./components/admin/pages/ManageMechanics";
 import ViewAppointments from "./components/user/pages/ViewAppointments";
-import Invoice from "./components/user/pages/Invoice";
 import MechanicProfile from "./components/mechanic/pages/MechanicProfile";
 import Servicelog from "./components/mechanic/pages/Servicelog";
 import EditProfile from "./components/mechanic/pages/EditProfile";
@@ -122,7 +121,6 @@ function App() {
             <Route path="services/:id" element={<Services />} />
             <Route path="service-centers" element={<ServiceCenters />} />
             <Route path="vehicles" element={<Vehicles />}/>
-            <Route path="invoice" element={<Invoice />} />
             <Route path="profile" element={<UserProfile />} />
             <Route path="edit-profile" element={<UserEditProfile />} />
           </Route>

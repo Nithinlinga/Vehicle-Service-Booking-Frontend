@@ -2,121 +2,134 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
 import ServiceTypeServices from "../../services/ServiceTypeServices";
+import { getAuthHeader } from "../../../utils/getAuthHeader";
 import { toast } from "react-hot-toast";
 
 const AddServiceType = () => {
-  const { id } = useParams();
-  // console.log(id);
-  const isEditMode = Boolean(id);
-  const [serviceCentreName, setServiceCentreName] = useState("");
-  const [serviceTypes, setServiceTypes] = useState([]);
-  const [selectedService, setSelectedService] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [errors, setErrors] = useState({});
+const { id } = useParams();
+const isEditMode = Boolean(id);
+const [serviceCentreName, setServiceCentreName] = useState("");
+const [serviceTypes, setServiceTypes] = useState([]);
+const [selectedService, setSelectedService] = useState(null);
+const [isModalOpen, setIsModalOpen] = useState(false);
+const [errors, setErrors] = useState({});
 
+useEffect(() => {
+const fetchServiceCentre = async () => {
+try {
+if (isEditMode) {
+const headers = getAuthHeader();
 
-  useEffect(() => {
-    const fetchServiceCentre = async () => {
-      try {
-        if (isEditMode) {
-          const serviceCentre = await ServiceCenterServices.getServiceCenterById(id);
-          setServiceCentreName(serviceCentre.data.name);
-          const response = await ServiceTypeServices.getAllServiceTypes(id);
-          setServiceTypes(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching service centre:", error);
-      }
-    };
-    fetchServiceCentre();
-  }, [id, isEditMode]);
-  const handleEditClick = (service) => {
-    setSelectedService({ ...service });
-    setIsModalOpen(true);
-  };
-  const validateService = (values) => {
-    const errors = {};
+const serviceCentre = await ServiceCenterServices.getServiceCenterById(id);
+setServiceCentreName(serviceCentre.data.name);
 
-    const nameRegex = /^[A-Za-z\s]{5,50}$/;
-    const descriptionRegex = /^[A-Za-z\s]{3,100}$/;
-    const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
-    if (!values.name) {
-      errors.name = "Name is required";
-    } else if (!descriptionRegex.test(values.name)) {
-      errors.name = "Description must be 5-50 alphabets only";
-    }
-    if (!values.description) {
-      errors.description = "Description is required";
-    } else if (!descriptionRegex.test(values.description)) {
-      errors.description = "Description must be 3-100 alphabets only";
-    }
-    if (!values.price) {
-      errors.price = "Price is required";
-    } else if (!priceRegex.test(values.price)) {
-      errors.price = "Price must be a valid positive number (up to 2 decimals)";
-    } else if (parseFloat(values.price) <= 0) {
-      errors.price = "Price must be greater than 0";
-    }
-    if (!values.status) {
-      errors.status = "Status is required";
-    } else if (!["ACTIVE", "INACTIVE"].includes(values.status)) {
-      errors.status = "Invalid status";
-    }
+const response = await ServiceTypeServices.getAllServiceTypes(id);
+setServiceTypes(response.data);
+}
+} catch (error) {
+console.error("Error fetching service centre:", error);
+toast.error("Failed to load service centre or service types.");
+}
+};
+fetchServiceCentre();
+}, [id, isEditMode]);
 
-    return errors;
-  };
-  const handleModalSave = () => {
-    const validationErrors = validateService(selectedService);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-    else{
-      handleSave();
-    }
-    setErrors({});
-    console.log("Saving service:", selectedService);
-    setIsModalOpen(false);
-  };
-  const handleAddComponentClick = () => {
-    setSelectedService({
-      name:"",
-      description: "",
-      price: "",
-      status: "ACTIVE",
-      serviceCenterId: id,
-    });
-    setIsModalOpen(true);
-  };
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-    setErrors({});
-    setSelectedService(null);
-  };
+const handleEditClick = (service) => {
+setSelectedService({ ...service });
+setIsModalOpen(true);
+};
 
-  const handleSave = async () => {
-    if (!selectedService) return;
+const validateService = (values) => {
+const errors = {};
+const nameRegex = /^[A-Za-z\s]{5,50}$/;
+const descriptionRegex = /^[A-Za-z\s]{3,100}$/;
+const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
 
-    try {
-      const serviceToUpdate = {
-        ...selectedService,
-        price: Number(selectedService.price)
-      };
-      if (selectedService.serviceTypeId) {
-        await ServiceTypeServices.updateServiceType(id,selectedService.serviceTypeId, serviceToUpdate);
-        toast.success("Service type updated successfully!");
-      } else {
-        await ServiceTypeServices.addServiceType(id,serviceToUpdate); 
-        toast.success("Service type added successfully!");
-      }
-      const updatedListResponse = await ServiceTypeServices.getAllServiceTypes(id);
-      setServiceTypes(updatedListResponse.data);
-      handleModalClose();
-    } catch (error) {
-      console.error("Error saving service type:", error);
-      toast.error("Failed to save service type. Please try again.");
-    }
-  };
+if (!values.name) {
+errors.name = "Name is required";
+} else if (!nameRegex.test(values.name)) {
+errors.name = "Name must be 5–50 alphabets only";
+}
+
+if (!values.description) {
+errors.description = "Description is required";
+} else if (!descriptionRegex.test(values.description)) {
+errors.description = "Description must be 3–100 alphabets only";
+}
+
+if (!values.price) {
+errors.price = "Price is required";
+} else if (!priceRegex.test(values.price)) {
+errors.price = "Price must be a valid number (up to 2 decimals)";
+} else if (parseFloat(values.price) <= 0) {
+errors.price = "Price must be greater than 0";
+}
+
+if (!values.status) {
+errors.status = "Status is required";
+} else if (!["ACTIVE", "INACTIVE"].includes(values.status)) {
+errors.status = "Invalid status";
+}
+
+return errors;
+};
+
+const handleModalSave = () => {
+const validationErrors = validateService(selectedService);
+if (Object.keys(validationErrors).length > 0) {
+setErrors(validationErrors);
+return;
+} else {
+handleSave();
+}
+setErrors({});
+setIsModalOpen(false);
+};
+
+const handleAddComponentClick = () => {
+setSelectedService({
+name: "",
+description: "",
+price: "",
+status: "ACTIVE",
+serviceCenterId: id,
+});
+setIsModalOpen(true);
+};
+
+const handleModalClose = () => {
+setIsModalOpen(false);
+setErrors({});
+setSelectedService(null);
+};
+
+const handleSave = async () => {
+if (!selectedService) return;
+
+try {
+const headers = getAuthHeader();
+const serviceToUpdate = {
+...selectedService,
+price: Number(selectedService.price),
+status: selectedService.status?.trim().toUpperCase()
+};
+
+if (selectedService.serviceTypeId) {
+await ServiceTypeServices.updateServiceType(id, selectedService.serviceTypeId, serviceToUpdate, headers);
+toast.success("Service type updated successfully!");
+} else {
+await ServiceTypeServices.addServiceType(id, serviceToUpdate, headers);
+toast.success("Service type added successfully!");
+}
+
+const updatedListResponse = await ServiceTypeServices.getAllServiceTypes(id);
+setServiceTypes(updatedListResponse.data);
+handleModalClose();
+} catch (error) {
+console.error("Error saving service type:", error);
+toast.error("Failed to save service type. Please try again.");
+}
+};
 
   return (
     <div className="flex justify-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">

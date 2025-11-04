@@ -2,51 +2,69 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UserServices from "../../services/UserServices";
+import { getAuthHeader } from "../../../utils/getAuthHeader";
 import { toast } from 'react-hot-toast';
 import Loader from "../../Loader";
 
 const UserProfile = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+const navigate = useNavigate();
+const { isAuthenticated, user } = useSelector((state) => state.auth);
 
-  const [userData, setUserData] = useState({
-    first_name: "",
-    last_name: "",
-    address: "",
-    phone: ""
-  });
+const [userData, setUserData] = useState({
+firstName: "",
+lastName: "",
+address: "",
+phone: ""
+});
 
-  const [isLoading, setIsLoading] = useState(true);
+const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (user && user.id) {
-      UserServices.getUserById(user.id)
-        .then((response) => {
-          const profile = response.data[0];
-          if (profile) {
-            const { first_name, last_name, address, phone } = profile;
-            setUserData({ first_name, last_name, address, phone });
-          } else {
-            toast.error("User profile not found.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          toast.error("Failed to load user profile.");
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else {
-      setIsLoading(false);
-    }
-  }, [user]);
+useEffect(() => {
+const fetchUserProfile = async () => {
+if (isAuthenticated && user?.id) {
+try {
+const headers = {
+...getAuthHeader(),
+"X-User-Id": user.id,
+"X-Role": user.role,
+};
 
-  const { first_name, last_name, address, phone } = userData;
+const response = await UserServices.getUserProfile(headers);
+const profile = Array.isArray(response.data) ? response.data[0] : response.data;
+console.log(profile);
 
-  if (isLoading) {
-    return <Loader/>;
-  }
+
+
+if (profile) {
+const { firstName, lastName, address, phone } = profile;
+setUserData({
+firstName,
+lastName,
+address,
+phone
+});
+} else {
+toast.error("User profile not found.");
+}
+} catch (error) {
+console.error("Error fetching user data:", error);
+toast.error("Failed to load user profile.");
+} finally {
+setIsLoading(false);
+}
+} else {
+setIsLoading(false);
+}
+};
+
+fetchUserProfile();
+}, [user, isAuthenticated]);
+
+const { firstName, lastName, address, phone } = userData;
+
+if (isLoading) {
+return <Loader />;
+}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-800 dark:to-slate-900 transition-colors duration-500">
@@ -59,7 +77,7 @@ const UserProfile = () => {
           />
           <div className="text-center md:text-left">
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-              {first_name || "John"} {last_name || "Doe"}
+              {firstName || "John"} {lastName || "Doe"}
             </h1>
             <p className="text-gray-500 dark:text-gray-300 mt-2">Welcome back to your Profile</p>
           </div>
