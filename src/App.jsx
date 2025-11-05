@@ -51,12 +51,13 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('auth');
+    // const storedUser = localStorage.getItem('authUser');
+    const storedUser = sessionStorage.getItem('authUser');
     if (storedUser) {
       dispatch(login(JSON.parse(storedUser)));
     }
   }, []);
-  console.log("user details", role)
+  // console.log("user details", role)
 
   return (
     <>

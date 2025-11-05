@@ -4,7 +4,7 @@ import adminReducer from './adminSlice';
 import { decodeToken } from '../utils/jwtUtils';
 const userloadState = () => {
   try {
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     if (!token) return null;
 
     const decoded = decodeToken(token);
@@ -47,7 +47,7 @@ store.subscribe(() => {
   const authSerializedState = JSON.stringify(state.auth);
   const adminSerializedState = JSON.stringify(state.admin);
 
-  localStorage.setItem('authUser', authSerializedState);
+  sessionStorage.setItem('authUser', authSerializedState);
   localStorage.setItem('admin', adminSerializedState);
 });
 

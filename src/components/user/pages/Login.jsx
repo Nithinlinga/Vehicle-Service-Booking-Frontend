@@ -54,8 +54,10 @@ const Login = () => {
       dispatch(login(decoded));
 
       // Optionally store token and decoded info in localStorage
-      localStorage.setItem("authToken", token);
-      localStorage.setItem("authUser", JSON.stringify(decoded));
+      // localStorage.setItem("authToken", token);
+      // localStorage.setItem("authUser", JSON.stringify(decoded));
+      sessionStorage.setItem("authToken", token);
+      sessionStorage.setItem("authUser", JSON.stringify(decoded))
 
       toast.success("Login success");
       navigate("/");
