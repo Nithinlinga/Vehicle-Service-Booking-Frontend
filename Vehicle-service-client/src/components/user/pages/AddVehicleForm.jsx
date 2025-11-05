@@ -202,7 +202,7 @@ const AddVehicleForm = () => {
   };
 
   // Updated to check for 'car' instead of 'CAR'
-  const modelsForSelectedBrand = vehicleType === 'car' ? carModels[form.make] : bikeModels[form.make];
+  const modelsForSelectedBrand = vehicleType === 'CAR' ? carModels[form.make] : bikeModels[form.make];
 
   return (
     <form onSubmit={handleSubmit} className="mt-10 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-xl mx-auto">
@@ -212,8 +212,8 @@ const AddVehicleForm = () => {
         <label className="block mb-1 font-semibold">Vehicle Type</label>
         <select name="vehicleType" value={vehicleType} onChange={handleTypeChange} required className="w-full px-3 dark:bg-gray-900 py-2 border rounded-lg">
           <option value="">Select Type</option>
-          <option value="car">Car</option>
-          <option value="bike">Bike</option>
+          <option value="CAR">Car</option>
+          <option value="BIKE">Bike</option>
         </select>
       </div>
 
@@ -223,7 +223,7 @@ const AddVehicleForm = () => {
             <label htmlFor="make" className="block mb-1 font-semibold">Brand</label>
             <select id="make" name="make" value={form.make} onChange={handleChange} required className="w-full dark:bg-gray-900   px-3 py-2 border rounded-lg">
               {/* Updated to check for 'car' instead of 'CAR' */}
-              {vehicleType === 'car' ? (
+              {vehicleType === 'CAR' ? (
                 carBrands.map((make) => (
                   <option key={make.value} value={make.value}>{make.label}</option>
                 ))
@@ -271,7 +271,7 @@ const AddVehicleForm = () => {
           </div>
 
           {/* Updated to check for 'car' instead of 'CAR' */}
-          {vehicleType === 'car' ? (
+          {vehicleType === 'CAR' ? (
             <>
               <div className="mb-4">
                 <label htmlFor="transmission" className="block mb-1 font-semibold">Transmission</label>

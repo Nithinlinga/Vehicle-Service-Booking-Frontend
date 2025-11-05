@@ -6,7 +6,6 @@ const ServiceCenters = () => {
   const [serviceCentre, setServiceCentre] = useState([]);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -20,15 +19,14 @@ const ServiceCenters = () => {
     }
   }
 
-
   return (
     <div className="m-2">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-center flex-1">
           All Service Centres
         </h2>
-
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {serviceCentre.map((s) => (
           <div
@@ -46,8 +44,7 @@ const ServiceCenters = () => {
                 "{s.feedback}"
               </p>
             )}
-            <div className="flex space-x-2  ">
-
+            <div className="flex space-x-2">
               <button
                 onClick={() => navigate(`/user/services/${s.servicecenterId}`)}
                 className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"
@@ -58,8 +55,6 @@ const ServiceCenters = () => {
           </div>
         ))}
       </div>
-
-
     </div>
   );
 };

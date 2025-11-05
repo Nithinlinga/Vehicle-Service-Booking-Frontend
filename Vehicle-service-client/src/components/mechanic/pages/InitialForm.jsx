@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const InitialForm = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -14,13 +15,13 @@ const InitialForm = () => {
     availability: 'Available',
     rating: 'Excellent',
   });
-  const [showSubmissionMessage, setShowSubmissionMessage] = useState(false);
+
   useEffect(() => {
     const authString = localStorage.getItem('auth');
     if (authString) {
       try {
         const authObject = JSON.parse(authString);
-        if (authObject && authObject.username) {
+        if (authObject?.username) {
           setFormData((prevData) => ({
             ...prevData,
             name: authObject.username,
@@ -31,6 +32,7 @@ const InitialForm = () => {
       }
     }
   }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -38,59 +40,67 @@ const InitialForm = () => {
       [name]: value,
     }));
   };
-  const handleSubmit = (e) => {
-  e.preventDefault();
-  const regex = {
-    name: /^[a-zA-Z]{2,50}$/,
-    phone: /^\d{10}$/,
-    address: /^[a-zA-Z0-9\s,.'-]{5,100}$/,
-    expertise: /^[a-zA-Z\s]{2,50}$/
-  };
-  if(!regex.name.test(formData.name)){
-    toast.error("Invalid name. Should contain at least 2 and at max 5 letters");
-  }
-  if(!regex.phone.test(formData.phone)){
-    toast.error("Invalid phone number. Should contain only 10 numbers");
-  }
-  if(!regex.address.test(formData.address)){
-    toast.error("Invalid address. Should contain at least 5 and at max 100 characters including letters,commas,apostopys,dot,numbers");
-  }
-  if(!regex.expertise.test(formData.expertise)){
-    toast.error("Invalid expertise. Should contain at least 2 and at max 50 letters");
-  }
-  const authString = localStorage.getItem('auth');
-  if (!authString) {
-    toast.error('User not authenticated');
-    return;
-  }
 
-  const authObject = JSON.parse(authString);
-  const mechanicId = authObject.id;
-  ServiceCenterServices.getServiceCenterById(mechanicId)
-    .then((serviceCenterId) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const regex = {
+      name: /^[a-zA-Z]{2,50}$/,
+      phone: /^\d{10}$/,
+      address: /^[a-zA-Z0-9\s,.'-]{5,100}$/,
+      expertise: /^[a-zA-Z\s]{2,50}$/,
+    };
+
+    if (!regex.name.test(formData.name)) {
+      toast.error("Invalid name. Should contain 2 to 50 letters.");
+      return;
+    }
+
+    if (!regex.phone.test(formData.phone)) {
+      toast.error("Invalid phone number. Must be exactly 10 digits.");
+      return;
+    }
+
+    if (!regex.address.test(formData.address)) {
+      toast.error("Invalid address. Must be 5 to 100 characters.");
+      return;
+    }
+
+    if (!regex.expertise.test(formData.expertise)) {
+      toast.error("Invalid expertise. Should contain 2 to 50 letters.");
+      return;
+    }
+
+    const authString = localStorage.getItem('auth');
+    if (!authString) {
+      toast.error('User not authenticated');
+      return;
+    }
+
+    try {
+      const authObject = JSON.parse(authString);
+      const mechanicId = authObject.id;
+
+      if (!mechanicId) {
+        toast.error('Invalid mechanic ID');
+        return;
+      }
+
+      const serviceCenterRes = await ServiceCenterServices.getServiceCenterById(mechanicId);
       const newData = {
         mechanicId,
-        serviceCenterId: serviceCenterId.data.serviceCenterId,
+        serviceCenterId: serviceCenterRes.data.serviceCenterId,
         ...formData,
       };
-      return MechanicServices.addMechanics(newData)
 
-      .then((response) => {
-        toast.success('Form submitted successfully!');
-        navigate('/mechanic/dashboard');
-      })
-      .catch((error) => {
-        console.error('Error submitting mechanic:', error);
-        toast.error('Submission failed');
-      });
-
-    })
-    .catch((error) => {
-      console.error('Error submitting form:', error);
+      await MechanicServices.addMechanics(newData);
+      toast.success('Mechanic profile created successfully!');
+      navigate('/mechanic/dashboard');
+    } catch (error) {
+      console.error('Error submitting mechanic profile:', error);
       toast.error('Submission failed');
-    });
-};
-
+    }
+  };
 
 
   return (

@@ -1,46 +1,41 @@
 import axios from "axios";
 
-const api = "http://localhost:3001/booking";
+const BASE = import.meta.env.VITE_SERVER_URL;
+const BOOKINGS = `${BASE}/app5/v1/bookings`;
 
 class BookingServices {
-  addBooking(credentials) {
-    return axios.post(`${api}`, credentials);
+  addBooking(credentials, headers) {
+    return axios.post(`${BOOKINGS}`, credentials, { headers });
   }
 
-  getAllBookings() {
-    return axios.get(`${api}`);
-  }
+  getAllBookings(headers) {
+  return axios.get(`${BOOKINGS}`, {headers});
+}
 
-  getBookingById(bookingId) {
-    return axios.get(`${api}/${bookingId}`);
-  }
 
-  getBookingsByUserId(userId) {
-    return axios.get(`${api}/user/${userId}`);
-  }
+  getBookingById(bookingId, headers) {
+  return axios.get(`${api}/${bookingId}`, {
+    headers: {
+      ...headers
+    }
+  });
+}
 
-  getBookingsByVehicleId(vehicleId) {
-    return axios.get(`${api}/vehicle/${vehicleId}`);
-  }
 
-  getBookingsByServiceCenterId(serviceCenterId) {
-    return axios.get(`${api}/service/${serviceCenterId}`);
-  }
+  deleteBookingById(bookingId, headers) {
+  return axios.delete(`${BOOKINGS}/${bookingId}`, {
+    headers
+  });
+}
 
-  updateBookingById(bookingId, updatedData) {
-    return axios.put(`${api}/${bookingId}`, updatedData);
-  }
+patchBookingVerifyById(bookingId, verify, role) {
+  return axios.patch(`${api}/${bookingId}/verify`, verify, {
+    headers: {
+      "X-Role": role
+    }
+  });
+}
 
-  patchBookingById(bookingId, updatedData) {
-    return axios.patch(`${api}/${bookingId}`, updatedData);
-  }
-  patchBookingVerifyById(bookingId, verify) {
-    return axios.patch(`${api}/verify/${bookingId}`, verify);
-  }
-
-  deleteBookingById(bookingId) {
-    return axios.delete(`${api}/${bookingId}`);
-  }
 }
 
 export default new BookingServices();

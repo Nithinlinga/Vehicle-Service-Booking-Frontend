@@ -91,7 +91,7 @@ setSelectedService({
 name: "",
 description: "",
 price: "",
-status: "ACTIVE",
+status: "",
 serviceCenterId: id,
 });
 setIsModalOpen(true);
@@ -265,8 +265,8 @@ toast.error("Failed to save service type. Please try again.");
                     errors.status ? "border-red-500" : ""
                   }`}
                 >
-                  <option value="ACTIVE">Active</option>
-                  <option value="INACTIVE">Inactive</option>
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="INACTIVE">INACTIVE</option>
                 </select>
                 {errors.status && (
                   <p className="text-red-500 text-sm mt-1">{errors.status}</p>

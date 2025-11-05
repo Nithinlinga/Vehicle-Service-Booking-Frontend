@@ -5,9 +5,14 @@ const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+
   const fetchUsers = async () => {
     try {
-      const response = await UserServices.getAllUsers();
+      const token = localStorage.getItem("token");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await UserServices.getAllUsers(headers); // returns all users for admin
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -30,14 +35,15 @@ const ManageUsers = () => {
 
   const handleSave = async () => {
     try {
-      await UserServices.updateUserStatus(
-        selectedUser.userId,
-        selectedUser.status
-      );
+      const token = localStorage.getItem("token");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      await UserServices.updateUserProfile(selectedUser, headers);
       await fetchUsers();
       handleModalClose();
     } catch (error) {
-      console.error("Error updating user status:", error);
+      console.error("Error updating user profile:", error);
     }
   };
 
@@ -60,7 +66,7 @@ const ManageUsers = () => {
             {users.map((u, i) => (
               <tr key={u.userId} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{i + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{u.first_name} {u.last_name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{u.firstName} {u.lastName}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.phone}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -69,7 +75,7 @@ const ManageUsers = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button onClick={() => handleEditClick(u)} className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-3 py-1 rounded text-sm shadow-sm">
+                  <button onClick={() => handleEditClick(u)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm shadow-sm">
                     Edit
                   </button>
                 </td>
@@ -78,25 +84,7 @@ const ManageUsers = () => {
           </tbody>
         </table>
       </div>
-      <div className="block sm:hidden space-y-4">
-        {users.map((u, i) => (
-          <div key={u.userId} className="border border-gray-300 rounded-lg p-4 shadow-sm bg-white dark:bg-gray-800 hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="font-semibold text-lg">{i + 1}. {u.first_name} {u.last_name}</h3>
-              <span className={`px-2 py-1 text-xs rounded-full ${u.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                {u.status === "active" ? "Active" : "inActive"}
-              </span>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">📧 {u.email}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">📞 {u.phone}</p>
-            <div className="text-right">
-              <button onClick={() => handleEditClick(u)} className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                Edit
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+
       {isModalOpen && selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
@@ -106,7 +94,7 @@ const ManageUsers = () => {
             <div className="space-y-3">
               <input
                 type="text"
-                value={`${selectedUser.first_name} ${selectedUser.last_name}`}
+                value={`${selectedUser.firstName} ${selectedUser.lastName}`}
                 disabled
                 className="w-full p-2 border rounded dark:bg-gray-700 cursor-not-allowed dark:text-white"
               />
@@ -132,20 +120,20 @@ const ManageUsers = () => {
                 }
                 className="w-full p-2 border rounded dark:bg-gray-900 cursor-pointer dark:text-white"
               >
-                <option value={"active"}>Active</option>
-                <option value={"inActive"}>InActive</option>
+                <option value="active">Active</option>
+                <option value="inActive">InActive</option>
               </select>
             </div>
             <div className="flex justify-end mt-6 space-x-2">
               <button
                 onClick={handleModalClose}
-                className="px-4 py-2 cursor-pointer bg-gray-400 text-white rounded hover:bg-gray-500"
+                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 cursor-pointer bg-green-600 text-white rounded hover:bg-green-700"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
               >
                 Save
               </button>

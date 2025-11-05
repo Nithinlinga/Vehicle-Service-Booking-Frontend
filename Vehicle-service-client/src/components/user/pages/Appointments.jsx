@@ -3,16 +3,17 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
-import ServiceTypeServices from "../../services/ServiceTypeServices";
+// import ServiceTypeServices from "../../services/ServiceTypeServices";
 import BookingServices from "../../services/BookingServices";
 import UserServices from "../../services/UserServices";
+import { getAuthHeader } from "../../../utils/getAuthHeader";
 
 const Appointments = () => {
   const [searchParams] = useSearchParams();
   const { user } = useSelector((state) => state.auth);
   const service_center = searchParams.get("service_center");
-  const service_type = searchParams.get("service_type");
-  const vehicleId = searchParams.get("vehicleId");
+//   const service_type = searchParams.get("service_type");
+  const vehicleId = Number(searchParams.get("vehicleId"));
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,127 +21,154 @@ const Appointments = () => {
   const [allVehicles, setAllVehicles] = useState([]);
 
   const [allServiceCenters, setAllServiceCenters] = useState([]);
-  const [serviceTypes, setServiceTypes] = useState([]);
+//   const [serviceTypes, setServiceTypes] = useState([]);
   const [submitted, setSubmitted] = useState(false);
 
+
   const [form, setForm] = useState({
-    name: "",
-    vehicle: "",
     vehicleId: vehicleId || "",
-    date: "",
-    userId: user.id,
+    bookingDate: "",
+    customerId: user.id,
     timeslot: "",
-    serviceCenterId: service_center || "",
-    service: "",
-    notes: "",
-    status: ""
+   centerId: service_center || ""
   });
 
   useEffect(() => {
-    const fetchVehicles = async () => {
+    const fetchVehicle = async () => {
       try {
-        const resp = await VehiclesServices.getVehiclesByUserId(user.id);
-        setAllVehicles(resp.data);
+        const headers = {
+            ...getAuthHeader(),
+            "X-User-Id": user.id,
+            "X-Role": user.role,
+          };
+        const resp = await UserServices.getVehicleById(vehicleId , headers);
+        console.log(resp.data);
+        setAllVehicles([resp.data]);
+        localStorage.setItem("vehicles",JSON.stringify([resp.data]))
       } catch (error) {
-        console.error("Error fetching vehicles:", error);
-        toast.error("Failed to load vehicles.");
+        console.error("Error in vehicle", error);
       }
     };
+  
+    fetchVehicle();
+  }, []);
 
-    if (user && user.id) {
-      fetchVehicles();
-    }
-  }, [user]);
+  // const fetchServiceTypes = async (centerId) => {
+  //   if (!centerId) return;
+  //   try {
+  //     const headers = {
+  //         "X-User-Id": user.id,
+  //         "X-Role": user.role
+  //       };
+  //   const resp = await ServiceTypeServices.getAllServiceTypes(centerId, { headers });
+  //   setServiceTypes(resp.data);
 
-  const fetchServiceTypes = async (centerId) => {
-    if (!centerId) return;
-    try {
-      const resp = await ServiceTypeServices.getAllServiceTypesByServiceCenter(
-        centerId
-      );
-      setServiceTypes(resp.data);
-      if (resp.data.length > 0) {
-        const selected =
-          resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ||
-          resp.data[0];
-        setForm((prev) => ({ ...prev, service: selected.name }));
-      }
-      
-    } catch (error) {
-      console.error("Error fetching service types:", error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const centers = await ServiceCenterServices.getAllServiceCenters();
-        setAllServiceCenters(centers.data);
-
-        let centerIdToFetch = service_center;
-
-        if (!centerIdToFetch && centers.data.length > 0) {
-          centerIdToFetch = String(centers.data[0].servicecenterId);
-        }
-
-        if (centerIdToFetch) {
-          setForm((prev) => ({ ...prev, serviceCenterId: centerIdToFetch }));
-          await fetchServiceTypes(centerIdToFetch);
-        }
-      } catch (error) {
-        console.error("Error fetching initial data:", error);
-      }
-    };
-    fetchInitialData();
-  }, [service_center, service_type]);
+  //   if (resp.data.length > 0) {
+  //   const selected =
+  //   resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ||
+  //   resp.data[0];
+  //   setForm((prev) => ({ ...prev, service: selected.name }));
+  //   }
+  //   } catch (error) {
+  //   console.error("Error fetching service types:", error);
+  //   toast.error("Failed to load service types.");
+  //   }
+  //   };
 
   useEffect(() => {
-    if (location.state?.vehicleId && allVehicles.length > 0) {
-      const foundVehicle = allVehicles.find(
-        (av) => String(av.vehicleId) === String(location.state.vehicleId)
-      );
-      if (foundVehicle) {
-        setForm((prev) => ({
-          ...prev,
-          vehicle: `${foundVehicle.make.toUpperCase()} ${foundVehicle.model}`,
-          vehicleId: foundVehicle.vehicleId,
-        }));
-      }
-    }
-  }, [location.state?.vehicleId, allVehicles]);
+    const headers = {
+          "X-User-Id": user.id,
+          "X-Role": user.role
+        };
+const fetchInitialData = async () => {
+try {
+const centers = await ServiceCenterServices.getAllServiceCenters();
+setAllServiceCenters(centers.data);
+
+let centerIdToFetch = service_center;
+
+if (!centerIdToFetch && centers.data.length > 0) {
+centerIdToFetch = String(centers.data[0].servicecenterId);
+}
+
+if (centerIdToFetch) {
+setForm((prev) => ({ ...prev,centerId: centerIdToFetch }));
+// await fetchServiceTypes(centerIdToFetch);
+}
+} catch (error) {
+console.error("Error fetching initial data:", error);
+toast.error("Failed to load service centers.");
+}
+};
+
+fetchInitialData();
+}, [service_center]);
+
+  useEffect(() => {
+if (location.state?.vehicleId && allVehicles.length > 0) {
+const foundVehicle = allVehicles.find(
+(av) => String(av.vehicleId) === String(location.state.vehicleId)
+);
+if (foundVehicle) {
+setForm((prev) => ({
+...prev,
+vehicle: `${foundVehicle.make.toUpperCase()} ${foundVehicle.model}`,
+vehicleId: foundVehicle.vehicleId,
+}));
+}
+}
+}, [location.state?.vehicleId, allVehicles]);
 
   const handleServiceCenterChange = (e) => {
-    const newCenterId = e.target.value;
-    setForm((prev) => ({ ...prev, serviceCenterId: newCenterId, service: "" }));
-    fetchServiceTypes(newCenterId);
-  };
+const newCenterId = e.target.value;
+// setForm((prev) => ({ ...prev,centerId: newCenterId, service: "" }));
+// fetchServiceTypes(newCenterId);
+};
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+const handleChange = (e) => {
+const { name, value } = e.target;
+setForm((prev) => ({ ...prev, [name]: value }));
+};
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const today = new Date().toISOString().split("T")[0];
-    if (form.date < today) {
-      toast.error("Please select a date on or after today.");
-      return;
-    }
-    if (!form.vehicleId) {
-      toast.error("Please select a vehicle.");
-      return;
-    }
-    try {
-      const appointment = await BookingServices.addBooking(form);
-      if(appointment){
+  const today = new Date().toISOString().split("T")[0];
+  if (form.bookingDate < today) {
+    toast.error("Please select a date on or after today.");
+    return;
+  }
+
+  if (!form.vehicleId) {
+    toast.error("Please select a vehicle.");
+    return;
+  }
+
+  try {
+    const headers = {
+      ...getAuthHeader(),
+      "X-User-Id": user.id,
+      "X-Role": user.role
+    };
+
+    // Combine date and time into ISO format
+    const fullDateTime = `${form.bookingDate}T${form.timeslot}`;
+
+    const payload = {
+      ...form,
+      bookingDate: fullDateTime
+    };
+
+    const appointment = await BookingServices.addBooking(payload, headers);
+
+    if (appointment) {
       setSubmitted(true);
-      toast.success("Appointment booked successfully!");}
-    } catch (error) {
-      console.error("Error booking appointment:", error);
-      toast.error("Failed to book appointment. Please try again.");
+      toast.success("Appointment booked successfully!");
     }
-  };
+  } catch (error) {
+    console.error("Error booking appointment:", error);
+    toast.error("Failed to book appointment. Please try again.");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-100 via-white to-teal-100 dark:from-gray-900 dark:via-gray-800 dark:to-teal-900 py-10">
@@ -162,19 +190,7 @@ const Appointments = () => {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
-                Your Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                required
-                value={form.name}
-                onChange={handleChange}
-                className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
-              />
-            </div>
+            
             <div>
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Select Vehicle
@@ -185,7 +201,7 @@ const Appointments = () => {
                 onChange={(e) => {
                   const selectedId = e.target.value;
                   const selectedVehicle = allVehicles.find(
-                    (v) => String(v.vehicleId) === selectedId
+                    (v) => (v.vehicleId) === selectedId
                   );
                   setForm((prev) => ({
                     ...prev,
@@ -199,9 +215,9 @@ const Appointments = () => {
               >
                 <option value="">Select Vehicle</option>
                 {allVehicles?.map((v) => (
-                  <option key={v.vehicleId} value={v.vehicleId}>
-                    {v.make.toUpperCase()} {v.model}
-                  </option>
+                <option key={v.vehicleId} value={v.vehicleId}>
+                  {v.make.toUpperCase()} {v.model}
+                </option>
                 ))}
               </select>
             </div>
@@ -212,9 +228,9 @@ const Appointments = () => {
                 </label>
                 <input
                   type="date"
-                  name="date"
+                  name="bookingDate"
                   required
-                  value={form.date}
+                  value={form.bookingDate}
                   onChange={handleChange}
                   min={new Date(Date.now() + 24 * 60 * 60 * 1000)
                     .toISOString()
@@ -227,6 +243,7 @@ const Appointments = () => {
                   Time
                 </label>
                 <input
+              
                   type="time"
                   name="timeslot"
                   required
@@ -242,7 +259,7 @@ const Appointments = () => {
               </label>
               <select
                 name="serviceCenterId"
-                value={form.serviceCenterId}
+//                 value={form.serviceCenterId}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 onChange={handleServiceCenterChange}
               >
@@ -253,48 +270,35 @@ const Appointments = () => {
                 ))}
               </select>
             </div>
-            <div>
+            {/* <div>
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Service Type
               </label>
               <select
                 name="service"
-                value={form.service}
+//                 value={form.service}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
-                onChange={(e) => setForm((prev) => ({ ...prev, service: e.target.value }))}
+//                 onChange={(e) => setForm((prev) => ({ ...prev, service: e.target.value }))}
               >
-                {serviceTypes?.map((s) => (
-                  s.status === 'active' ? 
-                  <option key={s.serviceTypeId} value={s.name}>
-                    {s.name}
-                  </option>
-                  :<option></option>
-                ))}
+//                 {serviceTypes?.map((s, index) =>
+                  s.status === "ACTIVE" ? (
+                    <option key={s.serviceTypeId} value={s.name}>
+                      {s.name}
+                    </option>
+                  ) : null
+                )}
               </select>
-              {form.service && (
+//               {form.service && (
                 <div className="mt-4">
                   <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                     Price
                   </label>
                   <div className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                    ₹{serviceTypes.find((s) => s.name === form.service)?.price}
+//                     ₹{serviceTypes.find((s) => s.name === form.service)?.price}
                   </div>
                 </div>
               )}
-            </div>
-            <div>
-              <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
-                Additional Notes
-              </label>
-              <textarea
-                name="notes"
-                value={form.notes}
-                onChange={handleChange}
-                rows={3}
-                className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
-                placeholder="Any specific requests?"
-              />
-            </div>
+            </div> */}
             <button
               type="submit"
               className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow transition text-lg"

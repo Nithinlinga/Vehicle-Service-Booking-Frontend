@@ -17,11 +17,16 @@ class UserServices {
   updateUserProfile(updatedData, headers = {}) {
     return axios.put(`${api}/app2/api/v1/customer`, updatedData, { headers });
   }
+  
+  getAllUsers(headers = {}) {
+    return axios.get(`${api}/app2/api/v1/customer/all`, { headers });
+  }
 
   // Register a vehicle
   addVehicle(vehicleData, headers = {}) {
     return axios.post(`${api}/app2/api/v1/customer/vehicle`, vehicleData, { headers });
   }
+  
 
   // Update a vehicle by ID
   updateVehicle(vehicleId, vehicleData, headers = {}) {
