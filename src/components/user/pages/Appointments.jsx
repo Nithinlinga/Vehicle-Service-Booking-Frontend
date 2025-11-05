@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
-// import ServiceTypeServices from "../../services/ServiceTypeServices";
+import ServiceTypeServices from "../../services/ServiceTypeServices";
 import BookingServices from "../../services/BookingServices";
 import UserServices from "../../services/UserServices";
 import { getAuthHeader } from "../../../utils/getAuthHeader";
@@ -12,7 +12,7 @@ const Appointments = () => {
   const [searchParams] = useSearchParams();
   const { user } = useSelector((state) => state.auth);
   const service_center = searchParams.get("service_center");
-//   const service_type = searchParams.get("service_type");
+  const service_type = searchParams.get("service_type");
   const vehicleId = Number(searchParams.get("vehicleId"));
 
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const Appointments = () => {
   const [allVehicles, setAllVehicles] = useState([]);
 
   const [allServiceCenters, setAllServiceCenters] = useState([]);
-//   const [serviceTypes, setServiceTypes] = useState([]);
+  const [serviceTypes, setServiceTypes] = useState([]);
   const [submitted, setSubmitted] = useState(false);
 
 
@@ -48,23 +48,23 @@ const Appointments = () => {
     fetchVehicle();
   }, []);
 
-  // const fetchServiceTypes = async (centerId) => {
-  //   if (!centerId) return;
-  //   try {
-  //   const resp = await ServiceTypeServices.getAllServiceTypes(centerId, { headers });
-  //   setServiceTypes(resp.data);
+  const fetchServiceTypes = async (centerId) => {
+    if (!centerId) return;
+    try {
+    const resp = await ServiceTypeServices.getAllServiceTypes(centerId);
+    setServiceTypes(resp.data);
 
-  //   if (resp.data.length > 0) {
-  //   const selected =
-  //   resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ||
-  //   resp.data[0];
-  //   setForm((prev) => ({ ...prev, service: selected.name }));
-  //   }
-  //   } catch (error) {
-  //   console.error("Error fetching service types:", error);
-  //   toast.error("Failed to load service types.");
-  //   }
-  //   };
+    if (resp.data.length > 0) {
+    const selected =
+    resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ||
+    resp.data[0];
+    setForm((prev) => ({ ...prev, service: selected.name }));
+    }
+    } catch (error) {
+    console.error("Error fetching service types:", error);
+    toast.error("Failed to load service types.");
+    }
+    };
 
   useEffect(() => {
 const fetchInitialData = async () => {
@@ -80,7 +80,7 @@ centerIdToFetch = String(centers.data[0].servicecenterId);
 
 if (centerIdToFetch) {
 setForm((prev) => ({ ...prev,centerId: centerIdToFetch }));
-// await fetchServiceTypes(centerIdToFetch);
+await fetchServiceTypes(centerIdToFetch);
 }
 } catch (error) {
 console.error("Error fetching initial data:", error);
@@ -108,8 +108,8 @@ vehicleId: foundVehicle.vehicleId,
 
   const handleServiceCenterChange = (e) => {
 const newCenterId = e.target.value;
-// setForm((prev) => ({ ...prev,centerId: newCenterId, service: "" }));
-// fetchServiceTypes(newCenterId);
+setForm((prev) => ({ ...prev,centerId: newCenterId, service: "" }));
+fetchServiceTypes(newCenterId);
 };
 
 const handleChange = (e) => {
@@ -241,7 +241,7 @@ setForm((prev) => ({ ...prev, [name]: value }));
               </label>
               <select
                 name="serviceCenterId"
-//                 value={form.serviceCenterId}
+                value={form.serviceCenterId}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 onChange={handleServiceCenterChange}
               >
@@ -252,35 +252,45 @@ setForm((prev) => ({ ...prev, [name]: value }));
                 ))}
               </select>
             </div>
-            {/* <div>
+            <div>
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Service Type
               </label>
               <select
-                name="service"
-//                 value={form.service}
+                name="serviceTypeId"
+                value={form.serviceTypeId}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
-//                 onChange={(e) => setForm((prev) => ({ ...prev, service: e.target.value }))}
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  const selectedService = serviceTypes.find(s => String(s.serviceTypeId) === selectedId);
+                  setForm((prev) => ({
+                    ...prev,
+                    serviceTypeId: selectedId,
+                    serviceTypeName: selectedService?.name || "",
+                    serviceTypePrice: selectedService?.price || 0
+                  }));
+                }}
               >
-//                 {serviceTypes?.map((s, index) =>
+                <option value="">Select Service Type</option>
+                {serviceTypes?.map((s) =>
                   s.status === "ACTIVE" ? (
-                    <option key={s.serviceTypeId} value={s.name}>
+                    <option key={s.serviceTypeId} value={s.serviceTypeId}>
                       {s.name}
                     </option>
                   ) : null
                 )}
               </select>
-//               {form.service && (
+               {form.serviceTypeId && (
                 <div className="mt-4">
                   <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                     Price
                   </label>
                   <div className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-//                     ₹{serviceTypes.find((s) => s.name === form.service)?.price}
+                    ₹{form.serviceTypePrice}
                   </div>
                 </div>
               )}
-            </div> */}
+            </div>
             <button
               type="submit"
               className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow transition text-lg"
