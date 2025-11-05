@@ -21,13 +21,8 @@ const UserEntry = () => {
       }
 
       try {
-        const headers = {
-          ...getAuthHeader(),
-          'X-User-Id': user.id,
-          'X-Role': user.role,
-        };
 
-        const response = await UserServices.getUserProfile(headers);
+        const response = await UserServices.getUserProfile();
         console.log('Fetched user profile:', response.data);
 
         // Check if profile exists (non-null, non-empty)

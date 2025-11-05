@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import UserServices from "../../services/UserServices";
-import { getAuthHeader } from "../../../utils/getAuthHeader";
 
 const Vehicles = () => {
   const navigate = useNavigate();
@@ -14,12 +13,7 @@ const Vehicles = () => {
 useEffect(() => {
   const fetchVehicle = async () => {
     try {
-      const headers = {
-          ...getAuthHeader(),
-          "X-User-Id": user.id,
-          "X-Role": user.role,
-        };
-      const resp = await UserServices.getAllVehicles(headers);
+      const resp = await UserServices.getAllVehicles();
       setVehicles(resp.data || []);
       localStorage.setItem("vehicles",JSON.stringify(resp.data))
     } catch (error) {

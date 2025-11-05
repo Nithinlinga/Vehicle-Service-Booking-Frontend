@@ -1,37 +1,38 @@
 import axios from "axios";
+import { getAuthHeader } from "../../utils/getAuthHeader";
 
 const api = import.meta.env.VITE_SERVER_URL + "/api/v1/mechanic";
 
 class MechanicServices {
   // Create mechanic profile
-  addMechanic(mechanicData, headers = {}) {
-    return axios.post(`${api}`, mechanicData, { headers });
+  addMechanic(mechanicData, ) {
+    return axios.post(`${api}`, mechanicData, { headers: getAuthHeader() });
   }
 
   // Update mechanic profile by authenticated ID
-  updateMechanic(mechanicData, headers = {}) {
-    return axios.put(`${api}`, mechanicData, { headers });
+  updateMechanic(mechanicData, ) {
+    return axios.put(`${api}`, mechanicData, { headers: getAuthHeader() });
   }
 
   // Get mechanic profile by authenticated ID
-  getMechanic(headers = {}) {
-    return axios.get(`${api}`, { headers });
+  getMechanic() {
+    return axios.get(`${api}`, { headers: getAuthHeader() });
   }
 
   // Update mechanic's service center (admin only)
-  updateMechanicCenter(mechanicAuthId, centerId, headers = {}) {
+  updateMechanicCenter(mechanicAuthId, centerId, ) {
     return axios.patch(`${api}/center`, {
       mechanicAuthId,
       centerId,
-    }, { headers });
+    }, { headers: getAuthHeader() });
   }
 
   // Update mechanic verification status (admin only)
-  updateVerificationStatus(mechanicAuthId, isVerified, headers = {}) {
+  updateVerificationStatus(mechanicAuthId, isVerified, ) {
     return axios.patch(`${api}/verify`, {
       mechanicAuthId,
       isVerified,
-    }, { headers });
+    }, { headers: getAuthHeader() });
   }
 }
 

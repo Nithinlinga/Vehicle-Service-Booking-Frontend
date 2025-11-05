@@ -23,13 +23,7 @@ useEffect(() => {
 const fetchUserProfile = async () => {
 if (isAuthenticated && user?.id) {
 try {
-const headers = {
-...getAuthHeader(),
-"X-User-Id": user.id,
-"X-Role": user.role,
-};
-
-const response = await UserServices.getUserProfile(headers);
+const response = await UserServices.getUserProfile();
 const profile = Array.isArray(response.data) ? response.data[0] : response.data;
 console.log(profile);
 

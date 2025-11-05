@@ -21,13 +21,8 @@ const UserEditProfile = () => {
     const fetchUserProfile = async () => {
       if (user?.id) {
         try {
-          const headers = {
-            ...getAuthHeader(),
-            "X-User-Id": user.id,
-            "X-Role": user.role,
-          };
 
-          const response = await UserServices.getUserProfile(headers);
+          const response = await UserServices.getUserProfile();
           const profile = response.data;
 
           const { firstName, lastName, phone, address } = profile;
@@ -76,13 +71,7 @@ const UserEditProfile = () => {
     }
 
     try {
-      const headers = {
-        ...getAuthHeader(),
-        "X-User-Id": user.id,
-        "X-Role": user.role,
-      };
-
-      await UserServices.updateUserProfile(formData, headers);
+      await UserServices.updateUserProfile(formData);
       toast.success("Profile updated successfully!");
       navigate("/user/profile");
     } catch (err) {

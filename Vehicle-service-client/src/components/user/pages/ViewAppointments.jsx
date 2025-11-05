@@ -19,13 +19,9 @@ const today = new Date().toISOString().split("T")[0];
 
 const fetchAppointments = async () => {
 try {
-const headers = {
-  ...getAuthHeader(),
-"X-User-Id": user.id,
-"X-Role": user.role
-};
 
-const response = await BookingServices.getAllBookings( headers);
+
+const response = await BookingServices.getAllBookings();
 const data = Array.isArray(response.data) ? response.data : [response.data];
 setAppointments(data);
 localStorage.setItem("appointments", JSON.stringify(data));
@@ -45,12 +41,7 @@ const handleDelete = async (id) => {
 try {
 const confirmed = window.confirm("Are you sure you want to delete this Booking?");
 if (confirmed) {
-const headers = {
-  ...getAuthHeader(),
-"X-User-Id": user.id,
-"X-Role": user.role
-};
-await BookingServices.deleteBookingById(id, headers);
+await BookingServices.deleteBookingById(id);
 toast.success("Booking Deleted Successfully");
 fetchAppointments();
 }

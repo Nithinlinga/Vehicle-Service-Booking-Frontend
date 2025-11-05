@@ -2,7 +2,7 @@ import axios from "axios";
 
 const api = "http://localhost:3001/skill";
 
-class BookingServices {
+class MechanicSkill {
     getAllSkills(id) {
         return axios.get(`${api}/${id}`);
     }
@@ -14,4 +14,4 @@ class BookingServices {
     }
 }
 
-export default new BookingServices();
+export default new MechanicSkill();

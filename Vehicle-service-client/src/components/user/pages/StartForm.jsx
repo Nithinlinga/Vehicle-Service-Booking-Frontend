@@ -3,7 +3,6 @@ import { toast } from 'react-hot-toast';
 import UserServices from '../../services/UserServices';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getAuthHeader } from '../../../utils/getAuthHeader';
 
 const StartForm = () => {
   const navigate = useNavigate();
@@ -74,7 +73,7 @@ const StartForm = () => {
       ...formData,
     };
 
-    UserServices.addUser(newData, getAuthHeader())
+    UserServices.addUser(newData)
     .then(() => {
       console.log(newData);
       toast.success('User profile created successfully!'); 

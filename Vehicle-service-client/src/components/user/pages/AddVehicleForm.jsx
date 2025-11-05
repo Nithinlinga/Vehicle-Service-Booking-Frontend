@@ -170,14 +170,8 @@ const AddVehicleForm = () => {
       vehicleType: form.vehicleType.toUpperCase() // Ensure payload is always uppercase
     };
 
-    const headers = {
-      ...getAuthHeader(),
-      'X-User-Id': user.id,
-      'X-Role': user.role,
-      'Content-Type': 'application/json'
-    };
 
-    UserServices.addVehicle(payload, headers)
+    UserServices.addVehicle(payload)
       .then(() => {
         toast.success('Vehicle Added Successfully');
         setVehicleType('');

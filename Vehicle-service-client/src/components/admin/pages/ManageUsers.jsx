@@ -8,11 +8,7 @@ const ManageUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-      const response = await UserServices.getAllUsers(headers); // returns all users for admin
+      const response = await UserServices.getAllUsers(); // returns all users for admin
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -35,11 +31,7 @@ const ManageUsers = () => {
 
   const handleSave = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-      await UserServices.updateUserProfile(selectedUser, headers);
+      await UserServices.updateUserProfile(selectedUser);
       await fetchUsers();
       handleModalClose();
     } catch (error) {

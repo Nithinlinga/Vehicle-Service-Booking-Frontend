@@ -1,39 +1,32 @@
 import axios from "axios";
+import { getAuthHeader } from "../../utils/getAuthHeader";
 
 const BASE = import.meta.env.VITE_SERVER_URL;
 const BOOKINGS = `${BASE}/app5/v1/bookings`;
 
 class BookingServices {
-  addBooking(credentials, headers) {
-    return axios.post(`${BOOKINGS}`, credentials, { headers });
+  addBooking(credentials) {
+    return axios.post(`${BOOKINGS}`, credentials, { headers: getAuthHeader() });
   }
 
-  getAllBookings(headers) {
-  return axios.get(`${BOOKINGS}`, {headers});
+  getAllBookings() {
+  return axios.get(`${BOOKINGS}`, {headers: getAuthHeader()});
 }
 
 
-  getBookingById(bookingId, headers) {
-  return axios.get(`${api}/${bookingId}`, {
-    headers: {
-      ...headers
-    }
-  });
+  getBookingById(bookingId, ) {
+  return axios.get(`${api}/${bookingId}`, { headers: getAuthHeader() });
 }
 
 
-  deleteBookingById(bookingId, headers) {
+  deleteBookingById(bookingId) {
   return axios.delete(`${BOOKINGS}/${bookingId}`, {
-    headers
+    headers: getAuthHeader()
   });
 }
 
 patchBookingVerifyById(bookingId, verify, role) {
-  return axios.patch(`${api}/${bookingId}/verify`, verify, {
-    headers: {
-      "X-Role": role
-    }
-  });
+  return axios.patch(`${api}/${bookingId}/verify`, verify, {});
 }
 
 }

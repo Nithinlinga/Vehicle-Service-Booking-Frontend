@@ -36,12 +36,7 @@ const Appointments = () => {
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
-        const headers = {
-            ...getAuthHeader(),
-            "X-User-Id": user.id,
-            "X-Role": user.role,
-          };
-        const resp = await UserServices.getVehicleById(vehicleId , headers);
+        const resp = await UserServices.getVehicleById(vehicleId);
         console.log(resp.data);
         setAllVehicles([resp.data]);
         localStorage.setItem("vehicles",JSON.stringify([resp.data]))
@@ -56,10 +51,6 @@ const Appointments = () => {
   // const fetchServiceTypes = async (centerId) => {
   //   if (!centerId) return;
   //   try {
-  //     const headers = {
-  //         "X-User-Id": user.id,
-  //         "X-Role": user.role
-  //       };
   //   const resp = await ServiceTypeServices.getAllServiceTypes(centerId, { headers });
   //   setServiceTypes(resp.data);
 
@@ -76,10 +67,6 @@ const Appointments = () => {
   //   };
 
   useEffect(() => {
-    const headers = {
-          "X-User-Id": user.id,
-          "X-Role": user.role
-        };
 const fetchInitialData = async () => {
 try {
 const centers = await ServiceCenterServices.getAllServiceCenters();
@@ -144,11 +131,6 @@ setForm((prev) => ({ ...prev, [name]: value }));
   }
 
   try {
-    const headers = {
-      ...getAuthHeader(),
-      "X-User-Id": user.id,
-      "X-Role": user.role
-    };
 
     // Combine date and time into ISO format
     const fullDateTime = `${form.bookingDate}T${form.timeslot}`;
@@ -158,7 +140,7 @@ setForm((prev) => ({ ...prev, [name]: value }));
       bookingDate: fullDateTime
     };
 
-    const appointment = await BookingServices.addBooking(payload, headers);
+    const appointment = await BookingServices.addBooking(payload);
 
     if (appointment) {
       setSubmitted(true);
