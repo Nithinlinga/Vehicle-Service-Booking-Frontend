@@ -49,7 +49,7 @@ const MechanicDashboard = () => {
   const fetchServiceCenter=async()=>{
     try {
       
-      const resp=await MechanicServices.getMechanicsById(user.id);
+      const resp=await MechanicServices.getMechanic(user.id);
       setServiceCenterId(resp.data.servicecenterId)
     } catch (error) {
       console.log(error)

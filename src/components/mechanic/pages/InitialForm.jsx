@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom';
 
 const InitialForm = () => {
   const navigate = useNavigate();
-
+  const [showSubmissionMessage, setShowSubmissionMessage] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     address: '',
     expertise: '',
-    availability: 'Available',
-    rating: 'Excellent',
+    availability: 'AVAILABLE',
+    rating: 'EXCELLENT',
   });
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const InitialForm = () => {
       return;
     }
 
-    const authString = localStorage.getItem('auth');
+    const authString = sessionStorage.getItem('authUser');
     if (!authString) {
       toast.error('User not authenticated');
       return;
@@ -86,14 +86,8 @@ const InitialForm = () => {
         return;
       }
 
-      const serviceCenterRes = await ServiceCenterServices.getServiceCenterById(mechanicId);
-      const newData = {
-        mechanicId,
-        serviceCenterId: serviceCenterRes.data.serviceCenterId,
-        ...formData,
-      };
 
-      await MechanicServices.addMechanics(newData);
+      await MechanicServices.addMechanic(formData);
       toast.success('Mechanic profile created successfully!');
       navigate('/mechanic/dashboard');
     } catch (error) {

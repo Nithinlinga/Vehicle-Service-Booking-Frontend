@@ -21,7 +21,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (user?.id) {
-      MechanicServices.getMechanic(getAuthHeader())
+      MechanicServices.getMechanic()
         .then((response) => {
           const { name, phone, address, expertise, availability, rating } = response.data;
           setFormData({
@@ -76,7 +76,7 @@ const EditProfile = () => {
       return;
     }
 
-    MechanicServices.updateMechanic(formData, getAuthHeader())
+    MechanicServices.updateMechanic(formData)
       .then(() => {
         toast.success("Profile updated successfully!");
         navigate("/mechanic/profile");
@@ -176,9 +176,9 @@ const EditProfile = () => {
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
           >
             <option value="">Select Availability</option>
-            <option value="Available">Available</option>
-            <option value="Not Available">Not Available</option>
-            <option value="On Leave">On Leave</option>
+            <option value="AVAILABLE">Available</option>
+            <option value="UNAVAILABLE">Not Available</option>
+            <option value="ONLEAVE">On Leave</option>
           </select>
         </div>
 
@@ -193,10 +193,10 @@ const EditProfile = () => {
             className="mt-1 w-full p-3 border rounded-lg dark:bg-slate-700 dark:text-white"
           >
             <option value="">Select Rating</option>
-            <option value="Excellent">Excellent</option>
-            <option value="Good">Good</option>
-            <option value="Average">Average</option>
-            <option value="Poor">Poor</option>
+            <option value="EXCELLENT">Excellent</option>
+            <option value="GOOD">Good</option>
+            <option value="AVERAGE">Average</option>
+            <option value="POOR">Poor</option>
           </select>
         </div>
 
