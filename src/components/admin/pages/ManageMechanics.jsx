@@ -16,7 +16,7 @@ export default function ManageMechanics() {
 
   const fetchMechanics = async () => {
     try {
-      const res = await MechanicServices.getMechanics();
+      const res = await MechanicServices.getAllMechanics();
       setMechanics(res.data);
     } catch (err) {
       console.error("Error fetching mechanics:", err);
@@ -36,15 +36,15 @@ export default function ManageMechanics() {
 
   const handleVerification = async (id, status) => {
     const confirmMsg =
-      status === "yes"
+      status === "YES"
         ? "Are you sure you want to ACCEPT this mechanic?"
-        : status === "rejected"
+        : status === "REJECTED"
           ? "Are you sure you want to REJECT this mechanic?"
           : "Are you sure you want to mark this mechanic as UNVERIFIED?";
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      await MechanicServices.updateVerification(id, status);
+      await MechanicServices.updateVerificationStatus(id, status);
       fetchMechanics();
     } catch (err) {
       console.error("Error updating verification:", err);
@@ -58,7 +58,7 @@ export default function ManageMechanics() {
 
   const handleSaveMechanic = async (updatedMechanic) => {
     console.log("Updated mechanic:", updatedMechanic);
-    await MechanicServices.editMechanics(updatedMechanic.mechanicId, updatedMechanic)
+    await MechanicServices.updateMechanicCenter(updatedMechanic.id, updatedMechanic.centerId,updatedMechanic.status)
     await fetchMechanics()
   };
 
@@ -69,7 +69,7 @@ export default function ManageMechanics() {
 
   const handleStatusSave = async () => {
     try {
-      await MechanicServices.updateStatus(selectedMechanic.mechanicId, selectedStatus)
+      await MechanicServices.updateStatus(selectedMechanic.id, selectedStatus)
 
       await fetchMechanics()
 
@@ -79,9 +79,9 @@ export default function ManageMechanics() {
     }
   };
 
-  const verified = mechanics.filter((m) => m.isVerified === "yes");
-  const unverified = mechanics.filter((m) => m.isVerified === "no");
-  const rejected = mechanics.filter((m) => m.isVerified === "rejected");
+  const verified = mechanics.filter((m) => m.isVerified === "YES");
+  const unverified = mechanics.filter((m) => m.isVerified === "NO" || m.isVerified === null);
+  const rejected = mechanics.filter((m) => m.isVerified === "REJECTED");
 
   return (
     <div className="w-full gap-4 space-y-4">
@@ -102,7 +102,7 @@ export default function ManageMechanics() {
           <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
             {unverified.map((m) => (
               <div
-                key={m.mechanicId}
+                key={m.id}
                 className="p-3 rounded shadow-sm border flex flex-col sm:flex-row sm:justify-between sm:items-center"
               >
                 <div>
@@ -114,13 +114,13 @@ export default function ManageMechanics() {
                 </div>
                 <div className="mt-3 sm:mt-0 flex gap-2">
                   <button
-                    onClick={() => handleVerification(m.mechanicId, "yes")}
+                    onClick={() => handleVerification(m.id, "YES")}
                     className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
                   >
                     Accept
                   </button>
                   <button
-                    onClick={() => handleVerification(m.mechanicId, "rejected")}
+                    onClick={() => handleVerification(m.id, "REJECTED")}
                     className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
                   >
                     Reject
@@ -152,7 +152,7 @@ export default function ManageMechanics() {
           <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
             {verified.map((m) => (
               <div
-                key={m.mechanicId}
+                key={m.id}
                 className="p-3 rounded shadow-sm border flex flex-col sm:flex-row sm:justify-between sm:items-center"
               >
                 <div>
@@ -160,7 +160,7 @@ export default function ManageMechanics() {
                   <p>Expertise: {m.expertise}</p>
                   <p>Availability: {m.availability}</p>
                   <p>Rating: {m.rating}</p>
-                  <p>Service Center Name: {m.serviceCenterName}</p>
+                  <p>Service Center Name: {m.centerName}</p>
                   <p>Address: {m.address}</p>
                   {m.status && <p>Status: {m.status}</p>}
                 </div>
@@ -198,7 +198,7 @@ export default function ManageMechanics() {
           <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
             {rejected.map((m) => (
               <div
-                key={m.mechanicId}
+                key={m.id}
                 className="p-3 rounded shadow-sm border flex flex-col sm:flex-row sm:justify-between sm:items-center"
               >
                 <div>
@@ -206,11 +206,11 @@ export default function ManageMechanics() {
                   <p>Expertise: {m.expertise}</p>
                   <p>Availability: {m.availability}</p>
                   <p>Rating: {m.rating}</p>
-                  <p>Service Center ID: {m.servicecenterId}</p>
+                  <p>Service Center Name: {m.centerName}</p>
                 </div>
                 <div className="mt-3 sm:mt-0 flex gap-2">
                   <button
-                    onClick={() => handleVerification(m.mechanicId, "yes")}
+                    onClick={() => handleVerification(m.id, "YES")}
                     className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
                   >
                     Accept

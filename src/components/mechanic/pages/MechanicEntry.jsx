@@ -13,33 +13,29 @@ const MechanicEntry = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkMechanicProfile = async () => {
-      if (!isAuthenticated || !user?.id || !user?.role) {
-          navigate('/login?role=mechanic');
-          return;
-        }
-        try {
-          const headers = {
-          ...getAuthHeader(),
-          'X-User-Id': user.id,
-          'X-Role': user.role,
-        };
-          const response = await MechanicServices.getMechanic(headers);
-          console.log('Fetched user profile:', response.data);
+useEffect(() => {
+  const checkMechanicProfile = async () => {
+    if (!isAuthenticated || !user?.id || !user?.role) {
+      navigate('/login?role=mechanic');
+      return;
+    }
+    try {
+      const response = await MechanicServices.getMechanic();
+      console.log('Fetched user profile:', response.data);
 
-        // Check if profile exists (non-null, non-empty)
-        setHasProfile(response.data && Object.keys(response.data).length > 0);
-        } catch (error) {
-          console.error("Error fetching mechanic profiles:", error);
-          setHasProfile(false);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-    
-    checkMechanicProfile();
-  }, [isAuthenticated, user?.id, user?.role, navigate]);
+      // Check if profile exists based on responseStatus
+      setHasProfile(response.data?.responseStatus === 'SUCCESS');
+    } catch (error) {
+      console.error("Error fetching mechanic profiles:", error);
+      setHasProfile(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  checkMechanicProfile();
+}, [isAuthenticated, user?.id, user?.role, navigate]);
+
 
   if (isLoading) {
     return <Loader/>;

@@ -21,7 +21,7 @@ const MechanicProfile = () => {
 
   useEffect(() => {
   if (user && user.id) {
-    MechanicServices.getMechanicsById(user.id)
+    MechanicServices.getMechanic(user.id)
       .then((response) => {
         const { name, phone, address, expertise, availability, rating } = response.data;
         setMechanicData({ name, phone, address, expertise, availability, rating });

@@ -14,7 +14,7 @@ const ManageMechanicModal = ({
     selectedMechanic?.status || (isVerificationFlow ? "unverified" : "active")
   );
   const [selectedServiceCenterId, setSelectedServiceCenterId] = useState(
-    selectedMechanic?.servicecenterId || ""
+    selectedMechanic?.centerId || ""
   );
   const getServiceCenters = async () => {
     try {
@@ -32,9 +32,9 @@ const ManageMechanicModal = ({
       }
       setSelectedStatus(
         selectedMechanic?.status ||
-          (isVerificationFlow ? "unverified" : "active")
+          (isVerificationFlow ? "UNVERIFIED" : "ACTIVE")
       );
-      setSelectedServiceCenterId(selectedMechanic?.servicecenterId || "");
+      setSelectedServiceCenterId(selectedMechanic?.centerId || "");
     }
   }, [isStatusModalOpen, selectedMechanic, isVerificationFlow]);
 
@@ -42,7 +42,7 @@ const ManageMechanicModal = ({
     const updatedMechanic = {
       ...selectedMechanic,
       status: selectedStatus,
-      servicecenterId: isVerificationFlow
+      centerId: isVerificationFlow
         ? selectedMechanic?.servicecenterId
         : selectedServiceCenterId,
     };
@@ -83,14 +83,14 @@ const ManageMechanicModal = ({
           >
             {isVerificationFlow ? (
               <>
-                <option value="yes">Accepted</option>
-                <option value="rejected">Rejected</option>
-                <option value="unverified">Unverified</option>
+                <option value="YES">Accepted</option>
+                <option value="REJECTED">Rejected</option>
+                <option value="UNVERIFIED">Unverified</option>
               </>
             ) : (
               <>
-                <option value="active">Active</option>
-                <option value="inActive">inActive</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">inActive</option>
               </>
             )}
           </select>
@@ -100,7 +100,7 @@ const ManageMechanicModal = ({
               onChange={(e) => setSelectedServiceCenterId(e.target.value)}
               className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
             >
-              <option value="none">-- Select Service Center --</option>
+              <option value="0">-- Select Service Center --</option>
               {serviceCenters.map((sc) => (
                 <option key={sc.servicecenterId} value={sc.servicecenterId}>
                   {sc.name} - {sc.location}
