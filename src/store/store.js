@@ -25,7 +25,7 @@ const adminloadState = () => {
   }
 };
 
-// ✅ Fix: wrap decoded user inside `auth` key
+// wrap decoded user inside `auth` key
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -41,13 +41,15 @@ const store = configureStore({
   },
 });
 
-// ✅ Fix: persist `auth` instead of `user`
+// persist `auth` instead of `user`
 store.subscribe(() => {
   const state = store.getState();
-  const authSerializedState = JSON.stringify(state.auth);
+  const { user } = state.auth;
   const adminSerializedState = JSON.stringify(state.admin);
 
-  sessionStorage.setItem('authUser', authSerializedState);
+
+  // Store only the user object
+  sessionStorage.setItem('authUser', JSON.stringify(user));
   localStorage.setItem('admin', adminSerializedState);
 });
 

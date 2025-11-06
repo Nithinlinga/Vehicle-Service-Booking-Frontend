@@ -1,14 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+// const initialState = {
+//   isAuthenticated: false,
+//   user: {
+//     role: '',
+//     username: '',
+//     email: '',
+//     password: '',
+//   },
+//   role:''
+// };
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: true,
   user: {
+    id: 0,
     role: '',
     username: '',
     email: '',
-    password: '',
+    sub: '',
   },
-  role:''
+  role: '',
 };
 
 const authSlice = createSlice({
@@ -19,7 +30,6 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.user = action.payload;
       state.role = action.payload.role;
-      state.password = action.payload.password;
     },
     logout(state) {
       state.isAuthenticated = false;
@@ -28,10 +38,12 @@ const authSlice = createSlice({
         username: '',
         email: '',
         password: '',
-      }
+      };
+      state.role = '';
     },
   },
 });
+
 
 export const { login, logout } = authSlice.actions;
 export default authSlice.reducer;
