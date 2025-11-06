@@ -254,7 +254,7 @@ toast.error("Failed to save service type. Please try again.");
               </div>
               <div>
                 <select
-                  value={selectedService?.status || "ACTIVE"}
+                  value={selectedService?.status || ""}
                   onChange={(e) =>
                     setSelectedService({
                       ...selectedService,
@@ -265,6 +265,7 @@ toast.error("Failed to save service type. Please try again.");
                     errors.status ? "border-red-500" : ""
                   }`}
                 >
+                  <option value="">Select Status</option>
                   <option value="ACTIVE">ACTIVE</option>
                   <option value="INACTIVE">INACTIVE</option>
                 </select>

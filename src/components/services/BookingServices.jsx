@@ -13,18 +13,17 @@ class BookingServices {
     return axios.get(`${BOOKINGS}`, { headers: getAuthHeader() });
   }
 
-
-
   getAllBookingsByAdmin() {
     return axios.get(`${BOOKINGS}/all`, { headers: getAuthHeader() });
   }
+
   getBookingByCenterId(centerId) {
     return axios.get(`${BOOKINGS}/center/${centerId}`, { headers: getAuthHeader() });
   }
-  getBookingById(bookingId,) {
-    return axios.get(`${api}/${bookingId}`, { headers: getAuthHeader() });
+  
+  getBookingById(bookingId) {
+    return axios.get(`${BOOKINGS}/${bookingId}`, { headers: getAuthHeader() });
   }
-
 
   deleteBookingById(bookingId) {
     return axios.delete(`${BOOKINGS}/${bookingId}`, {

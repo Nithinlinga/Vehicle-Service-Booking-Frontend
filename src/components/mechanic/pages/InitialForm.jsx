@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import MechanicServices from '../../services/MechanicServices';
-import ServiceCenterServices from '../../services/ServiceCenterServices';
 import { useNavigate } from 'react-router-dom';
 
 const InitialForm = () => {
@@ -175,8 +174,8 @@ const InitialForm = () => {
               onChange={handleChange}
               className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 bg-white dark:bg-gray-700 text-slate-900 dark:text-white transition-colors duration-500"
             >
-              <option value="Available">Available</option>
-              <option value="Unavailable">Unavailable</option>
+              <option value="AVAILABLE">Available</option>
+              <option value="UNAVAILABLE">Unavailable</option>
             </select>
           </div>
           <div>
@@ -190,10 +189,10 @@ const InitialForm = () => {
               onChange={handleChange}
               className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 bg-white dark:bg-gray-700 text-slate-900 dark:text-white transition-colors duration-500"
             >
-              <option value="Excellent">Excellent</option>
-              <option value="Good">Good</option>
-              <option value="Average">Average</option>
-              <option value="Bad">Bad</option>
+              <option value="EXCELLENT">Excellent</option>
+              <option value="GOOD">Good</option>
+              <option value="AVERAGE">Average</option>
+              <option value="BAD">Bad</option>
             </select>
           </div>
           <div>

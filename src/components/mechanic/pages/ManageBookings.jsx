@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import BookingServices from "../../services/BookingServices";
-import UserServices from "../../services/UserServices";
-import ServiceCenterServices from "../../services/ServiceCenterServices";
 import { toast } from 'react-hot-toast';
 import MechanicServices from "../../services/MechanicServices";
 
@@ -23,9 +21,6 @@ const ManageBookings = () => {
             const mechanicResp = await MechanicServices.getMechanic(user.id);
             const response = await BookingServices.getBookingByCenterId(mechanicResp.data.centerId);
             setAppointments(response.data)
-
-
-            //   localStorage.setItem("appointments", JSON.stringify(enrichedData));
         } catch (error) {
             console.error("Error fetching appointments:", error);
             toast.error("Failed to load appointments.");

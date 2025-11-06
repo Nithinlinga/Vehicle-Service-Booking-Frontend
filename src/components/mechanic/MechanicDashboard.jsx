@@ -49,8 +49,9 @@ const MechanicDashboard = () => {
   const fetchServiceCenter=async()=>{
     try {
       
-      const resp=await MechanicServices.getMechanic(user.id);
-      setServiceCenterId(resp.data.servicecenterId)
+      const resp=await MechanicServices.getMechanic();
+      
+      setServiceCenterId(resp.data.centerId)
     } catch (error) {
       console.log(error)
     }
@@ -61,7 +62,7 @@ const MechanicDashboard = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await BookingServices.getBookingsByServiceCenterId(serviceCenterId);
+      const response = await BookingServices.getBookingByCenterId(serviceCenterId);
       console.log("Fetched bookings:", response.data);
       setBookings(response.data || []);
     } catch (error) {
@@ -75,7 +76,7 @@ const MechanicDashboard = () => {
     }
   }, [serviceCenterId]);
     const normalizeStatus = (booking) => {
-    if (booking.isVerified === "Rejected") return "cancelled";
+    if (booking.isVerified === "YES") return "cancelled";
 
     const bookingDate = new Date(booking.date);
     const now = new Date();

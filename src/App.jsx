@@ -24,7 +24,6 @@ import Appointments from './components/user/pages/Appointments';
 import ManageServiceCentre from "./components/admin/pages/ManageServiceCentre";
 import AdminHome from "./components/admin/pages/AdminHome";
 import ManageAppointment from "./components/admin/pages/ManageAppointment";
-import AdminProfile from "./components/admin/pages/AdminProfile";
 import Vehicles from './components/user/pages/Vehicles';
 import AddServiceCentre from "./components/admin/pages/AddServiceCentre";
 import ManageUsers from "./components/admin/pages/ManageUsers";
@@ -39,27 +38,17 @@ import UserDashboard from "./components/user/pages/UserDashboard";
 import UserProfile from "./components/user/pages/UserProfile";
 import MechanicLayout from "./components/mechanic/MechanicLayout";
 import UserEditProfile from "./components/user/pages/UserEditProfile";
-import AdminEditProfile from "./components/admin/pages/AdminEditProfile";
 import AddServiceType from "./components/admin/pages/AddServiceType";
 import ServiceCenters from "./components/user/pages/ServiceCenters";
 import MechanicEntry from "./components/mechanic/pages/MechanicEntry";
 import UserEntry from "./components/user/pages/UserEntry";
 import ManageBookings from "./components/mechanic/pages/ManageBookings";
+import Report from "./components/mechanic/pages/Report";
 
 
 function App() {
   const { isAuthenticated, user, role } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   // const storedUser = localStorage.getItem('authUser');
-  //   const storedUser = sessionStorage.getItem('authUser');
-  //   if (storedUser) {
-  //     dispatch(login(JSON.parse(storedUser)));
-  //   }
-  // }, []);
-  // console.log("user details", role)
-
   return (
     <>
       <Navbar />
@@ -96,8 +85,6 @@ function App() {
               <Route path="add-service-type/:id" element={<AddServiceType />} />
               <Route path="manage-users" element={<ManageUsers />} />
               <Route path="manage-mechanics" element={<ManageMechanics />} />
-              <Route path="profile" element={<AdminProfile />} />
-              <Route path="edit-profile" element={<AdminEditProfile />} />
             </Route>
           </Route>
 
@@ -108,6 +95,7 @@ function App() {
             <Route path="dashboard" element={<MechanicDashboard />}/>
             <Route path="profile" element={<MechanicProfile />} />
             <Route path="services" element={<Servicelog />} />
+            <Route path="reports" element={<Report />} />
             <Route path="bookings" element={<ManageBookings />} />
             <Route path="edit-profile" element={<EditProfile />} />
             <Route path="edit-skills" element={<EditSkills />} />

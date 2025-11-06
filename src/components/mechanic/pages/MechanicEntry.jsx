@@ -4,7 +4,6 @@ import MechanicServices from '../../services/MechanicServices';
 import { useSelector } from 'react-redux';
 import MechanicDashboard from '../MechanicDashboard';
 import Loader from '../../Loader';
-import { getAuthHeader } from '../../../utils/getAuthHeader';
 import { useNavigate } from 'react-router-dom';
 
 const MechanicEntry = () => {
