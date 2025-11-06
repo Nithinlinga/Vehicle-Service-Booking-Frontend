@@ -84,8 +84,8 @@ export default function ManageAppointments() {
                 b.isVerified === "NO" && (
                   <div key={b.bookingId} className="p-3 rounded shadow-sm border">
                     <div key={b.bookingId} className="p-3 rounded shadow-sm border">
-                    <p><b>Service Center Name:</b> {b.serviceCenterName}</p>
-                    <p><b>Date:</b> {b.date?.split("T")[0]}</p>
+                    <p><b>Service Center Name:</b> {b.centerName}</p>
+                    <p><b>Date:</b> {b.bookingDate?.split("T")[0]}</p>
                     <p><b>Time:</b> {b.timeslot}</p>
                     <p><b>Vehicle Name:</b> {b.vehicleName}</p>
                   </div>
@@ -134,7 +134,7 @@ export default function ManageAppointments() {
                   >
                     {/* Booking Details */}
                     <div className="space-y-1">
-                      <p><b>Service Center Name:</b> {b.serviceCenterName}</p>
+                      <p><b>Service Center Name:</b> {b.centerName}</p>
                       <p><b>Date:</b> {b.bookingDate?.split("T")[0]}</p>
                       <p><b>Time:</b> {b.timeslot}</p>
                       <p><b>Vehicle Name:</b> {b.vehicleName}</p>
@@ -152,7 +152,7 @@ export default function ManageAppointments() {
                         }
                       >
                         <option value="">Select</option>
-                        {mechanicsByCenter[b.serviceCenterName]?.map((m) => (
+                        {mechanicsByCenter[b.centerName]?.map((m) => (
                           <option key={m.mechanicId} value={m.mechanicId}>
                             {m.name} ({m.expertise})
                           </option>
@@ -185,7 +185,7 @@ export default function ManageAppointments() {
                 b.isVerified === "REJECTED" && (
                   <div key={b.bookingId} className="p-3 rounded shadow-sm border">
                     <div key={b.bookingId} className="p-3 rounded shadow-sm border">
-                    <p><b>Service Center Name:</b> {b.serviceCenterName}</p>
+                    <p><b>Service Center Name:</b> {b.centerName}</p>
                     <p><b>Date:</b> {b.bookingDate?.split("T")[0]}</p>
                     <p><b>Time:</b> {b.timeslot}</p>
                     <p><b>Vehicle Name:</b> {b.vehicleName}</p>

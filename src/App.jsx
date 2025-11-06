@@ -44,6 +44,7 @@ import AddServiceType from "./components/admin/pages/AddServiceType";
 import ServiceCenters from "./components/user/pages/ServiceCenters";
 import MechanicEntry from "./components/mechanic/pages/MechanicEntry";
 import UserEntry from "./components/user/pages/UserEntry";
+import ManageBookings from "./components/mechanic/pages/ManageBookings";
 
 
 function App() {
@@ -106,7 +107,8 @@ function App() {
             <Route index element={<MechanicEntry />} />
             <Route path="dashboard" element={<MechanicDashboard />}/>
             <Route path="profile" element={<MechanicProfile />} />
-            <Route path="service-history" element={<Servicelog />} />
+            <Route path="services" element={<Servicelog />} />
+            <Route path="bookings" element={<ManageBookings />} />
             <Route path="edit-profile" element={<EditProfile />} />
             <Route path="edit-skills" element={<EditSkills />} />
             </Route>

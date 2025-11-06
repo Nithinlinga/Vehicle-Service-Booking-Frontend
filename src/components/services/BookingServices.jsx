@@ -18,6 +18,9 @@ class BookingServices {
   getAllBookingsByAdmin() {
     return axios.get(`${BOOKINGS}/all`, { headers: getAuthHeader() });
   }
+  getBookingByCenterId(centerId) {
+    return axios.get(`${BOOKINGS}/center/${centerId}`, { headers: getAuthHeader() });
+  }
   getBookingById(bookingId,) {
     return axios.get(`${api}/${bookingId}`, { headers: getAuthHeader() });
   }
@@ -28,6 +31,13 @@ class BookingServices {
       headers: getAuthHeader()
     });
   }
+  updateBookingStatusById(bookingId, status) {
+  return axios.patch(
+    `${BOOKINGS}/${bookingId}/status`,
+    { status }, 
+    { headers: getAuthHeader() } 
+  );
+}
 
   patchBookingVerifyById(bookingId, verify) {
     return axios.patch(`${BOOKINGS}/${bookingId}/verify`, verify, {headers: getAuthHeader() });

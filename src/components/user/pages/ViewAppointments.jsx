@@ -19,43 +19,9 @@ const ViewAppointments = () => {
   const fetchAppointments = async () => {
     try {
       const response = await BookingServices.getAllBookings();
-      const data = Array.isArray(response.data) ? response.data : [response.data];
 
-      const enrichedData = await Promise.all(
-        data.map(async (a) => {
-          let vehicleName = "";
-          let registrationNumber = "";
-          let vehicleType = "";
-          let centerName = "";
-
-          try {
-            const vehicleResp = await UserServices.getVehicleById(a.vehicleId);
-            vehicleName = `${vehicleResp.data.make.toUpperCase()} ${vehicleResp.data.model}`;
-            registrationNumber = vehicleResp.data.registrationNumber;
-            vehicleType = vehicleResp.data.vehicleType;
-          } catch (err) {
-            console.error("Vehicle fetch failed", err);
-          }
-
-          try {
-            const centerResp = await ServiceCenterServices.getServiceCenterById(a.centerId);
-            centerName = centerResp.data.name;
-          } catch (err) {
-            console.error("Center fetch failed", err);
-          }
-
-          return {
-            ...a,
-            vehicleName,
-            centerName,
-            registrationNumber,
-            vehicleType,
-          };
-        })
-      );
-
-      setAppointments(enrichedData);
-      localStorage.setItem("appointments", JSON.stringify(enrichedData));
+      setAppointments(response.data);
+      localStorage.setItem("appointments", JSON.stringify(response.data));
     } catch (error) {
       console.error("Error fetching appointments:", error);
       toast.error("Failed to load appointments.");
