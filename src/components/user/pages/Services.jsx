@@ -7,7 +7,7 @@ import ServiceCenterServices from '../../services/ServiceCenterServices';
 const Services = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-  const { id } = useParams();
+  const { id } = useParams(); // centerId from route
   const [serviceType, setServiceType] = useState([]);
   const [serviceCenterName, setServiceCenterName] = useState("");
   const navigate = useNavigate();
@@ -33,7 +33,6 @@ const Services = () => {
         console.log("No Services found", error);
       }
     };
-
     fetchData();
   }, [id]);
 
@@ -48,26 +47,28 @@ const Services = () => {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {serviceType.map((service, index) => (
-            <div
-              key={index}
-              onClick={() => handleOpenModal(service)}
-              className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer"
-            >
-              <div className="flex justify-center mb-4 text-5xl text-cyan-600 dark:text-cyan-400">
-                <FaBolt />
+          {serviceType
+            .filter(service => service.status === "ACTIVE")
+            .map((service, index) => (
+              <div
+                key={index}
+                onClick={() => handleOpenModal(service)}
+                className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer"
+              >
+                <div className="flex justify-center mb-4 text-5xl text-cyan-600 dark:text-cyan-400">
+                  <FaBolt />
+                </div>
+                <h2 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white">
+                  {service.title}
+                </h2>
+                <p className="text-center text-gray-600 dark:text-gray-400">
+                  {service.name}
+                </p>
+                <p className="text-center text-gray-600 dark:text-gray-400">
+                  {service.description}
+                </p>
               </div>
-              <h2 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white">
-                {service.title}
-              </h2>
-              <p className="text-center text-gray-600 dark:text-gray-400">
-                {service.name}
-              </p>
-              <p className="text-center text-gray-600 dark:text-gray-400">
-                {service.description}
-              </p>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
@@ -105,11 +106,12 @@ const Services = () => {
             </h4>
 
             <button
-              onClick={() =>
+              onClick={() => {
+                const vehicleId = localStorage.getItem("selectedVehicleId");
                 navigate(
-                  `/user/appointment?service_center=${selectedService.serviceCenterId}&service_type=${selectedService.serviceTypeId}`
-                )
-              }
+                  `/user/appointment?service_center=${selectedService.serviceCenterId}&service_type=${selectedService.serviceTypeId}&vehicleId=${vehicleId}`
+                );
+              }}
               className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"
             >
               Book Appointment

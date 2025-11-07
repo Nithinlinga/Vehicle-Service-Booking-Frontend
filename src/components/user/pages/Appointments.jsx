@@ -6,7 +6,6 @@ import ServiceCenterServices from "../../services/ServiceCenterServices";
 import ServiceTypeServices from "../../services/ServiceTypeServices";
 import BookingServices from "../../services/BookingServices";
 import UserServices from "../../services/UserServices";
-import { getAuthHeader } from "../../../utils/getAuthHeader";
 
 const Appointments = () => {
   const [searchParams] = useSearchParams();
@@ -30,41 +29,65 @@ const Appointments = () => {
     bookingDate: "",
     customerId: user.id,
     timeslot: "",
-   centerId: service_center || ""
+    centerId: service_center || ""
   });
 
   useEffect(() => {
-    const fetchVehicle = async () => {
-      try {
-        const resp = await UserServices.getVehicleById(vehicleId);
-        console.log(resp.data);
-        setAllVehicles([resp.data]);
-        localStorage.setItem("vehicles",JSON.stringify([resp.data]))
-      } catch (error) {
-        console.error("Error in vehicle", error);
+  const fetchVehicles = async () => {
+    try {
+      const resp = await UserServices.getAllVehicles();
+      setAllVehicles(resp.data);
+      localStorage.setItem("vehicles", JSON.stringify(resp.data));
+
+      // If vehicleId is present in URL, pre-select it
+      if (vehicleId) {
+        const selectedVehicle = resp.data.find(v => v.vehicleId === vehicleId);
+        if (selectedVehicle) {
+          setForm((prev) => ({
+            ...prev,
+            vehicleId: selectedVehicle.vehicleId,
+            vehicle: `${selectedVehicle.make.toUpperCase()} ${selectedVehicle.model}`,
+          }));
+        }
       }
-    };
-  
-    fetchVehicle();
-  }, []);
+    } catch (error) {
+      console.error("Error fetching vehicles", error);
+    }
+  };
+  fetchVehicles();
+}, [vehicleId]);
 
   const fetchServiceTypes = async (centerId) => {
-    if (!centerId) return;
-    try {
-    const resp = await ServiceTypeServices.getAllServiceTypes(centerId);
-    setServiceTypes(resp.data);
+  const centerIdInt = Number(centerId);
+  const typeIdInt = Number(service_type);
 
-    if (resp.data.length > 0) {
-    const selected =
-    resp.data.find((s) => String(s.serviceTypeId) === String(service_type)) ||
-    resp.data[0];
-    setForm((prev) => ({ ...prev, service: selected.name }));
+  if (!centerIdInt || isNaN(centerIdInt)) {
+    console.warn("Invalid centerId:", centerId);
+    return;
+  }
+
+  try {
+    if (service_type && !isNaN(typeIdInt)) {
+      // Fetch specific service type by ID
+      const resp = await ServiceTypeServices.getServiceTypeById(centerIdInt, typeIdInt);
+      setServiceTypes([resp.data]); // wrap in array for consistency
+      setForm((prev) => ({
+        ...prev,
+        serviceTypeId: resp.data.serviceTypeId,
+        serviceTypeName: resp.data.name,
+        serviceTypePrice: resp.data.price,
+      }));
+    } else {
+      // Fallback: fetch all service types
+      const resp = await ServiceTypeServices.getAllServiceTypes(centerIdInt);
+      setServiceTypes(resp.data);
     }
-    } catch (error) {
+  } catch (error) {
     console.error("Error fetching service types:", error);
     toast.error("Failed to load service types.");
-    }
-    };
+  }
+};
+
 
   useEffect(() => {
 const fetchInitialData = async () => {
@@ -74,10 +97,14 @@ setAllServiceCenters(centers.data);
 
 let centerIdToFetch = service_center;
 
-if (!centerIdToFetch && centers.data.length > 0) {
-centerIdToFetch = String(centers.data[0].servicecenterId);
+if (!centerIdToFetch || centerIdToFetch === "undefined") {
+  if (centers.data.length > 0) {
+    centerIdToFetch = String(centers.data[0].servicecenterId);
+  } else {
+    toast.error("No service center available.");
+    return;
+  }
 }
-
 if (centerIdToFetch) {
 setForm((prev) => ({ ...prev,centerId: centerIdToFetch }));
 await fetchServiceTypes(centerIdToFetch);
@@ -241,7 +268,7 @@ setForm((prev) => ({ ...prev, [name]: value }));
               </label>
               <select
                 name="serviceCenterId"
-                value={form.serviceCenterId}
+                value={form.centerId}
                 className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400"
                 onChange={handleServiceCenterChange}
               >
