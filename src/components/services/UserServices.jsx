@@ -16,7 +16,17 @@ class UserServices {
 
   // Update user profile by authenticated ID (no path param, uses headers)
   updateUserProfile(updatedData) {
-    return axios.put(`${api}/app2/api/v1/customer`, updatedData, { headers: getAuthHeader() });
+    const headers = { ...getAuthHeader(), "Content-Type": "application/json" };
+
+    // prefer explicit userId path if provided
+    if (updatedData?.userId) {
+      return axios.put(`${api}/app2/api/v1/customer/${updatedData.userId}`, updatedData, {
+        headers,
+      });
+    }
+
+    // fallback to authenticated-user endpoint
+    return axios.put(`${api}/app2/api/v1/customer`, updatedData, { headers });
   }
   
   getAllUsers(headers = {}) {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import UserServices from "../../services/UserServices";
+import toast from "react-hot-toast";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -30,14 +31,24 @@ const ManageUsers = () => {
   };
 
   const handleSave = async () => {
-    try {
-      await UserServices.updateUserProfile(selectedUser);
-      await fetchUsers();
-      handleModalClose();
-    } catch (error) {
-      console.error("Error updating user profile:", error);
+  try {
+    // ensure selectedUser has id property (backend expects that in path)
+    if (!selectedUser?.authId) {
+      console.error("Missing id on selectedUser", selectedUser);
+      toast.error("Unable to update: missing user id");
+      return;
     }
-  };
+
+    await UserServices.updateUserProfile(selectedUser);
+    await fetchUsers();
+    handleModalClose();
+    toast.success("User updated");
+  } catch (error) {
+    console.error("Error updating user profile:", error.response?.status, error.response?.data || error.message);
+    toast.error(`Update failed: ${error.response?.data?.message || error.response?.statusText || 'Forbidden'}`);
+  }
+};
+
 
   return (
     <div className="p-4 sm:p-6">
@@ -48,7 +59,6 @@ const ManageUsers = () => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">#</th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Email</th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Phone</th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Actions</th>
@@ -59,7 +69,6 @@ const ManageUsers = () => {
               <tr key={u.userId} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{i + 1}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{u.firstName} {u.lastName}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.phone}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.status === "ACTIVE" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
@@ -87,12 +96,6 @@ const ManageUsers = () => {
               <input
                 type="text"
                 value={`${selectedUser.firstName} ${selectedUser.lastName}`}
-                disabled
-                className="w-full p-2 border rounded dark:bg-gray-700 cursor-not-allowed dark:text-white"
-              />
-              <input
-                type="email"
-                value={selectedUser.email}
                 disabled
                 className="w-full p-2 border rounded dark:bg-gray-700 cursor-not-allowed dark:text-white"
               />
