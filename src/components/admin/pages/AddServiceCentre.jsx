@@ -15,7 +15,6 @@ name: "",
 location: "",
 contact: "",
 rating: "",
-feedback: ""
 });
 
 useEffect(() => {
@@ -29,7 +28,6 @@ name: sc.name || "",
 location: sc.location || "",
 contact: sc.contact || "",
 rating: sc.rating || "Good",
-feedback: sc.feedback || ""
 });
 }
 } catch (error) {
@@ -167,15 +165,6 @@ setSubmitting(false);
               <option value="Average">Average</option>
               <option value="Poor">Poor</option>
             </select>
-          </div>
-          <div>
-            <label className="block font-medium mb-1">Feedback</label>
-            <textarea
-              name="feedback"
-              value={formik.values.feedback}
-              onChange={formik.handleChange}
-              className="w-full p-2 border rounded"
-            />
           </div>
           <div className="text-right">
             <button
