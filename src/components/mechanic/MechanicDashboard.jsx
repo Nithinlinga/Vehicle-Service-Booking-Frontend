@@ -75,16 +75,16 @@ const MechanicDashboard = () => {
       fetchBookings();
     }
   }, [serviceCenterId]);
-    const normalizeStatus = (booking) => {
-    if (booking.isVerified === "YES") return "cancelled";
 
-    const bookingDate = new Date(booking.date);
-    const now = new Date();
 
-    const status = bookingDate > now ? "upcoming" : "completed";
-    console.log("Booking:", booking.bookingId, "Status:", status);
-    return status;
-  };
+
+  const normalizeStatus = (booking) => {
+  const st = booking.status;
+  if (st === "CANCELLED") return "CANCELLED";
+  if (st === "COMPLETED") return "COMPLETED";
+  if (st === "UPCOMING") return "UPCOMING";
+};
+
   const statusCounts = bookings.reduce(
     (acc, booking) => {
       const status = normalizeStatus(booking);
@@ -96,21 +96,21 @@ const MechanicDashboard = () => {
   const cards = [
     {
       title: "Upcoming Services",
-      value: statusCounts.upcoming || 0,
+      value: statusCounts.UPCOMING || 0,
       color: "text-cyan-400 border-cyan-400",
-      status: "upcoming",
+      status: "UPCOMING",
     },
     {
       title: "Completed Services",
-      value: statusCounts.completed || 0,
+      value: statusCounts.COMPLETED || 0,
       color: "text-green-400 border-green-400",
-      status: "completed",
+      status: "COMPLETED",
     },
     {
       title: "Cancelled Services",
-      value: statusCounts.cancelled || 0,
+      value: statusCounts.CANCELLED || 0,
       color: "text-green-400 border-green-400",
-      status: "cancelled",
+      status: "CANCELLED",
     },
   ];
   const filteredBookings = selectedStatus
