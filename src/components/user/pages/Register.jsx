@@ -49,8 +49,8 @@ const Register = () => {
             if (!values.password) {
                 errors.password = "Password required";
             } 
-            if (values.password.length < 3 || values.password.length > 10) {
-                errors.password = "Password must be between 3 and 10 characters";
+            if (values.password.length < 3 || values.password.length > 50) {
+                errors.password = "Password must be between 3 and 50 characters";
             }
             if (!values.confirmPassword) {
                 errors.confirmPassword = "Please confirm your password";
