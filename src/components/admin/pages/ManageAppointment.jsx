@@ -4,8 +4,7 @@ import BookingServices from "../../services/BookingServices";
 import MechanicServices from "../../services/MechanicServices";
 
 export default function ManageAppointments() {
-  const [showVerified, setShowVerified] = useState(false);
-  const [showUnverified, setShowUnverified] = useState(false);
+  const [activeTab, setActiveTab] = useState("PENDING");
   const [bookings, setBookings] = useState([]);
   const [mechanicsByCenter, setMechanicsByCenter] = useState({});
 
@@ -44,165 +43,101 @@ export default function ManageAppointments() {
   }, [bookings]);
 
   const handleVerification = async (id, status) => {
-    // const confirmMsg =
-    //   status === "YES"
-    //     ? "Are you sure you want to ACCEPT this Booking?"
-    //     : status === "REJECTED"
-    //       ? "Are you sure you want to REJECT this Booking?"
-    //       : "Are you sure you want to mark this Booking as UNVERIFIED?";
-    // if (!window.confirm(confirmMsg)) return;
-
     try {
-
-      await BookingServices.patchBookingVerifyById(id, {
-        isVerified: status,
-      })
+      await BookingServices.patchBookingVerifyById(id, { isVerified: status });
       fetchBookings();
     } catch (err) {
       console.error("Error updating verification:", err);
     }
   };
-  return (
-    <div className="w-full gap-4">
-      <div className="flex-1">
-        <button
-          onClick={() => setShowUnverified(!showUnverified)}
-          className="w-full flex justify-between items-center text-white py-3 px-4 rounded shadow bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 transition-colors duration-500"
-        >
-          <span>
-            Pending Appointments ({bookings.filter(b => b.isVerified === "NO").length})
-          </span>
-          {showUnverified ? <IoIosArrowUp /> : <IoIosArrowDown />}
-        </button>
-        <div
-          className={`overflow-hidden transition-all duration-1000 ease-in-out ${showUnverified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-            }`}
-        >
-          <div className="mt-2 rounded p-3 space-y-3">
-            {bookings.map(
-              b =>
-                b.isVerified === "NO" && (
-                  <div key={b.bookingId} className="p-3 rounded shadow-sm border">
-                    <div key={b.bookingId} className="p-3 rounded shadow-sm border">
-                    <p><b>Service Center Name:</b> {b.centerName}</p>
-                    <p><b>Date:</b> {b.bookingDate?.split("T")[0]}</p>
-                    <p><b>Time:</b> {b.timeslot}</p>
-                    <p><b>Vehicle Name:</b> {b.vehicleName}</p>
-                  </div>
-                    <div className="mt-3 sm:mt-0 flex gap-2">
-                      <button
-                        onClick={() => handleVerification(b.bookingId, "YES")}
-                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
-                      >
-                        Accept
-                      </button>
-                      <button
-                        onClick={() => handleVerification(b.bookingId, "REJECTED")}
-                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  </div>
 
-                )
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="flex-1">
-        <button
-          onClick={() => setShowVerified(!showVerified)}
-          className="w-full flex justify-between items-center text-white py-3 px-4 rounded shadow bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 transition-colors duration-500"
-        >
-          <span>
-            All Appointments ({bookings.filter(b => b.isVerified === "YES").length})
-          </span>
-          {showVerified ? <IoIosArrowUp /> : <IoIosArrowDown />}
-        </button>
-        <div
-          className={`overflow-hidden transition-all duration-1000 ease-in-out ${showVerified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-            }`}
-        >
-          <div className="mt-2 rounded p-3 space-y-3">
-            {bookings.map(
-              (b) =>
-                b.isVerified === "YES" && (
-                  <div
-                    key={b.bookingId}
-                    className="p-4 rounded-lg shadow-md border bg-gray-50 dark:bg-gray-800 flex justify-between items-center text-gray-900 dark:text-gray-100"
+  const filteredBookings = {
+    PENDING: bookings.filter(b => b.isVerified === "NO" && b.status === "UPCOMING"),
+    VERIFIED: bookings.filter(b => b.isVerified === "YES" && b.status !== "CANCELLED"),
+    REJECTED: bookings.filter(b => b.isVerified === "REJECTED"),
+  };
+
+  const renderBookings = (list, label, badgeColor) => {
+    if (list.length === 0) {
+      return <div className="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl h-[300px] overflow-y-auto flex justify-center items-center">No {label} appointments.</div>;
+    }
+
+    return (
+      <div className="space-y-4">
+        {list.map((b) => (
+          <div
+            key={b.bookingId}
+            className="rounded-xl border-l-4 border-teal-500 bg-teal-50 dark:bg-teal-900/30 p-5 shadow flex flex-col md:flex-row md:items-center md:justify-between"
+          >
+            <div>
+              <div className="font-bold text-lg text-teal-800 dark:text-teal-200">{b.vehicleName}</div>
+              <div className="text-gray-700 dark:text-gray-200"><b>Service Center:</b> {b.centerName}</div>
+              <div className="text-gray-700 dark:text-gray-200"><b>Date:</b> {b.bookingDate?.split("T")[0]} <b>Time:</b> {b.timeslot}</div>
+              <div className="text-gray-700 dark:text-gray-200"><b>Verified:</b> {b.isVerified}</div>
+            </div>
+            <div className="mt-3 md:mt-0 flex items-center flex-col gap-2">
+              <span className={`inline-block px-4 py-1 rounded-full ${badgeColor} text-white font-semibold text-sm mb-2`}>
+                {label}
+              </span>
+              {label === "Pending" && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleVerification(b.bookingId, "YES")}
+                    className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
                   >
-                    {/* Booking Details */}
-                    <div className="space-y-1">
-                      <p><b>Service Center Name:</b> {b.centerName}</p>
-                      <p><b>Date:</b> {b.bookingDate?.split("T")[0]}</p>
-                      <p><b>Time:</b> {b.timeslot}</p>
-                      <p><b>Vehicle Name:</b> {b.vehicleName}</p>
-                    </div>
-
-                    {/* Dropdown for Mechanics */}
-                    {/* <div className="ml-4">
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Assign Mechanic
-                      </label>
-                      <select
-                        className="border rounded px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
-                        onChange={(e) =>
-                          console.log(`Mechanic for booking ${b.bookingId}:`, e.target.value)
-                        }
-                      >
-                        <option value="">Select</option>
-                        {mechanicsByCenter[b.centerName]?.map((m) => (
-                          <option key={m.mechanicId} value={m.mechanicId}>
-                            {m.name} ({m.expertise})
-                          </option>
-                        ))}
-                      </select>
-                    </div> */}
-                  </div>
-                )
-            )}
+                    Accept
+                  </button>
+                  <button
+                    onClick={() => handleVerification(b.bookingId, "REJECTED")}
+                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                  >
+                    Reject
+                  </button>
+                </div>
+              )}
+              {label === "Rejected" && (
+                <button
+                  onClick={() => handleVerification(b.bookingId, "YES")}
+                  className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                >
+                  Accept
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
-      <div className="flex-1">
-        <button
-          onClick={() => setShowVerified(!showVerified)}
-          className="w-full flex justify-between items-center text-white py-3 px-4 rounded shadow bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-sky-600 hover:to-cyan-600 transition-colors duration-500"
-        >
-          <span>
-            Rejected Appointments ({bookings.filter(b => b.isVerified === "REJECTED").length})
-          </span>
-          {showVerified ? <IoIosArrowUp /> : <IoIosArrowDown />}
-        </button>
-        <div
-          className={`overflow-hidden transition-all duration-1000 ease-in-out ${showVerified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-            }`}
-        >
-          <div className="mt-2 rounded p-3 space-y-3">
-            {bookings.map(
-              b =>
-                b.isVerified === "REJECTED" && (
-                  <div key={b.bookingId} className="p-3 rounded shadow-sm border">
-                    <div key={b.bookingId} className="p-3 rounded shadow-sm border">
-                    <p><b>Service Center Name:</b> {b.centerName}</p>
-                    <p><b>Date:</b> {b.bookingDate?.split("T")[0]}</p>
-                    <p><b>Time:</b> {b.timeslot}</p>
-                    <p><b>Vehicle Name:</b> {b.vehicleName}</p>
-                  </div>
-                    <div className="mt-3 sm:mt-0 flex gap-2">
-                      <button
-                        onClick={() => handleVerification(b.bookingId, "YES")}
-                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
-                      >
-                        Accept
-                      </button>
-                    </div>
-                  </div>
-                )
-            )}
-          </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-cyan-100 via-white to-teal-100 dark:from-gray-900 dark:via-gray-800 dark:to-teal-900 py-10">
+      <div className="w-full m-2 max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-10">
+        <h2 className="text-3xl font-extrabold text-teal-700 dark:text-teal-300 mb-8 text-center">
+          Manage Appointments
+        </h2>
+
+        {/* Tabs */}
+        <div className="flex justify-center mb-6 space-x-4">
+          {["PENDING", "VERIFIED", "REJECTED"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-full font-semibold ${
+                activeTab === tab
+                  ? "bg-teal-600 text-white"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+              }`}
+            >
+              {tab.charAt(0) + tab.slice(1).toLowerCase()}
+            </button>
+          ))}
         </div>
+
+        {/* Tab Content */}
+        {activeTab === "PENDING" && renderBookings(filteredBookings.PENDING, "Pending", "bg-yellow-500")}
+        {activeTab === "VERIFIED" && renderBookings(filteredBookings.VERIFIED, "Verified", "bg-green-500")}
+        {activeTab === "REJECTED" && renderBookings(filteredBookings.REJECTED, "Rejected", "bg-red-500")}
       </div>
     </div>
   );

@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import MechanicServices from "../../services/MechanicServices";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
 import ManageMechanicModal from "./ManageMechanicModal";
 
 export default function ManageMechanics() {
-  const [showVerified, setShowVerified] = useState(false);
-  const [showUnverified, setShowUnverified] = useState(false);
-  const [showRejected, setShowRejected] = useState(false);
+  const [activeTab, setActiveTab] = useState("UNVERIFIED");
   const [mechanics, setMechanics] = useState([]);
-  const [serviceCentreName, setServiceCentreName] = useState("");
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [selectedMechanic, setSelectedMechanic] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState("active");
 
   const fetchMechanics = async () => {
     try {
@@ -22,14 +17,7 @@ export default function ManageMechanics() {
       console.error("Error fetching mechanics:", err);
     }
   };
-  const getServiceCenterById = async (id) => {
-    try {
-      const response = await ServiceCenterServices.getServiceCenterById(id)
-      setServiceCentreName(response.data.name)
-    } catch (error) {
-      console.error("Service centre not found", error)
-    }
-  }
+
   useEffect(() => {
     fetchMechanics();
   }, []);
@@ -38,9 +26,7 @@ export default function ManageMechanics() {
     const confirmMsg =
       status === "YES"
         ? "Are you sure you want to ACCEPT this mechanic?"
-        : status === "REJECTED"
-          ? "Are you sure you want to REJECT this mechanic?"
-          : "Are you sure you want to mark this mechanic as UNVERIFIED?";
+        : "Are you sure you want to REJECT this mechanic?";
     if (!window.confirm(confirmMsg)) return;
 
     try {
@@ -51,15 +37,18 @@ export default function ManageMechanics() {
     }
   };
 
-  const openStatusModal = async (mechanic) => {
+  const openStatusModal = (mechanic) => {
     setSelectedMechanic(mechanic);
     setIsStatusModalOpen(true);
   };
 
   const handleSaveMechanic = async (updatedMechanic) => {
-    console.log("Updated mechanic:", updatedMechanic);
-    await MechanicServices.updateMechanicCenter(updatedMechanic.id, updatedMechanic.centerId,updatedMechanic.status)
-    await fetchMechanics()
+    await MechanicServices.updateMechanicCenter(
+      updatedMechanic.id,
+      updatedMechanic.centerId,
+      updatedMechanic.status
+    );
+    await fetchMechanics();
   };
 
   const closeStatusModal = () => {
@@ -67,52 +56,41 @@ export default function ManageMechanics() {
     setSelectedMechanic(null);
   };
 
-  const handleStatusSave = async () => {
-    try {
-      await MechanicServices.updateStatus(selectedMechanic.id, selectedStatus)
-
-      await fetchMechanics()
-
-      closeStatusModal();
-    } catch (err) {
-      console.error("Error updating active/inactive status:", err);
-    }
-  };
-
   const verified = mechanics.filter((m) => m.isVerified === "YES");
   const unverified = mechanics.filter((m) => m.isVerified === "NO" || m.isVerified === null);
   const rejected = mechanics.filter((m) => m.isVerified === "REJECTED");
 
-  return (
-    <div className="w-full gap-4 space-y-4">
-      {/* Unverified Mechanics */}
-      <div className="flex-1">
-        <button
-          onClick={() => setShowUnverified(!showUnverified)}
-          className="w-full flex justify-between items-center text-white py-3 px-4 rounded shadow bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 transition-colors duration-500"
-        >
-          <span>Unverified Mechanics ({unverified.length})</span>
-          {showUnverified ? <IoIosArrowUp /> : <IoIosArrowDown />}
-        </button>
-        <div
-          className={`overflow-hidden transition-all duration-1000 ease-in-out ${showUnverified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-            }`}
-        >
-          {/* Scrollable list */}
-          <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
-            {unverified.map((m) => (
-              <div
-                key={m.id}
-                className="p-3 rounded shadow-sm border flex flex-col sm:flex-row sm:justify-between sm:items-center"
-              >
-                <div>
-                  <p className="font-bold text-amber-700">{m.name}</p>
-                  <p>Expertise: {m.expertise}</p>
-                  <p>Availability: {m.availability}</p>
-                  <p>Rating: {m.rating}</p>
-                  <p>Address: {m.address}</p>
-                </div>
-                <div className="mt-3 sm:mt-0 flex gap-2">
+  const renderMechanics = (list, label, badgeColor) => {
+    if (list.length === 0) {
+      return (
+        <div className="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl h-[300px] overflow-y-auto flex justify-center items-center">
+          No {label} mechanics.
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-4">
+        {list.map((m) => (
+          <div
+            key={m.id}
+            className="rounded-xl border-l-4 border-teal-500 bg-teal-50 dark:bg-teal-900/30 p-5 shadow flex flex-col sm:flex-row sm:justify-between sm:items-center"
+          >
+            <div>
+              <p className="font-bold text-lg text-teal-800 dark:text-teal-200">{m.name}</p>
+              <p>Expertise: {m.expertise}</p>
+              <p>Availability: {m.availability}</p>
+              <p>Rating: {m.rating}</p>
+              <p>Address: {m.address}</p>
+              {m.centerName && <p>Service Center: {m.centerName}</p>}
+              {m.status && <p>Status: {m.status}</p>}
+            </div>
+            <div className="mt-3 sm:mt-0 flex flex-col items-center gap-2">
+              <span className={`inline-block px-4 py-1 rounded-full ${badgeColor} text-white font-semibold text-sm mb-2`}>
+                {label}
+              </span>
+              {label === "Unverified" && (
+                <div className="flex gap-2">
                   <button
                     onClick={() => handleVerification(m.id, "YES")}
                     className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
@@ -126,107 +104,64 @@ export default function ManageMechanics() {
                     Reject
                   </button>
                 </div>
-              </div>
-            ))}
-            {unverified.length === 0 && (
-              <p className="text-sm text-gray-500">No unverified mechanics.</p>
-            )}
+              )}
+              {label === "Rejected" && (
+                <button
+                  onClick={() => handleVerification(m.id, "YES")}
+                  className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                >
+                  Accept
+                </button>
+              )}
+              {label === "Verified" && (
+                <button
+                  onClick={() => openStatusModal(m)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                >
+                  Edit
+                </button>
+              )}
+            </div>
           </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-cyan-100 via-white to-teal-100 dark:from-gray-900 dark:via-gray-800 dark:to-teal-900 py-10">
+      <div className="w-full m-2 max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-10">
+        <h2 className="text-3xl font-extrabold text-teal-700 dark:text-teal-300 mb-8 text-center">
+          Manage Mechanics
+        </h2>
+
+        {/* Tabs */}
+        <div className="flex justify-center mb-6 space-x-4">
+          {["UNVERIFIED", "VERIFIED", "REJECTED"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-full font-semibold ${
+                activeTab === tab
+                  ? "bg-teal-600 text-white"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+              }`}
+            >
+              {tab.charAt(0) + tab.slice(1).toLowerCase()}
+            </button>
+          ))}
         </div>
+
+        {/* Tab Content */}
+        {activeTab === "UNVERIFIED" && renderMechanics(unverified, "Unverified", "bg-yellow-500")}
+        {activeTab === "VERIFIED" && renderMechanics(verified, "Verified", "bg-green-500")}
+        {activeTab === "REJECTED" && renderMechanics(rejected, "Rejected", "bg-red-500")}
       </div>
 
-      {/* Verified Mechanics */}
-      <div className="flex-1">
-        <button
-          onClick={() => setShowVerified(!showVerified)}
-          className="w-full flex justify-between items-center text-white py-3 px-4 rounded shadow bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 transition-colors duration-500"
-        >
-          <span>Verified Mechanics ({verified.length})</span>
-          {showVerified ? <IoIosArrowUp /> : <IoIosArrowDown />}
-        </button>
-        <div
-          className={`overflow-hidden transition-all duration-1000 ease-in-out ${showVerified ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-            }`}
-        >
-          {/* Scrollable list */}
-          <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
-            {verified.map((m) => (
-              <div
-                key={m.id}
-                className="p-3 rounded shadow-sm border flex flex-col sm:flex-row sm:justify-between sm:items-center"
-              >
-                <div>
-                  <p className="font-bold text-teal-700">{m.name}</p>
-                  <p>Expertise: {m.expertise}</p>
-                  <p>Availability: {m.availability}</p>
-                  <p>Rating: {m.rating}</p>
-                  <p>Service Center Name: {m.centerName}</p>
-                  <p>Address: {m.address}</p>
-                  {m.status && <p>Status: {m.status}</p>}
-                </div>
-                <div className="mt-3 sm:mt-0 flex gap-2">
-                  <button
-                    onClick={() => openStatusModal(m)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                  >
-                    Edit
-                  </button>
-                </div>
-              </div>
-            ))}
-            {verified.length === 0 && (
-              <p className="text-sm text-gray-500">No verified mechanics.</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Rejected Mechanics */}
-      <div className="flex-1">
-        <button
-          onClick={() => setShowRejected(!showRejected)}
-          className="w-full flex justify-between items-center text-white py-3 px-4 rounded shadow bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 transition-colors duration-500"
-        >
-          <span>Rejected Mechanics ({rejected.length})</span>
-          {showRejected ? <IoIosArrowUp /> : <IoIosArrowDown />}
-        </button>
-        <div
-          className={`overflow-hidden transition-all duration-1000 ease-in-out ${showRejected ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-            }`}
-        >
-          {/* Scrollable list */}
-          <div className="mt-2 rounded p-3 space-y-3 max-h-96 overflow-y-auto">
-            {rejected.map((m) => (
-              <div
-                key={m.id}
-                className="p-3 rounded shadow-sm border flex flex-col sm:flex-row sm:justify-between sm:items-center"
-              >
-                <div>
-                  <p className="font-bold text-red-700">{m.name}</p>
-                  <p>Expertise: {m.expertise}</p>
-                  <p>Availability: {m.availability}</p>
-                  <p>Rating: {m.rating}</p>
-                  <p>Service Center Name: {m.centerName}</p>
-                </div>
-                <div className="mt-3 sm:mt-0 flex gap-2">
-                  <button
-                    onClick={() => handleVerification(m.id, "YES")}
-                    className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
-                  >
-                    Accept
-                  </button>
-                </div>
-              </div>
-            ))}
-            {rejected.length === 0 && (
-              <p className="text-sm text-gray-500">No rejected mechanics.</p>
-            )}
-          </div>
-        </div>
-      </div>
+      {/* Modal */}
       <ManageMechanicModal
         isStatusModalOpen={isStatusModalOpen}
-        closeStatusModal={() => setIsStatusModalOpen(false)}
+        closeStatusModal={closeStatusModal}
         selectedMechanic={selectedMechanic}
         isEdit={!!selectedMechanic?.servicecenterId}
         onSave={handleSaveMechanic}
