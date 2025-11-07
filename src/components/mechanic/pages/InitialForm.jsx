@@ -13,6 +13,7 @@ const InitialForm = () => {
     expertise: '',
     availability: 'AVAILABLE',
     rating: 'EXCELLENT',
+    skills: '',
   });
 
   useEffect(() => {
@@ -84,8 +85,6 @@ const InitialForm = () => {
         toast.error('Invalid mechanic ID');
         return;
       }
-
-
       await MechanicServices.addMechanic(formData);
       toast.success('Mechanic profile created successfully!');
       navigate('/mechanic/dashboard');
@@ -159,6 +158,21 @@ const InitialForm = () => {
               value={formData.expertise}
               onChange={handleChange}
               placeholder="e.g., HVAC, Plumbing, Electrical"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 bg-white dark:bg-gray-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500 transition-colors duration-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="skills" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1 transition-colors duration-500">
+              Skills
+            </label>
+            <input
+              type="text"
+              id="skills"
+              name="skills"
+              value={formData.skills}
+              onChange={handleChange}
+              placeholder="e.g., Oil Change, Brake Repair"
               className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 bg-white dark:bg-gray-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500 transition-colors duration-500"
               required
             />

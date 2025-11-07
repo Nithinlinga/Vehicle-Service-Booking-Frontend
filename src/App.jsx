@@ -15,8 +15,6 @@ import MechanicDashboard from "./components/mechanic/MechanicDashboard";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import RoleRoute from "./components/routes/RoleRoute";
 import PublicOnlyRoute from "./components/routes/PublicOnlyRoute";
-import { login } from "./store/authSlice";
-import { useEffect } from "react";
 import UnauthorizedPage from "./components/UnauthorizedPage";
 import Footer from './components/footer/Footer';
 import Services from './components/user/pages/Services';
@@ -32,7 +30,6 @@ import ViewAppointments from "./components/user/pages/ViewAppointments";
 import MechanicProfile from "./components/mechanic/pages/MechanicProfile";
 import Servicelog from "./components/mechanic/pages/Servicelog";
 import EditProfile from "./components/mechanic/pages/EditProfile";
-import EditSkills from "./components/mechanic/pages/EditSkills";
 import UserLayout from "./components/user/UserLayout";
 import UserDashboard from "./components/user/pages/UserDashboard";
 import UserProfile from "./components/user/pages/UserProfile";
@@ -98,7 +95,6 @@ function App() {
             <Route path="reports" element={<Report />} />
             <Route path="bookings" element={<ManageBookings />} />
             <Route path="edit-profile" element={<EditProfile />} />
-            <Route path="edit-skills" element={<EditSkills />} />
             </Route>
           </Route>
 
