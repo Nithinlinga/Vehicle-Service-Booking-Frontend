@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import UserServices from "../../services/UserServices";
-import toast from "react-hot-toast";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -9,7 +8,7 @@ const ManageUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await UserServices.getAllUsers(); // returns all users for admin
+      const response = await UserServices.getAllUsers();
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -31,24 +30,14 @@ const ManageUsers = () => {
   };
 
   const handleSave = async () => {
-  try {
-    // ensure selectedUser has id property (backend expects that in path)
-    if (!selectedUser?.authId) {
-      console.error("Missing id on selectedUser", selectedUser);
-      toast.error("Unable to update: missing user id");
-      return;
+    try {
+      await UserServices.updateUserProfile(selectedUser);
+      await fetchUsers();
+      handleModalClose();
+    } catch (error) {
+      console.error("Error updating user profile:", error);
     }
-
-    await UserServices.updateUserProfile(selectedUser);
-    await fetchUsers();
-    handleModalClose();
-    toast.success("User updated");
-  } catch (error) {
-    console.error("Error updating user profile:", error.response?.status, error.response?.data || error.message);
-    toast.error(`Update failed: ${error.response?.data?.message || error.response?.statusText || 'Forbidden'}`);
-  }
-};
-
+  };
 
   return (
     <div className="p-4 sm:p-6">
@@ -96,6 +85,12 @@ const ManageUsers = () => {
               <input
                 type="text"
                 value={`${selectedUser.firstName} ${selectedUser.lastName}`}
+                disabled
+                className="w-full p-2 border rounded dark:bg-gray-700 cursor-not-allowed dark:text-white"
+              />
+              <input
+                type="email"
+                value={selectedUser.email}
                 disabled
                 className="w-full p-2 border rounded dark:bg-gray-700 cursor-not-allowed dark:text-white"
               />

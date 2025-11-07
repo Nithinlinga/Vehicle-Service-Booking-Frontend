@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import UserServices from '../../services/UserServices';
-import { getAuthHeader } from '../../../utils/getAuthHeader';
-
 const carBrands = [
   { value: '', label: 'Select Brand' },
   { value: 'volvo', label: 'Volvo' },
