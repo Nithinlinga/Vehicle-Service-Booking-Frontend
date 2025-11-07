@@ -47,7 +47,7 @@ const Login = () => {
       setServerError("");
       try {
         const response = await LoginServices.postLogin(values);
-        const token = response.data.accessToken; // assuming backend returns JWT as `token`
+        const token = response?.data?.accessToken; // assuming backend returns JWT as `token`
       const decoded = decodeToken(token);
 
       // Store decoded user info in Redux

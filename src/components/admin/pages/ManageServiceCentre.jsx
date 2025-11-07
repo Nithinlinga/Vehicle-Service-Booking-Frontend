@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ServiceCenterServices from "../../services/ServiceCenterServices";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const ManageServiceCentre = () => {
   const [serviceCentre, setServiceCentre] = useState([]);
@@ -17,6 +18,7 @@ const ManageServiceCentre = () => {
       setServiceCentre(response.data);
     } catch (error) {
       console.error("Error fetching service centres:", error);
+      toast.error(error?.response?.data?.error)
     }
   }
 
@@ -34,6 +36,11 @@ const ManageServiceCentre = () => {
           + Add Service Centre
         </Link>
       </div>
+      {serviceCentre.length === 0 ? (
+      <div className="flex justify-center items-center h-40">
+        <p className="text-gray-500 text-lg italic">No service centres available yet.</p>
+      </div>
+    ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {serviceCentre.map((s) => (
           <div
@@ -68,7 +75,7 @@ const ManageServiceCentre = () => {
             </div>
           </div>
         ))}
-      </div>
+      </div>)}
     </div>
   );
 };

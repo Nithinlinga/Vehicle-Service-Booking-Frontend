@@ -6,92 +6,92 @@ import { getAuthHeader } from "../../../utils/getAuthHeader";
 import { toast } from "react-hot-toast";
 
 const ServiceCentreForm = () => {
-const { id } = useParams();
-const navigate = useNavigate();
-const isEditMode = Boolean(id);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isEditMode = Boolean(id);
 
-const [initialValues, setInitialValues] = useState({
-name: "",
-location: "",
-contact: "",
-rating: "",
-});
+  const [initialValues, setInitialValues] = useState({
+    name: "",
+    location: "",
+    contact: "",
+    rating: "",
+  });
 
-useEffect(() => {
-const fetchServiceCentre = async () => {
-try {
-if (isEditMode) {
-const response = await ServiceCenterServices.getServiceCenterById(id);
-const sc = response.data;
-setInitialValues({
-name: sc.name || "",
-location: sc.location || "",
-contact: sc.contact || "",
-rating: sc.rating || "Good",
-});
-}
-} catch (error) {
-console.error("Error fetching service centre:", error);
-toast.error("Failed to load service centre data.");
-}
-};
-fetchServiceCentre();
-}, [id, isEditMode]);
+  useEffect(() => {
+    const fetchServiceCentre = async () => {
+      try {
+        if (isEditMode) {
+          const response = await ServiceCenterServices.getServiceCenterById(id);
+          const sc = response.data;
+          setInitialValues({
+            name: sc.name || "",
+            location: sc.location || "",
+            contact: sc.contact || "",
+            rating: sc.rating || "Good",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching service centre:", error);
+        toast.error("Failed to load service centre data.");
+      }
+    };
+    fetchServiceCentre();
+  }, [id, isEditMode]);
 
-const validate = (values) => {
-const errors = {};
-const nameRegex = /^[A-Za-z\s]{3,50}$/;
-const locationRegex = /^[A-Za-z0-9\s,.\-\/]{5,100}$/;
-const contactRegex = /^[0-9]{10}$/;
+  const validate = (values) => {
+    const errors = {};
+    const nameRegex = /^[A-Za-z\s]{3,50}$/;
+    const locationRegex = /^[A-Za-z0-9\s,.\-\/]{5,100}$/;
+    const contactRegex = /^[0-9]{10}$/;
 
-if (!values.name) {
-errors.name = "Service centre name is required";
-} else if (!nameRegex.test(values.name)) {
-errors.name = "Name must be 3–50 letters only";
-}
+    if (!values.name) {
+      errors.name = "Service centre name is required";
+    } else if (!nameRegex.test(values.name)) {
+      errors.name = "Name must be 3–50 letters only";
+    }
 
-if (!values.location) {
-errors.location = "Location is required";
-} else if (!locationRegex.test(values.location)) {
-errors.location = "Location must be 5–100 characters";
-}
+    if (!values.location) {
+      errors.location = "Location is required";
+    } else if (!locationRegex.test(values.location)) {
+      errors.location = "Location must be 5–100 characters";
+    }
 
-if (!values.contact) {
-errors.contact = "Contact is required";
-} else if (!contactRegex.test(values.contact)) {
-errors.contact = "Contact must be exactly 10 digits";
-}
+    if (!values.contact) {
+      errors.contact = "Contact is required";
+    } else if (!contactRegex.test(values.contact)) {
+      errors.contact = "Contact must be exactly 10 digits";
+    }
 
-return errors;
-};
+    return errors;
+  };
 
-const formik = useFormik({
-enableReinitialize: true,
-initialValues,
-validateOnBlur: true,
-validateOnChange: false,
-validate,
-onSubmit: async (values, { setSubmitting }) => {
-try {
-const headers = getAuthHeader();
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues,
+    validateOnBlur: true,
+    validateOnChange: false,
+    validate,
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const headers = getAuthHeader();
 
-if (isEditMode) {
-await ServiceCenterServices.updateServiceCenter(id, values, headers);
-toast.success("Service centre updated successfully!");
-} else {
-await ServiceCenterServices.addServiceCenter(values, headers);
-toast.success("Service centre added successfully!");
-}
+        if (isEditMode) {
+          await ServiceCenterServices.updateServiceCenter(id, values, headers);
+          toast.success("Service centre updated successfully!");
+        } else {
+          await ServiceCenterServices.addServiceCenter(values, headers);
+          toast.success("Service centre added successfully!");
+        }
 
-navigate("/admin/manage-service-centers", { replace: true });
-} catch (error) {
-console.error("Error saving service centre:", error);
-toast.error("Failed to save service centre.");
-} finally {
-setSubmitting(false);
-}
-}
-});
+        navigate("/admin/manage-service-centers", { replace: true });
+      } catch (error) {
+        console.error("Error saving service centre:", error);
+        toast.error("Failed to save service centre.");
+      } finally {
+        setSubmitting(false);
+      }
+    }
+  });
 
   return (
     <div className="flex justify-center items-center min-h-screen p-4">
@@ -118,7 +118,7 @@ setSubmitting(false);
             )}
           </div>
 
- 
+
           <div>
             <label className="block font-medium mb-1">Location</label>
             <input
@@ -135,7 +135,7 @@ setSubmitting(false);
             )}
           </div>
 
-      
+
           <div>
             <label className="block font-medium mb-1">Contact</label>
             <input

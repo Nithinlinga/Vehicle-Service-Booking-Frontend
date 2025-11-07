@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import UserServices from "../../services/UserServices";
 import LoginServices from "../../services/LoginServices";
+import toast from "react-hot-toast";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -13,6 +14,7 @@ const ManageUsers = () => {
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
+      toast.error(error?.response?.data?.error)
     }
   };
 
@@ -54,6 +56,11 @@ const ManageUsers = () => {
               <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
+          {users.length === 0 ? (
+      <tbody className="flex justify-center items-center h-40">
+        <p className="text-gray-500 text-lg italic">No Users Found.</p>
+      </tbody>
+    ) : (
           <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
             {users.map((u, i) => (
               u.role!="ADMIN" &&
@@ -73,7 +80,7 @@ const ManageUsers = () => {
                 </td>
               </tr>
             ))}
-          </tbody>
+          </tbody>)}
         </table>
       </div>
 
