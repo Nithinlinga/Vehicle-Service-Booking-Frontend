@@ -62,8 +62,8 @@ const ManageUsers = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.phone}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                    {u.status === "active" ? "Active" : "inActive"}
+                  <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.status === "ACTIVE" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                    {u.status}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -112,8 +112,8 @@ const ManageUsers = () => {
                 }
                 className="w-full p-2 border rounded dark:bg-gray-900 cursor-pointer dark:text-white"
               >
-                <option value="active">Active</option>
-                <option value="inActive">InActive</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">InActive</option>
               </select>
             </div>
             <div className="flex justify-end mt-6 space-x-2">
