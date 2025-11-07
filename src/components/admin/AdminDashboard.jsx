@@ -47,9 +47,6 @@ const AdminDashboard = () => {
           <NavLink to="manage-mechanics" className="block text-gray-700 dark:text-white hover:text-cyan-600">
             {open ? "Manage Mechanics" : <span className="text-xl"><UserCog /></span>}
           </NavLink>
-          <NavLink to="profile" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-            {open ? "Profile" : <span className="text-xl"><ShieldUser /></span>}
-          </NavLink>
         </nav>
       </div>
       <div className="flex-1 overflow-auto">
