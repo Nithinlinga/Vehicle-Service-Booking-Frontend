@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import UserServices from "../../services/UserServices";
+import LoginServices from "../../services/LoginServices";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -8,7 +9,7 @@ const ManageUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await UserServices.getAllUsers();
+      const response = await LoginServices.getAllUsers();
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -31,7 +32,7 @@ const ManageUsers = () => {
 
   const handleSave = async () => {
     try {
-      await UserServices.updateUserProfile(selectedUser);
+      await LoginServices.updateUserStatus(selectedUser.id,selectedUser.status);
       await fetchUsers();
       handleModalClose();
     } catch (error) {
@@ -48,17 +49,18 @@ const ManageUsers = () => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">#</th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Phone</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Role</th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
             {users.map((u, i) => (
-              <tr key={u.userId} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              u.role!="ADMIN" &&
+              <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{i + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{u.firstName} {u.lastName}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.phone}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{u.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{u.role}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.status === "ACTIVE" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
                     {u.status}
@@ -83,12 +85,6 @@ const ManageUsers = () => {
             </h3>
             <div className="space-y-3">
               <input
-                type="text"
-                value={`${selectedUser.firstName} ${selectedUser.lastName}`}
-                disabled
-                className="w-full p-2 border rounded dark:bg-gray-700 cursor-not-allowed dark:text-white"
-              />
-              <input
                 type="email"
                 value={selectedUser.email}
                 disabled
@@ -96,7 +92,7 @@ const ManageUsers = () => {
               />
               <input
                 type="text"
-                value={selectedUser.phone}
+                value={selectedUser.role}
                 disabled
                 className="w-full p-2 border rounded dark:bg-gray-700 cursor-not-allowed dark:text-white"
               />

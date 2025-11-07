@@ -69,11 +69,10 @@ const Login = () => {
       } catch (error) {
         console.error("Submission failed:", error);
         const msg =
-          error?.response?.data?.message ||
-          error?.message ||
+          error?.response?.data
           "Something went wrong";
         setServerError(msg);
-        toast.error("Login failed");
+        // toast.error("Login failed");
       } finally {
         setSubmitting(false);
       }
@@ -91,7 +90,7 @@ const Login = () => {
           <div
             role="alert"
             aria-live="polite"
-            className="mb-6 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-900/30 dark:text-red-200"
+            className="mb-6 rounded-md border flex justify-center border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-900/30 dark:text-red-200"
           >
             {serverError}
           </div>
