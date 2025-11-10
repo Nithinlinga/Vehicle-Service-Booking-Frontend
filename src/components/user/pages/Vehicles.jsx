@@ -3,179 +3,189 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import UserServices from "../../services/UserServices";
 import car from '../../../assets/logos/car.jpg';
+// Import the bike image
+import bike from '../../../assets/logos/bike.png'; // **<-- NEW IMPORT**
 
 const Vehicles = () => {
   const navigate = useNavigate();
-  const {user}=useSelector((state)=>state.auth);
-  const [vehicles,setVehicles]=useState([]);
+  const { user } = useSelector((state) => state.auth);
+  const [vehicles, setVehicles] = useState([]);
   const [vehicleType, setVehicleType] = useState("CAR");
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [selected, setSelected] = useState(null);
-useEffect(() => {
-  const fetchVehicle = async () => {
-    try {
-      const resp = await UserServices.getAllVehicles();
-      setVehicles(resp.data || []);
-      localStorage.setItem("vehicles",JSON.stringify(resp.data))
-    } catch (error) {
-      console.error("Error in vehicle", error);
+
+  useEffect(() => {
+    const fetchVehicle = async () => {
+      try {
+        const resp = await UserServices.getAllVehicles();
+        setVehicles(resp.data || []);
+        localStorage.setItem("vehicles", JSON.stringify(resp.data));
+      } catch (error) {
+        console.error("Error in vehicle", error);
+      }
+    };
+
+    fetchVehicle();
+  }, []);
+
+  useEffect(() => {
+    if (vehicles.length > 0 && vehicleType) {
+      const filtered = vehicles.filter(
+        (v) => v.vehicleType.toUpperCase() === vehicleType.toUpperCase()
+      );
+      console.log(selected);
+
+      setFilteredVehicles(filtered);
+      setSelected(filtered[0] || null);
+    } else {
+      setFilteredVehicles([]);
+      setSelected(null);
     }
+  }, [vehicleType, vehicles]);
+
+  // Helper function to determine the correct image source
+  const getVehicleImage = (type) => {
+    return type.toUpperCase() === "CAR" ? car : bike;
   };
-
-  fetchVehicle();
-}, []);
-
-useEffect(() => {
-  if (vehicles.length > 0 && vehicleType) {
-    const filtered = vehicles.filter(
-      (v) => v.vehicleType.toUpperCase() === vehicleType.toUpperCase()
-    );
-    console.log(selected);
-    
-    setFilteredVehicles(filtered);
-    setSelected(filtered[0] || null);
-  } else {
-    setFilteredVehicles([]);
-    setSelected(null);
-  }
-}, [vehicleType, vehicles]);
 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-cyan-50 to-teal-100 dark:from-slate-900 dark:via-slate-800 dark:to-teal-900 py-10 px-2">
-  <div className="flex justify-center mb-8">
-    <div className="relative w-56 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center shadow-inner">
-      <span
-        className={`absolute top-1 left-1 w-26 h-10 rounded-full bg-gradient-to-r from-cyan-400 to-teal-500 dark:from-cyan-700 dark:to-teal-700 shadow-md transition-all duration-300 ${
-          vehicleType === "CAR" ? "translate-x-0" : "translate-x-28"
-        }`}
-        style={{ width: "104px" }}
-      ></span>
-      <button
-        className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors duration-300 cursor-pointer ${
-          vehicleType === "CAR"
-            ? "text-white"
-            : "text-slate-700 dark:text-slate-200"
-        }`}
-        onClick={() => setVehicleType("CAR")}
-      >
-        Cars
-      </button>
-      <button
-        className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors cursor-pointer duration-300 ${
-          vehicleType === "BIKE"
-            ? "text-white"
-            : "text-slate-700 dark:text-slate-200"
-        }`}
-        onClick={() => setVehicleType("BIKE")}
-      >
-        Bikes
-      </button>
-    </div>
-  </div>
-
-  <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
-    <div className="w-full lg:w-1/3 flex flex-col gap-4">
-      {filteredVehicles.length === 0 ? (
-        <div className="text-center text-gray-500 dark:text-gray-300">
-          No {vehicleType.toUpperCase()}S added yet.
-        </div>
-      ) : (
-        filteredVehicles.map((v) => (
-          <div
-            key={v.vehicleId}
-            onClick={() => setSelected(v)}
-            className={`cursor-pointer rounded-xl border-2 transition-all duration-200 shadow-sm hover:shadow-lg p-4 flex items-center gap-4 ${
-              selected && selected.vehicleId === v.vehicleId
-                ? "border-teal-600 bg-white dark:bg-slate-800"
-                : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+      <div className="flex justify-center mb-8">
+        <div className="relative w-56 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center shadow-inner">
+          <span
+            className={`absolute top-1 left-1 w-26 h-10 rounded-full bg-gradient-to-r from-cyan-400 to-teal-500 dark:from-cyan-700 dark:to-teal-700 shadow-md transition-all duration-300 ${
+              vehicleType === "CAR" ? "translate-x-0" : "translate-x-28"
             }`}
-          >
-            <img
-              src={car}
-              alt={v.model}
-              className="w-16 h-16 object-contain mb-4 rounded-xl mix-blend-multiply"
-            />
-            <span className="font-bold text-lg text-slate-800 dark:text-slate-100">
-              {v.make.toUpperCase()} {v.model}
-            </span>
-          </div>
-        ))
-      )}
-    </div>
-    <div className="flex-1 flex h-screen justify-center">
-      {selected && (
-        <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 flex flex-col items-center">
-          <img
-            src={car}
-            alt={selected.model}
-            className="w-48 h-48 object-contain mb-4 rounded-xl mix-blend-multiply"
-          />
-          <div className="text-3xl font-extrabold text-teal-700 dark:text-teal-300 mb-2">
-            {selected.make.toUpperCase()} {selected.model}
-          </div>
-          <table className="w-full mb-4 border-separate border-spacing-y-1 ml-40">
-            <tbody>
-              <tr>
-                <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200 w-40">Year</td>
-                <td className="py-1 text-slate-900 dark:text-slate-100">{selected.year}</td>
-              </tr>
-              <tr>
-                <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Registration Number</td>
-                <td className="py-1 text-slate-900 dark:text-slate-100">{selected.registrationNumber}</td>
-              </tr>
-              <tr>
-                <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Type</td>
-                <td className="py-1 text-slate-900 dark:text-slate-100">{selected.vehicleType}</td>
-              </tr>
-              {selected.vehicleType === "CAR" ? (
-                <>
-                  <tr>
-                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Transmission</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.transmission}</td>
-                  </tr>
-                  <tr>
-                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Fuel</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.fuel}</td>
-                  </tr>
-                  <tr>
-                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Doors</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.doors}</td>
-                  </tr>
-                  <tr>
-                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">AC</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.ac}</td>
-                  </tr>
-                </>
-              ) : (
-                <>
-                  <tr>
-                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Engine</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.engine}</td>
-                  </tr>
-                  <tr>
-                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Fuel</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.fuel}</td>
-                  </tr>
-                  <tr>
-                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">ABS</td>
-                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.abs}</td>
-                  </tr>
-                </>
-              )}
-            </tbody>
-          </table>
+            style={{ width: "104px" }}
+          ></span>
           <button
-            onClick={() => navigate(`/user/appointment?vehicleId=${selected.vehicleId}`)}
-            className="w-full cursor-pointer bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow transition"
+            className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors duration-300 cursor-pointer ${
+              vehicleType === "CAR"
+                ? "text-white"
+                : "text-slate-700 dark:text-slate-200"
+            }`}
+            onClick={() => setVehicleType("CAR")}
           >
-            Book Appointment Now
+            Cars
+          </button>
+          <button
+            className={`relative z-10 w-1/2 h-full rounded-full font-bold text-lg transition-colors cursor-pointer duration-300 ${
+              vehicleType === "BIKE"
+                ? "text-white"
+                : "text-slate-700 dark:text-slate-200"
+            }`}
+            onClick={() => setVehicleType("BIKE")}
+          >
+            Bikes
           </button>
         </div>
-      )}
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
+        <div className="w-full lg:w-1/3 flex flex-col gap-4">
+          {filteredVehicles.length === 0 ? (
+            <div className="text-center text-gray-500 dark:text-gray-300">
+              No {vehicleType.toUpperCase()}S added yet.
+            </div>
+          ) : (
+            filteredVehicles.map((v) => (
+              <div
+                key={v.vehicleId}
+                onClick={() => setSelected(v)}
+                className={`cursor-pointer rounded-xl border-2 transition-all duration-200 shadow-sm hover:shadow-lg p-4 flex items-center gap-4 ${
+                  selected && selected.vehicleId === v.vehicleId
+                    ? "border-teal-600 bg-white dark:bg-slate-800"
+                    : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+                }`}
+              >
+                <img
+                  // **<-- CONDITIONAL RENDERING HERE (in the list) -->**
+                  src={getVehicleImage(v.vehicleType)}
+                  alt={v.model}
+                  className="w-16 h-16 object-contain mb-4 rounded-xl mix-blend-multiply"
+                />
+                <span className="font-bold text-lg text-slate-800 dark:text-slate-100">
+                  {v.make.toUpperCase()} {v.model}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+        <div className="flex-1 flex h-screen justify-center">
+          {selected && (
+            <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 flex flex-col items-center">
+              <img
+                // **<-- CONDITIONAL RENDERING HERE (in the detail view) -->**
+                src={getVehicleImage(selected.vehicleType)}
+                alt={selected.model}
+                className="w-48 h-48 object-contain mb-4 rounded-xl mix-blend-multiply"
+              />
+              <div className="text-3xl font-extrabold text-teal-700 dark:text-teal-300 mb-2">
+                {selected.make.toUpperCase()} {selected.model}
+              </div>
+              <table className="w-full mb-4 border-separate border-spacing-y-1 ml-40">
+                <tbody>
+                  <tr>
+                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200 w-40">Year</td>
+                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.year}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Registration Number</td>
+                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.registrationNumber}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Type</td>
+                    <td className="py-1 text-slate-900 dark:text-slate-100">{selected.vehicleType}</td>
+                  </tr>
+                  {selected.vehicleType === "CAR" ? (
+                    <>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Transmission</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.transmission}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Fuel</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.fuel}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Doors</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.doors}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">AC</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.ac}</td>
+                      </tr>
+                    </>
+                  ) : (
+                    <>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Engine</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.engine}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">Fuel</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.fuel}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1 pr-4 font-bold text-left text-slate-700 dark:text-slate-200">ABS</td>
+                        <td className="py-1 text-slate-900 dark:text-slate-100">{selected.abs}</td>
+                      </tr>
+                    </>
+                  )}
+                </tbody>
+              </table>
+              <button
+                onClick={() => navigate(`/user/appointment?vehicleId=${selected.vehicleId}`)}
+                className="w-full cursor-pointer bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl shadow transition"
+              >
+                Book Appointment Now
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
-  </div>
-</div>
   );
 };
 
