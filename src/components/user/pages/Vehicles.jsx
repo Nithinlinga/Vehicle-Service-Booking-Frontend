@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import UserServices from "../../services/UserServices";
+import car from '../../../assets/logos/car.jpg';
 
 const Vehicles = () => {
   const navigate = useNavigate();
@@ -91,9 +92,9 @@ useEffect(() => {
             }`}
           >
             <img
-              src={v.image || "https://www.pngmart.com/files/22/Car-PNG-Image.png"}
+              src={car}
               alt={v.model}
-              className="w-16 h-16 object-contain rounded-lg bg-slate-100 dark:bg-slate-700"
+              className="w-16 h-16 object-contain mb-4 rounded-xl mix-blend-multiply"
             />
             <span className="font-bold text-lg text-slate-800 dark:text-slate-100">
               {v.make.toUpperCase()} {v.model}
@@ -102,14 +103,13 @@ useEffect(() => {
         ))
       )}
     </div>
-
     <div className="flex-1 flex h-screen justify-center">
       {selected && (
         <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 flex flex-col items-center">
           <img
-            src={selected.image || "https://www.pngmart.com/files/22/Car-PNG-Image.png"}
+            src={car}
             alt={selected.model}
-            className="w-48 h-48 object-contain mb-4 rounded-xl bg-slate-100 dark:bg-slate-700"
+            className="w-48 h-48 object-contain mb-4 rounded-xl mix-blend-multiply"
           />
           <div className="text-3xl font-extrabold text-teal-700 dark:text-teal-300 mb-2">
             {selected.make.toUpperCase()} {selected.model}

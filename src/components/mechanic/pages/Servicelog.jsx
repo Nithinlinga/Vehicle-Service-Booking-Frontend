@@ -50,7 +50,7 @@ const Servicelog = () => {
                   <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold">Customer</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold">Service</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Car</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Vehicles</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold">Amount</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
                 </tr>
