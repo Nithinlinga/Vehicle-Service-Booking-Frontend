@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import BookingServices from "../../services/BookingServices";
 import { toast } from 'react-hot-toast';
 import MechanicServices from "../../services/MechanicServices";
 
 const ManageBookings = () => {
     const { user } = useSelector((state) => state.auth);
-    const navigate = useNavigate();
 
     const [appointments, setAppointments] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
@@ -61,7 +59,7 @@ const ManageBookings = () => {
 
     const handleCompleted = async (id) => {
         try {
-            const confirmed = window.confirm("Are you sure you want to delete this Booking?");
+            const confirmed = globalThis.confirm("Are you sure you want to delete this Booking?");
             if (confirmed) {
                 await BookingServices.updateBookingStatusById(id, "COMPLETED");
                 toast.success("Booking Updated Successfully");
