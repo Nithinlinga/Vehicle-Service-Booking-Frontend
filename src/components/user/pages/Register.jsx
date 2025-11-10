@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -19,7 +19,6 @@ const Register = () => {
     const formik = useFormik({
         initialValues: {
             email: "",
-            username: "",
             password: "",
             confirmPassword: "",
             role: role.toUpperCase(),
@@ -34,17 +33,6 @@ const Register = () => {
                 !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
             ) {
                 errors.email = "Invalid email address";
-            }
-            if (!values.username) {
-                errors.username = "Username required";
-            } else if (["admin", "null", "god"].includes(values.username)) {
-                errors.username = "Nice try";
-            } else if (!/^[a-z]+$/.test(values.username)) {
-                errors.username = "Must contain only lowercase letters";
-            } else if (values.username.length < 8) {
-                errors.username = "Must be at least 8 characters long";
-            } else if (values.username.length > 50) {
-                errors.username = "Cannot be more than 50 characters";
             }
             if (!values.password) {
                 errors.password = "Password required";
@@ -129,36 +117,6 @@ const Register = () => {
                             {formik.touched.email && formik.errors.email && (
                                 <span className="text-xs text-red-600">
                                     {formik.errors.email}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                    <div className="flex flex-col">
-                        <label
-                            htmlFor="username"
-                            className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-300"
-                        >
-                            Username
-                        </label>
-                        <input
-                            type="text"
-                            name="username"
-                            id="username"
-                            placeholder="lowercaseusername"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.username}
-                            autoComplete="username"
-                            className="p-3 rounded border border-slate-300 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:border-cyan-600 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                            aria-invalid={Boolean(
-                                formik.touched.username && formik.errors.username
-                            )}
-                            aria-describedby="username-error"
-                        />
-                        <div id="username-error" className="h-5 mt-1">
-                            {formik.touched.username && formik.errors.username && (
-                                <span className="text-xs text-red-600">
-                                    {formik.errors.username}
                                 </span>
                             )}
                         </div>
