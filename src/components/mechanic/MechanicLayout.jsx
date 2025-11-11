@@ -53,9 +53,7 @@
                 {open ? "Services" : <span className="text-xl"><FaWrench /></span>}
               </NavLink>
 
-              <NavLink to="reports" className="block text-gray-700 dark:text-white hover:text-cyan-600">
-                {open ? "Reports" : <span className="text-xl"><FaChartBar /></span>}
-              </NavLink>
+
             </nav>
           </div>
           <div className="flex-1 overflow-auto">

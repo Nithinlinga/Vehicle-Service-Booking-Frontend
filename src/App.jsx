@@ -40,7 +40,6 @@ import ServiceCenters from "./components/user/pages/ServiceCenters";
 import MechanicEntry from "./components/mechanic/pages/MechanicEntry";
 import UserEntry from "./components/user/pages/UserEntry";
 import ManageBookings from "./components/mechanic/pages/ManageBookings";
-import Report from "./components/mechanic/pages/Report";
 
 
 function App() {
@@ -92,7 +91,6 @@ function App() {
             <Route path="dashboard" element={<MechanicDashboard />}/>
             <Route path="profile" element={<MechanicProfile />} />
             <Route path="services" element={<Servicelog />} />
-            <Route path="reports" element={<Report />} />
             <Route path="bookings" element={<ManageBookings />} />
             <Route path="edit-profile" element={<EditProfile />} />
             </Route>
