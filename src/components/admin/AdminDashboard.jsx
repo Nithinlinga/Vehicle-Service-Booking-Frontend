@@ -1,10 +1,58 @@
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { MdOutlineKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
-import { LayoutDashboard, Wrench, CalendarClock, Users, UserCog, ShieldUser } from 'lucide-react';
+import { LayoutDashboard, Wrench, CalendarClock, Users, UserCog } from 'lucide-react';
+import UserServices from "../services/UserServices";
+// import ServiceCenterServices from "../../services/ServiceCenterServices";
+// import BookingServices from "../../services/BookingServices";
+// import ServiceTypeServices from "../../services/ServiceTypeServices";
+
 const AdminDashboard = () => {
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const allvehicles = await UserServices.getAllVehicles();
+        console.log(allvehicles.data);
+        setVehicleCount(allvehicles.data.length);
+      } catch (error) {
+        console.error("Error fetching vehicles:", error);
+      }
+    };
+    // const fetchServiceCenter = async () => {
+    //   try {
+    //     const allServiceCenters = await ServiceCenterServices.getAllServiceCenters();
+    //     console.log(allServiceCenters.data);
+    //     setServiceCenterCount(allServiceCenters.data.length);
+    //   } catch (error) {
+    //     console.error("Error fetching service centers:", error);
+    //   }
+    // };
+    // const fetchBookings = async () => {
+    //   try {
+    //     const allBookings = await BookingServices.getAllBookings();
+    //     console.log(allBookings.data);
+    //     setUpcomingBookingCount(allBookings.data.length);
+    //   } catch (error) {
+    //     console.error("Error fetching upcoming bookings:", error);
+    //   }
+    // };
+    // const fetchServiceTypes = async () => {
+    //   try {
+    //     const allServiceTypes = await ServiceTypeServices.getAllServiceTypes();
+    //     console.log(allServiceTypes.data);
+    //     setServiceTypeCount(allServiceTypes.data.length);
+    //   } catch (error) {
+    //     console.error("Error fetching service types:", error);
+    //   }
+    // };
+
+    fetchVehicles();
+    // fetchServiceCenter();
+    // fetchBookings();
+    // fetchServiceTypes();
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 overflow-auto">
