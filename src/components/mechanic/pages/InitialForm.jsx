@@ -16,22 +16,6 @@ const InitialForm = () => {
     skills: '',
   });
 
-  useEffect(() => {
-    const authString = localStorage.getItem('auth');
-    if (authString) {
-      try {
-        const authObject = JSON.parse(authString);
-        if (authObject?.username) {
-          setFormData((prevData) => ({
-            ...prevData,
-            name: authObject.username,
-          }));
-        }
-      } catch (error) {
-        console.error("Failed to parse auth data from localStorage:", error);
-      }
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
