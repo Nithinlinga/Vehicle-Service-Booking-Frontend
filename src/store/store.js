@@ -8,7 +8,11 @@ const userloadState = () => {
 
     const decoded = decodeToken(token);
     const isExpired = decoded.exp && Date.now() >= decoded.exp * 1000;
-    return isExpired ? null : decoded;
+    if(isExpired){
+      sessionStorage.removeItem("authToken");
+      return null;
+    }
+    return decoded;
   } catch (e) {
     console.error("Invalid token:", e);
     return null;
