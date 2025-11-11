@@ -62,13 +62,7 @@ const InitialForm = () => {
     }
 
     try {
-      const authObject = JSON.parse(authString);
-      const mechanicId = authObject.id;
 
-      if (!mechanicId) {
-        toast.error('Invalid mechanic ID');
-        return;
-      }
       await MechanicServices.addMechanic(formData);
       toast.success('Mechanic profile created successfully!');
       navigate('/mechanic/dashboard');

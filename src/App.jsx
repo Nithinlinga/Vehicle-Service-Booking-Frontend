@@ -41,6 +41,7 @@ import MechanicEntry from "./components/mechanic/pages/MechanicEntry";
 import UserEntry from "./components/user/pages/UserEntry";
 import ManageBookings from "./components/mechanic/pages/ManageBookings";
 import Report from "./components/mechanic/pages/Report";
+import SessionExpiredPage from "./components/SessionExpiredPage";
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
         <Route path="/admin-dashboard" element={<Navigate to={"/admin"} />} />
+        <Route path="/session-expired" element={<SessionExpiredPage />} />
 
         {/* Public-only pages (redirect if already logged in) */}
         <Route element={<PublicOnlyRoute />}>
