@@ -55,7 +55,7 @@ const InitialForm = () => {
       return;
     }
 
-    const authString = sessionStorage.getItem('authUser');
+    const authString = sessionStorage.getItem('authToken');
     if (!authString) {
       toast.error('User not authenticated');
       return;

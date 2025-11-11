@@ -16,6 +16,7 @@ import {
   Doughnut
 } from "react-chartjs-2";
 import { Link } from 'react-router-dom';
+import image5 from '../../../assets/users/5.webp';
 
 const UserDashboard = () => {
   // const navigate = useNavigate();
@@ -90,8 +91,8 @@ const UserDashboard = () => {
             <Link to = "/user/viewappointment">
               <DashboardCard image={image3} label="Total Appointments" end={upcomingBookingCount} />
             </Link>
-            {/* <DashboardCard image={image5} label="Service Types" end={50} /> */}
-            <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md w-full h-[235px] flex flex-col justify-center items-center text-center">
+            <DashboardCard image={image5} label="Service Types" end={50} />
+            {/* <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md w-full h-[235px] flex flex-col justify-center items-center text-center">
                         <h4 className="text-base font-semibold mb-2 text-slate-700 dark:text-white">Efficiency</h4>
                         <div className="w-[160px] h-[160px]">
                           <Doughnut
@@ -106,7 +107,7 @@ const UserDashboard = () => {
                           />
                         </div>
                         <p className="mt-2 text-lg font-bold text-slate-700 dark:text-white">78%</p>
-                      </div>
+                      </div> */}
           </div>
 
           <AddVehicleForm />
