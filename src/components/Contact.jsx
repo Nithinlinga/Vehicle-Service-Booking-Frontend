@@ -1,35 +1,61 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 const Contact = () => {
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
+  const [mapUrl, setMapUrl] = useState("https://www.google.com/maps?q=0,0&z=1&output=embed");
 
-          const iframe = document.getElementById('map-iframe');
-          if (iframe) {
-            const mapUrl = `https://maps.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`;
-            iframe.src = mapUrl;
-          }
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-          toast.error("We couldn't get your location. Please allow location access to see the map.");
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-      toast.error("Geolocation is not supported by your browser.");
+  const handleLocationAccess = () => {
+  if (!navigator.geolocation) {
+    toast.error("Geolocation is not supported by your browser.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      console.log("Your location:", latitude, longitude);
+
+      const updatedUrl = `https://maps.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`;
+      setMapUrl(updatedUrl);
+      toast.success("Location access granted! Map updated.");
+    },
+    (error) => {
+      console.error("Geolocation error:", error);
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          toast.error("Permission denied. Please allow location access.");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          toast.error("Location information is unavailable.");
+          break;
+        case error.TIMEOUT:
+          toast.error("Location request timed out.");
+          break;
+        default:
+          toast.error("An unknown error occurred.");
+      }
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
     }
-  }, []);
+  );
+};
+
 
   return (
     <div style={{ padding: "9rem 0 5rem 0", textAlign: "center" }}>
+      <button
+        onClick={handleLocationAccess}
+        className="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+      >
+        Show My Location on Map
+      </button>
+
       <iframe
         id="map-iframe"
-        src="https://www.google.com/maps?q=0,0&z=1&output=embed"
+        src={mapUrl}
         width="100%"
         height="400"
         style={{ border: 0 }}
