@@ -202,7 +202,7 @@ const quarterlyData = {
                       Booking #{booking.bookingId}
                     </h3>
                     <p className="text-sm text-gray-500 dark:text-slate-400">
-                      Date: {new Date(booking.date).toLocaleDateString()} at {booking.timeslot}
+                      Date: {new Date(booking.bookingDate).toLocaleDateString()} at {booking.timeslot}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-slate-400">
                       Status: <span className="capitalize font-medium">{normalizeStatus(booking)}</span>
@@ -235,17 +235,17 @@ const quarterlyData = {
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8"> */}
           {/* Downtime Pie Chart */}
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md w-full h-[300px] flex flex-col justify-center items-center">
+          {/* <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md w-full h-[300px] flex flex-col justify-center items-center">
             <h4 className="text-base font-semibold mb-2 text-slate-700 dark:text-white">Downtime Causes</h4>
             <div className="w-[240px] h-[240px]">
               <Pie data={downtimeData} />
             </div>
-          </div>
+          </div> */}
 
           {/* Efficiency Circular Indicator */}
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md w-full h-[300px] flex flex-col justify-center items-center text-center">
+          {/* <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md w-full h-[300px] flex flex-col justify-center items-center text-center">
             <h4 className="text-base font-semibold mb-2 text-slate-700 dark:text-white">Efficiency</h4>
             <div className="w-[200px] h-[200px]">
               <Doughnut
@@ -260,11 +260,11 @@ const quarterlyData = {
               />
             </div>
             <p className="mt-2 text-lg font-bold text-slate-700 dark:text-white">78%</p>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
 
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md">
             <h4 className="text-lg font-semibold mb-4 text-slate-700 dark:text-white">Service Types</h4>
             <Bar data={serviceTypeData} />
@@ -273,7 +273,7 @@ const quarterlyData = {
             <h4 className="text-lg font-semibold mb-4 text-slate-700 dark:text-white">Quarterly Service Volume</h4>
             <Line data={quarterlyData} />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

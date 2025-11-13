@@ -36,7 +36,7 @@ const ManageBookings = () => {
 
         setUpcoming(
             appointments.filter((a) => {
-                if (a.status !== "UPCOMING") return false;
+                if (a.status !== "UPCOMING" || a.isVerified  !== "YES") return false;
 
                 const bookingDateTime = new Date(`${a.bookingDate.split("T")[0]}T${a.timeslot}`);
                 return bookingDateTime >= now; // only future upcoming
