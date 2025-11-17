@@ -33,151 +33,151 @@ const Appointments = () => {
   });
 
   useEffect(() => {
-  const fetchVehicles = async () => {
-    try {
-      const resp = await UserServices.getAllVehicles();
-      setAllVehicles(resp.data);
-      localStorage.setItem("vehicles", JSON.stringify(resp.data));
+    const fetchVehicles = async () => {
+      try {
+        const resp = await UserServices.getAllVehicles();
+        setAllVehicles(resp.data);
+        localStorage.setItem("vehicles", JSON.stringify(resp.data));
 
-      // If vehicleId is present in URL, pre-select it
-      if (vehicleId) {
-        const selectedVehicle = resp.data.find(v => v.vehicleId === vehicleId);
-        if (selectedVehicle) {
-          setForm((prev) => ({
-            ...prev,
-            vehicleId: selectedVehicle.vehicleId,
-            vehicle: `${selectedVehicle.make.toUpperCase()} ${selectedVehicle.model}`,
-          }));
+        // If vehicleId is present in URL, pre-select it
+        if (vehicleId) {
+          const selectedVehicle = resp.data.find(v => v.vehicleId === vehicleId);
+          if (selectedVehicle) {
+            setForm((prev) => ({
+              ...prev,
+              vehicleId: selectedVehicle.vehicleId,
+              vehicle: `${selectedVehicle.make.toUpperCase()} ${selectedVehicle.model}`,
+            }));
+          }
         }
+      } catch (error) {
+        console.error("Error fetching vehicles", error);
       }
-    } catch (error) {
-      console.error("Error fetching vehicles", error);
-    }
-  };
-  fetchVehicles();
-}, [vehicleId]);
+    };
+    fetchVehicles();
+  }, [vehicleId]);
 
   const fetchServiceTypes = async (centerId) => {
-  const centerIdInt = Number(centerId);
-  const typeIdInt = Number(service_type);
+    const centerIdInt = Number(centerId);
+    const typeIdInt = Number(service_type);
 
-  if (!centerIdInt || isNaN(centerIdInt)) {
-    console.warn("Invalid centerId:", centerId);
-    return;
-  }
-
-  try {
-    if (service_type && !isNaN(typeIdInt)) {
-      // Fetch specific service type by ID
-      const resp = await ServiceTypeServices.getServiceTypeById(centerIdInt, typeIdInt);
-      setServiceTypes([resp.data]); // wrap in array for consistency
-      setForm((prev) => ({
-        ...prev,
-        serviceTypeId: resp.data.serviceTypeId,
-        serviceTypeName: resp.data.name,
-        serviceTypePrice: resp.data.price,
-      }));
-    } else {
-      // Fallback: fetch all service types
-      const resp = await ServiceTypeServices.getAllServiceTypes(centerIdInt);
-      setServiceTypes(resp.data);
+    if (!centerIdInt || isNaN(centerIdInt)) {
+      console.warn("Invalid centerId:", centerId);
+      return;
     }
-  } catch (error) {
-    console.error("Error fetching service types:", error);
-    toast.error("Failed to load service types.");
-  }
-};
+
+    try {
+      if (service_type && !isNaN(typeIdInt)) {
+        // Fetch specific service type by ID
+        const resp = await ServiceTypeServices.getServiceTypeById(centerIdInt, typeIdInt);
+        setServiceTypes([resp.data]); // wrap in array for consistency
+        setForm((prev) => ({
+          ...prev,
+          serviceTypeId: resp.data.serviceTypeId,
+          serviceTypeName: resp.data.name,
+          serviceTypePrice: resp.data.price,
+        }));
+      } else {
+        // Fallback: fetch all service types
+        const resp = await ServiceTypeServices.getAllServiceTypes(centerIdInt);
+        setServiceTypes(resp.data);
+      }
+    } catch (error) {
+      console.error("Error fetching service types:", error);
+      toast.error(error.response.data)
+    }
+  };
 
 
   useEffect(() => {
-const fetchInitialData = async () => {
-try {
-const centers = await ServiceCenterServices.getAllServiceCenters();
-setAllServiceCenters(centers.data);
+    const fetchInitialData = async () => {
+      try {
+        const centers = await ServiceCenterServices.getAllServiceCenters();
+        setAllServiceCenters(centers.data);
 
-let centerIdToFetch = service_center;
+        let centerIdToFetch = service_center;
 
-if (!centerIdToFetch || centerIdToFetch === "undefined") {
-  if (centers.data.length > 0) {
-    centerIdToFetch = String(centers.data[0].servicecenterId);
-  } else {
-    toast.error("No service center available.");
-    return;
-  }
-}
-if (centerIdToFetch) {
-setForm((prev) => ({ ...prev,centerId: centerIdToFetch }));
-await fetchServiceTypes(centerIdToFetch);
-}
-} catch (error) {
-console.error("Error fetching initial data:", error);
-toast.error("Failed to load service centers.");
-}
-};
-
-fetchInitialData();
-}, [service_center]);
-
-  useEffect(() => {
-if (location.state?.vehicleId && allVehicles.length > 0) {
-const foundVehicle = allVehicles.find(
-(av) => String(av.vehicleId) === String(location.state.vehicleId)
-);
-if (foundVehicle) {
-setForm((prev) => ({
-...prev,
-vehicle: `${foundVehicle.make.toUpperCase()} ${foundVehicle.model}`,
-vehicleId: foundVehicle.vehicleId,
-}));
-}
-}
-}, [location.state?.vehicleId, allVehicles]);
-
-  const handleServiceCenterChange = (e) => {
-const newCenterId = e.target.value;
-setForm((prev) => ({ ...prev,centerId: newCenterId, service: "" }));
-fetchServiceTypes(newCenterId);
-};
-
-const handleChange = (e) => {
-const { name, value } = e.target;
-setForm((prev) => ({ ...prev, [name]: value }));
-};
- const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const today = new Date().toISOString().split("T")[0];
-  if (form.bookingDate < today) {
-    toast.error("Please select a date on or after today.");
-    return;
-  }
-
-  if (!form.vehicleId) {
-    toast.error("Please select a vehicle.");
-    return;
-  }
-
-  try {
-
-    // Combine date and time into ISO format
-    const fullDateTime = `${form.bookingDate}T${form.timeslot}`;
-
-    const payload = {
-      ...form,
-      bookingDate: fullDateTime
+        if (!centerIdToFetch || centerIdToFetch === "undefined") {
+          if (centers.data.length > 0) {
+            centerIdToFetch = String(centers.data[0].servicecenterId);
+          } else {
+            toast.error("No service center available.");
+            return;
+          }
+        }
+        if (centerIdToFetch) {
+          setForm((prev) => ({ ...prev, centerId: centerIdToFetch }));
+          await fetchServiceTypes(centerIdToFetch);
+        }
+      } catch (error) {
+        console.error("Error fetching initial data:", error);
+        toast.error("Failed to load service centers.");
+      }
     };
 
-    const appointment = await BookingServices.addBooking(payload);
+    fetchInitialData();
+  }, [service_center]);
 
-    if (appointment) {
-      setSubmitted(true);
-      toast.success("Appointment booked successfully!");
+  useEffect(() => {
+    if (location.state?.vehicleId && allVehicles.length > 0) {
+      const foundVehicle = allVehicles.find(
+        (av) => String(av.vehicleId) === String(location.state.vehicleId)
+      );
+      if (foundVehicle) {
+        setForm((prev) => ({
+          ...prev,
+          vehicle: `${foundVehicle.make.toUpperCase()} ${foundVehicle.model}`,
+          vehicleId: foundVehicle.vehicleId,
+        }));
+      }
     }
-  } catch (error) {
-    console.error("Error booking appointment:", error);
-    toast.error("Failed to book appointment. Please try again.");
-  }
-};
+  }, [location.state?.vehicleId, allVehicles]);
+
+  const handleServiceCenterChange = (e) => {
+    const newCenterId = e.target.value;
+    setForm((prev) => ({ ...prev, centerId: newCenterId, service: "" }));
+    fetchServiceTypes(newCenterId);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const today = new Date().toISOString().split("T")[0];
+    if (form.bookingDate < today) {
+      toast.error("Please select a date on or after today.");
+      return;
+    }
+
+    if (!form.vehicleId) {
+      toast.error("Please select a vehicle.");
+      return;
+    }
+
+    try {
+
+      // Combine date and time into ISO format
+      const fullDateTime = `${form.bookingDate}T${form.timeslot}`;
+
+      const payload = {
+        ...form,
+        bookingDate: fullDateTime
+      };
+
+      const appointment = await BookingServices.addBooking(payload);
+
+      if (appointment) {
+        setSubmitted(true);
+        toast.success("Appointment booked successfully!");
+      }
+    } catch (error) {
+      console.error("Error booking appointment:", error);
+      toast.error("Failed to book appointment. Please try again.");
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-100 via-white to-teal-100 dark:from-gray-900 dark:via-gray-800 dark:to-teal-900 py-10">
@@ -199,7 +199,7 @@ setForm((prev) => ({ ...prev, [name]: value }));
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
-            
+
             <div>
               <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                 Select Vehicle
@@ -224,9 +224,9 @@ setForm((prev) => ({ ...prev, [name]: value }));
               >
                 <option value="">Select Vehicle</option>
                 {allVehicles?.map((v) => (
-                <option key={v.vehicleId} value={v.vehicleId}>
-                  {v.make.toUpperCase()} {v.model}
-                </option>
+                  <option key={v.vehicleId} value={v.vehicleId}>
+                    {v.make.toUpperCase()} {v.model}
+                  </option>
                 ))}
               </select>
             </div>
@@ -252,7 +252,7 @@ setForm((prev) => ({ ...prev, [name]: value }));
                   Time
                 </label>
                 <input
-              
+
                   type="time"
                   name="timeslot"
                   required
@@ -307,7 +307,7 @@ setForm((prev) => ({ ...prev, [name]: value }));
                   ) : null
                 )}
               </select>
-               {form.serviceTypeId && (
+              {form.serviceTypeId && (
                 <div className="mt-4">
                   <label className="block font-semibold mb-1 text-teal-700 dark:text-teal-300">
                     Price

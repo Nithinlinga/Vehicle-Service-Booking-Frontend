@@ -46,7 +46,7 @@ const ServiceCenters = () => {
             )}
             <div className="flex space-x-2">
               <button
-                onClick={() => navigate(`/user/services/${s.servicecenterId}`)}
+                onClick={() => navigate(`/user/services/${s.centerId}`)}
                 className="mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-3 py-1 rounded"
               >
                 View

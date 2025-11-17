@@ -151,7 +151,7 @@ const ServiceCentreForm = () => {
               <div className="text-red-500 text-sm">{formik.errors.contact}</div>
             )}
           </div>
-          <div>
+          {/* <div>
             <label className="block font-medium mb-1">Rating</label>
             <select
               name="rating"
@@ -165,7 +165,7 @@ const ServiceCentreForm = () => {
               <option value="Average">Average</option>
               <option value="Poor">Poor</option>
             </select>
-          </div>
+          </div> */}
           <div className="text-right">
             <button
               type="submit"

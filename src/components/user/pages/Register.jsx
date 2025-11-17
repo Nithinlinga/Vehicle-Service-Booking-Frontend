@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { TiTick } from "react-icons/ti";
-import RegisterServices from '../../services/RegisterServices';
+import RegisterServices from "../../services/RegisterServices";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ const Register = () => {
 
     const [serverError, setServerError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const formik = useFormik({
         initialValues: {
             email: "",
@@ -36,7 +36,7 @@ const Register = () => {
             }
             if (!values.password) {
                 errors.password = "Password required";
-            } 
+            }
             if (values.password.length < 3 || values.password.length > 50) {
                 errors.password = "Password must be between 3 and 50 characters";
             }
@@ -51,7 +51,7 @@ const Register = () => {
         onSubmit: async (values, { setSubmitting }) => {
             setServerError("");
             try {
-                const response = await RegisterServices.addAuth(values);
+                await RegisterServices.addAuth(values);
                 toast.success("Registration successful");
                 navigate(`/login?role=${role}`);
             } catch (error) {
@@ -70,8 +70,8 @@ const Register = () => {
 
     const showTick =
         formik.values.password.length >= 8 &&
-        formik.values.password === formik.values.confirmPassword
-    console.log(showTick)
+        formik.values.password === formik.values.confirmPassword;
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 px-4">
             <div className="w-full max-w-3xl rounded-xl shadow-2xl bg-white/80 dark:bg-slate-900/70 backdrop-blur p-6 sm:p-8 md:p-10">
@@ -90,13 +90,14 @@ const Register = () => {
 
                 <form
                     onSubmit={formik.handleSubmit}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5"
+                    className="flex flex-col gap-y-5 items-center"
                     noValidate
                 >
-                    <div className="flex flex-col">
+                    {/* Email */}
+                    <div className="w-full flex flex-col items-center">
                         <label
                             htmlFor="email"
-                            className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-300"
+                            className="w-3/4 mb-1 text-sm font-medium text-slate-700 dark:text-slate-300"
                         >
                             Email
                         </label>
@@ -109,11 +110,11 @@ const Register = () => {
                             onBlur={formik.handleBlur}
                             value={formik.values.email}
                             autoComplete="email"
-                            className="p-3 rounded border border-slate-300 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:border-cyan-600 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                            className="w-3/4 p-3 rounded border border-slate-300 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:border-cyan-600 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                             aria-invalid={Boolean(formik.touched.email && formik.errors.email)}
                             aria-describedby="email-error"
                         />
-                        <div id="email-error" className="h-5 mt-1">
+                        <div id="email-error" className="w-3/4 h-5 mt-1">
                             {formik.touched.email && formik.errors.email && (
                                 <span className="text-xs text-red-600">
                                     {formik.errors.email}
@@ -121,15 +122,17 @@ const Register = () => {
                             )}
                         </div>
                     </div>
-                    <div className="flex flex-col">
+
+                    {/* Password */}
+                    <div className="w-full flex flex-col items-center">
                         <label
                             htmlFor="password"
-                            className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-300"
+                            className="w-3/4 mb-1 text-sm font-medium text-slate-700 dark:text-slate-300"
                         >
                             Password
                         </label>
 
-                        <div className="relative">
+                        <div className="relative w-3/4">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 name="password"
@@ -140,7 +143,9 @@ const Register = () => {
                                 value={formik.values.password}
                                 autoComplete="new-password"
                                 className="p-3 pr-10 rounded border w-full border-slate-300 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:border-cyan-600 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                                aria-invalid={Boolean(formik.touched.password && formik.errors.password)}
+                                aria-invalid={Boolean(
+                                    formik.touched.password && formik.errors.password
+                                )}
                                 aria-describedby="password-error"
                             />
                             <button
@@ -156,23 +161,28 @@ const Register = () => {
                             </button>
                         </div>
 
-                        <div id="password-error" className="h-5 mt-1" aria-live="polite">
+                        <div id="password-error" className="w-3/4 h-5 mt-1" aria-live="polite">
                             {formik.touched.password && formik.errors.password && (
-                                <span className="text-xs text-red-600">{formik.errors.password}</span>
+                                <span className="text-xs text-red-600">
+                                    {formik.errors.password}
+                                </span>
                             )}
                         </div>
                     </div>
-                    <div className="flex flex-col">
+
+                    {/* Confirm Password */}
+                    {/* Confirm Password */}
+                    <div className="w-full flex flex-col items-center">
                         <label
                             htmlFor="confirmPassword"
-                            className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-300"
+                            className="w-3/4 mb-1 text-sm font-medium text-slate-700 dark:text-slate-300"
                         >
                             Confirm Password
                         </label>
 
-                        <div className="relative">
+                        <div className="relative w-3/4">
                             <input
-                                type={showConfirmPassword ? "text" : "password"}
+                                type={showPassword ? "text" : "password"}
                                 name="confirmPassword"
                                 id="confirmPassword"
                                 placeholder="••••••••"
@@ -186,32 +196,39 @@ const Register = () => {
                                 )}
                                 aria-describedby="confirmPassword-error"
                             />
+
                             <TiTick
                                 color="green"
                                 size={24}
                                 className={[
                                     "absolute right-10 top-1/4 -translate-y-1/2 pointer-events-none",
                                     "transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none",
-                                    showTick ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95",
+                                    showTick
+                                        ? "opacity-100 translate-y-0 scale-100"
+                                        : "opacity-0 translate-y-2 scale-95",
                                 ].join(" ")}
                                 aria-hidden={!showTick}
                                 title={showTick ? "Passwords match" : ""}
                             />
+
                             <button
                                 type="button"
-                                onClick={() => setShowConfirmPassword((s) => !s)}
+                                onClick={() => setShowPassword((s) => !s)}
                                 onMouseDown={(e) => e.preventDefault()}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 z-10 text-slate-600 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white"
-                                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                                aria-pressed={showConfirmPassword}
-                                title={showConfirmPassword ? "Hide password" : "Show password"}
+                                aria-label={showPassword ? "Hide passwords" : "Show passwords"}
+                                aria-pressed={showPassword}
+                                title={showPassword ? "Hide passwords" : "Show passwords"}
                             >
-                                {showConfirmPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
+                                {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
                             </button>
                         </div>
 
-
-                        <div id="confirmPassword-error" className="h-5 mt-1" aria-live="polite">
+                        <div
+                            id="confirmPassword-error"
+                            className="w-3/4 h-5 mt-1"
+                            aria-live="polite"
+                        >
                             {formik.touched.confirmPassword && formik.errors.confirmPassword && (
                                 <span className="text-xs text-red-600">
                                     {formik.errors.confirmPassword}
@@ -219,11 +236,14 @@ const Register = () => {
                             )}
                         </div>
                     </div>
-                    <div className="w-full flex justify-center md:col-span-2 pt-2">
+
+
+                    {/* Submit button */}
+                    <div className="w-full flex justify-center pt-2">
                         <button
                             type="submit"
                             disabled={formik.isSubmitting}
-                            className="inline-flex items-center justify-center rounded-md bg-cyan-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:-translate-y-0.5 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 disabled:opacity-60 disabled:cursor-not-allowed"
+                            className="w-3/4 inline-flex items-center justify-center rounded-md bg-cyan-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-600/30 transition hover:-translate-y-0.5 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             {formik.isSubmitting ? (
                                 <span className="inline-flex items-center gap-2">
